@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-container-low": "#1c1b1b",
+                    "on-primary-fixed": "#002108",
+                    "secondary-container": "#1c5329",
+                    "surface-container-lowest": "#0e0e0e",
+                    "primary-fixed": "#72fe8f",
+                    "on-primary": "#003914",
+                    "on-secondary-container": "#8cc690",
+                    "tertiary-container": "#ff767b",
+                    "surface-tint": "#53e076",
+                    "on-error-container": "#ffdad6",
+                    "on-secondary-fixed": "#002108",
+                    "on-primary-fixed-variant": "#005320",
+                    "secondary": "#99d59d",
+                    "error-container": "#93000a",
+                    "on-tertiary-fixed": "#400009",
+                    "tertiary-fixed": "#ffdad9",
+                    "surface-bright": "#393939",
+                    "outline": "#869585",
+                    "on-primary-container": "#004118",
+                    "surface-container-high": "#2a2a2a",
+                    "primary-container": "#1db954",
+                    "on-tertiary-fixed-variant": "#881d28",
+                    "tertiary": "#ffb3b3",
+                    "surface-container-highest": "#353534",
+                    "on-secondary-fixed-variant": "#195127",
+                    "surface-variant": "#353534",
+                    "surface-container": "#201f1f",
+                    "on-surface-variant": "#bccbb9",
+                    "on-surface": "#e5e2e1",
+                    "on-tertiary": "#680114",
+                    "inverse-surface": "#e5e2e1",
+                    "secondary-fixed": "#b5f1b8",
+                    "background": "#131313",
+                    "secondary-fixed-dim": "#99d59d",
+                    "primary": "#53e076",
+                    "inverse-primary": "#006e2d",
+                    "primary-fixed-dim": "#53e076",
+                    "error": "#ffb4ab",
+                    "surface": "#131313",
+                    "on-background": "#e5e2e1",
+                    "outline-variant": "#3d4a3d",
+                    "tertiary-fixed-dim": "#ffb3b3",
+                    "on-secondary": "#003914",
+                    "surface-dim": "#131313",
+                    "inverse-on-surface": "#313030",
+                    "on-tertiary-container": "#730a1b",
+                    "on-error": "#690005"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Epilogue"],
+                    "body": ["Plus Jakarta Sans"],
+                    "label": ["Space Grotesk"]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { background-color: #131313; color: #e5e2e1; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .kinetic-blur {
+            background: radial-gradient(circle at 50% 50%, rgba(29, 185, 84, 0.15) 0%, rgba(19, 19, 19, 0) 70%);
+        }
+        .glass-card {
+            background: rgba(42, 42, 42, 0.4);
+            backdrop-filter: blur(20px);
+        }
+    </style>
+</head>
+<body class="font-body selection:bg-primary-container selection:text-on-primary-container">
+<!-- Top Navigation Bar -->
+<nav class="fixed top-0 w-full z-50 bg-[#131313]/60 backdrop-blur-xl shadow-2xl shadow-black/40 flex justify-between items-center px-8 h-20 w-full max-w-none">
+<div class="text-xl font-bold text-[#e5e2e1] font-headline tracking-tighter">
+            The Kinetic Void
+        </div>
+<div class="hidden md:flex items-center gap-8 font-label tracking-widest text-xs uppercase">
+<a class="text-[#e5e2e1]/70 hover:text-[#e5e2e1] transition-colors hover:bg-[#1DB954]/10 transition-all duration-300 px-3 py-1 rounded-full" href="#">Home</a>
+<a class="text-[#1DB954] font-bold border-b-2 border-[#1DB954] pb-1 hover:bg-[#1DB954]/10 transition-all duration-300 px-3 py-1" href="#">Projects</a>
+<a class="text-[#e5e2e1]/70 hover:text-[#e5e2e1] transition-colors hover:bg-[#1DB954]/10 transition-all duration-300 px-3 py-1 rounded-full" href="#">News</a>
+</div>
+<button class="bg-primary-container text-on-primary-container px-6 py-2.5 rounded-full font-label font-bold text-xs uppercase tracking-widest hover:shadow-[0_0_20px_rgba(29,185,84,0.4)] transition-all active:scale-95">
+            Hire Me
+        </button>
+</nav>
+<main class="pt-32 pb-24 px-8 max-w-7xl mx-auto relative overflow-hidden">
+<!-- Ambient Background Glows -->
+<div class="absolute -top-40 -right-40 w-96 h-96 kinetic-blur pointer-events-none"></div>
+<div class="absolute top-1/2 -left-40 w-96 h-96 kinetic-blur opacity-50 pointer-events-none"></div>
+<!-- Header & Search Section -->
+<header class="mb-16 relative z-10">
+<h1 class="font-headline text-6xl md:text-8xl font-extrabold tracking-tighter mb-8 text-on-surface">
+                Digital <span class="text-primary">Artifacts</span>
+</h1>
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-8">
+<!-- Filter Tabs -->
+<div class="flex flex-wrap gap-2 p-1 bg-surface-container-low rounded-full w-fit">
+<button class="px-6 py-2 rounded-full font-label text-xs font-bold tracking-widest uppercase bg-primary-container text-on-primary-container">All</button>
+<button class="px-6 py-2 rounded-full font-label text-xs font-bold tracking-widest uppercase text-on-surface/50 hover:text-on-surface hover:bg-surface-container-high transition-all">Frontend</button>
+<button class="px-6 py-2 rounded-full font-label text-xs font-bold tracking-widest uppercase text-on-surface/50 hover:text-on-surface hover:bg-surface-container-high transition-all">Backend</button>
+<button class="px-6 py-2 rounded-full font-label text-xs font-bold tracking-widest uppercase text-on-surface/50 hover:text-on-surface hover:bg-surface-container-high transition-all">Full Stack</button>
+</div>
+<!-- Search Bar -->
+<div class="relative group w-full md:w-80">
+<span class="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface/40 group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full bg-surface-container-low border-b-2 border-outline-variant focus:border-primary-container focus:ring-0 focus:outline-none py-3 pl-12 pr-4 font-label text-sm placeholder:text-on-surface/30 transition-all rounded-t-lg" placeholder="Search projects..." type="text"/>
+</div>
+</div>
+</header>
+<!-- Projects Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
+<!-- Project Card 1 -->
+<div class="glass-card rounded-3xl overflow-hidden group hover:-translate-y-2 transition-all duration-500 ease-out flex flex-col">
+<div class="h-64 overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="abstract high-tech neon green interface with flowing data streams and glass elements against a dark obsidian background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpH1-4ck7PXFAzEKRkA2kdUCWRqMPOtGEhWp2reoXum0hHfrcVETWPJDTmWKqgk5c_2hJt9O5thFSP-08I0m9CkdMUleHKpq2QGfar_t412Si1NA8pv8Allcu3u7BQIUHX1tZiYFvTknNTlExMVC6bJRlXHdmIiibVI2JT7IHBTn3e7OzJYbWvDVtTv8zJw9QoydpvFukPXMyqc7Y41tduHlGpTq66NSwYR1D53-A50HGAi0wAGX1STYR22U_IIEK6XWTMvl_mXAHA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#131313] to-transparent opacity-60"></div>
+</div>
+<div class="p-8 flex flex-col flex-grow">
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-3 py-1 rounded-md bg-surface-container-highest text-primary-fixed font-label text-[10px] font-bold uppercase tracking-widest">React</span>
+<span class="px-3 py-1 rounded-md bg-surface-container-highest text-primary-fixed font-label text-[10px] font-bold uppercase tracking-widest">Three.js</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-3 text-on-surface">Neural Nexus Dashboard</h3>
+<p class="text-on-surface/60 text-sm mb-6 line-clamp-2">A high-performance data visualization interface simulating synaptic firing patterns in real-time.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-on-surface/40 font-label text-xs">2024</span>
+<button class="flex items-center gap-2 text-primary font-label text-xs font-bold uppercase tracking-widest group/btn">
+                            Explore
+                            <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Project Card 2 -->
+<div class="glass-card rounded-3xl overflow-hidden group hover:-translate-y-2 transition-all duration-500 ease-out flex flex-col">
+<div class="h-64 overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="satellite view of earth at night with glowing blue and green data networks connecting major global hubs in deep space" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZknxJsxoSgvjPNr9myRiszyA5ZL-4iZ4MwrAJ_W8rZ-dS4MkDIbSnmsCOzLi_QkyBsRtSVkh5DvjixLYXP0wmTm0NUpVp2h9SmD4SaEZPqC2Cf0CG0UAcHN4pdBFKS5EbzhnOQdVcflQhyLZ42nNznURcElhJukuQf737uVtGcL5PQPEiFSjWg_6ikSzo0ZLwe7OSJ94NNSphDUeggmSThfpWpNjSlLgLSzA2PoBv1tdRKj3bIDOxInoYvuNdhNI7lFGQ3jkCHXqc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#131313] to-transparent opacity-60"></div>
+</div>
+<div class="p-8 flex flex-col flex-grow">
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-3 py-1 rounded-md bg-surface-container-highest text-primary-fixed font-label text-[10px] font-bold uppercase tracking-widest">Node.js</span>
+<span class="px-3 py-1 rounded-md bg-surface-container-highest text-primary-fixed font-label text-[10px] font-bold uppercase tracking-widest">Redis</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-3 text-on-surface">Pulse API Gateway</h3>
+<p class="text-on-surface/60 text-sm mb-6 line-clamp-2">Low-latency global distribution layer designed for sub-millisecond edge synchronization.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-on-surface/40 font-label text-xs">2023</span>
+<button class="flex items-center gap-2 text-primary font-label text-xs font-bold uppercase tracking-widest group/btn">
+                            Explore
+                            <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Project Card 3 (Asymmetric size variation potential - sticking to grid as requested) -->
+<div class="glass-card rounded-3xl overflow-hidden group hover:-translate-y-2 transition-all duration-500 ease-out flex flex-col">
+<div class="h-64 overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="close-up of a high-tech computer chip with green circuit lights pulsing inside a dark metal casing" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDmrwc5zZH5b9uq7ODScizscv8oXqeWUPYSoTd29YTRonnbvcppWZBausi2CHlaSKaEG_33qH_lyYhS9JX0v6FBDDd2XlNOvCSkqMQFhDy1cEni3BfoqLVswOxSpLPqTavS_apRmiAOarj6JkUgiokJgmuW9UnEH6NkM1jtd8wjL_rgdoZZKxukJVYUpD27lcKEx3mdsOkhOl2UZ2HOhXs-t93y9arJNMkL3iOQD3NzLZbpevfuj5Bftc7q9b8i_lJT5EcceuHp63zd"/>
+<div class="absolute inset-0 bg-gradient-to-t from-[#131313] to-transparent opacity-60"></div>
+</div>
+<div class="p-8 flex flex-col flex-grow">
+<div class="flex flex-wrap gap-2 mb-4">
+<span class="px-3 py-1 rounded-md bg-surface-container-highest text-primary-fixed font-label text-[10px] font-bold uppercase tracking-widest">Next.js</span>
+<span class="px-3 py-1 rounded-md bg-surface-container-highest text-primary-fixed font-label text-[10px] font-bold uppercase tracking-widest">Tailwind</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-3 text-on-surface">Void Commerce</h3>
+<p class="text-on-surface/60 text-sm mb-6 line-clamp-2">Headless shopping experience built with a focus on buttery-smooth kinetic interactions.</p>
+<div class="mt-auto flex items-center justify-between">
+<span class="text-on-surface/40 font-label text-xs">2024</span>
+<button class="flex items-center gap-2 text-primary font-label text-xs font-bold uppercase tracking-widest group/btn">
+                            Explore
+                            <span class="material-symbols-outlined text-sm group-hover/btn:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Skeleton Loading State (Placeholder) -->
+<div class="bg-surface-container-low/40 rounded-3xl overflow-hidden animate-pulse">
+<div class="h-64 bg-surface-container-high/40"></div>
+<div class="p-8">
+<div class="flex gap-2 mb-4">
+<div class="h-4 w-12 bg-surface-container-high/40 rounded"></div>
+<div class="h-4 w-16 bg-surface-container-high/40 rounded"></div>
+</div>
+<div class="h-8 w-3/4 bg-surface-container-high/40 rounded mb-4"></div>
+<div class="h-4 w-full bg-surface-container-high/40 rounded mb-2"></div>
+<div class="h-4 w-2/3 bg-surface-container-high/40 rounded"></div>
+</div>
+</div>
+<!-- Skeleton Loading State 2 -->
+<div class="bg-surface-container-low/40 rounded-3xl overflow-hidden animate-pulse">
+<div class="h-64 bg-surface-container-high/40"></div>
+<div class="p-8">
+<div class="flex gap-2 mb-4">
+<div class="h-4 w-12 bg-surface-container-high/40 rounded"></div>
+<div class="h-4 w-16 bg-surface-container-high/40 rounded"></div>
+</div>
+<div class="h-8 w-3/4 bg-surface-container-high/40 rounded mb-4"></div>
+<div class="h-4 w-full bg-surface-container-high/40 rounded mb-2"></div>
+<div class="h-4 w-2/3 bg-surface-container-high/40 rounded"></div>
+</div>
+</div>
+<!-- Skeleton Loading State 3 -->
+<div class="bg-surface-container-low/40 rounded-3xl overflow-hidden animate-pulse">
+<div class="h-64 bg-surface-container-high/40"></div>
+<div class="p-8">
+<div class="flex gap-2 mb-4">
+<div class="h-4 w-12 bg-surface-container-high/40 rounded"></div>
+<div class="h-4 w-16 bg-surface-container-high/40 rounded"></div>
+</div>
+<div class="h-8 w-3/4 bg-surface-container-high/40 rounded mb-4"></div>
+<div class="h-4 w-full bg-surface-container-high/40 rounded mb-2"></div>
+<div class="h-4 w-2/3 bg-surface-container-high/40 rounded"></div>
+</div>
+</div>
+</div>
+<!-- Empty State Example (Hidden by default, shown here as a concept section) -->
+<div class="hidden mt-24 text-center py-24 border border-dashed border-outline-variant/30 rounded-3xl">
+<span class="material-symbols-outlined text-6xl text-on-surface/20 mb-4" data-weight="fill">search_off</span>
+<h4 class="font-headline text-2xl font-bold mb-2">The Void is Empty</h4>
+<p class="text-on-surface/50 font-body">No projects match your current filters. Try exploring other dimensions.</p>
+<button class="mt-8 text-primary font-label text-xs font-bold uppercase tracking-widest border-b border-primary pb-1">Reset All Filters</button>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-[#131313] w-full py-12 border-t border-[#e5e2e1]/10 flex flex-col md:flex-row justify-between items-center px-12 w-full">
+<p class="font-label text-sm text-[#e5e2e1]/40 mb-6 md:mb-0">
+            © 2024 The Kinetic Void. Built for the orbit.
+        </p>
+<div class="flex gap-8 font-label text-sm">
+<a class="text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors" href="#">LinkedIn</a>
+<a class="text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors" href="#">GitHub</a>
+<a class="text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors" href="#">Twitter</a>
+</div>
+</footer>
+</body></html>

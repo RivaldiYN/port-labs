@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800&amp;family=Plus+Jakarta+Sans:wght@400;500;600&amp;family=Space+Grotesk:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+                  "surface-container-low": "#1c1b1b",
+                  "on-primary-fixed": "#002108",
+                  "secondary-container": "#1c5329",
+                  "surface-container-lowest": "#0e0e0e",
+                  "primary-fixed": "#72fe8f",
+                  "on-primary": "#003914",
+                  "on-secondary-container": "#8cc690",
+                  "tertiary-container": "#ff767b",
+                  "surface-tint": "#53e076",
+                  "on-error-container": "#ffdad6",
+                  "on-secondary-fixed": "#002108",
+                  "on-primary-fixed-variant": "#005320",
+                  "secondary": "#99d59d",
+                  "error-container": "#93000a",
+                  "on-tertiary-fixed": "#400009",
+                  "tertiary-fixed": "#ffdad9",
+                  "surface-bright": "#393939",
+                  "outline": "#869585",
+                  "on-primary-container": "#004118",
+                  "surface-container-high": "#2a2a2a",
+                  "primary-container": "#1db954",
+                  "on-tertiary-fixed-variant": "#881d28",
+                  "tertiary": "#ffb3b3",
+                  "surface-container-highest": "#353534",
+                  "on-secondary-fixed-variant": "#195127",
+                  "surface-variant": "#353534",
+                  "surface-container": "#201f1f",
+                  "on-surface-variant": "#bccbb9",
+                  "on-surface": "#e5e2e1",
+                  "on-tertiary": "#680114",
+                  "inverse-surface": "#e5e2e1",
+                  "secondary-fixed": "#b5f1b8",
+                  "background": "#131313",
+                  "secondary-fixed-dim": "#99d59d",
+                  "primary": "#53e076",
+                  "inverse-primary": "#006e2d",
+                  "primary-fixed-dim": "#53e076",
+                  "error": "#ffb4ab",
+                  "surface": "#131313",
+                  "on-background": "#e5e2e1",
+                  "outline-variant": "#3d4a3d",
+                  "tertiary-fixed-dim": "#ffb3b3",
+                  "on-secondary": "#003914",
+                  "surface-dim": "#131313",
+                  "inverse-on-surface": "#313030",
+                  "on-tertiary-container": "#730a1b",
+                  "on-error": "#690005"
+          },
+          "borderRadius": {
+                  "DEFAULT": "0.25rem",
+                  "lg": "0.5rem",
+                  "xl": "0.75rem",
+                  "full": "9999px"
+          },
+          "fontFamily": {
+                  "headline": ["Epilogue"],
+                  "body": ["Plus Jakarta Sans"],
+                  "label": ["Space Grotesk"]
+          }
+        },
+      },
+    }
+  </script>
+<style>body {
+    background-color: #131313;
+    color: #e5e2e1;
+    font-family: "Plus Jakarta Sans", sans-serif;
+    overflow-x: hidden
+    }
+.material-symbols-outlined {
+    font-variation-settings: "FILL" 0, "wght" 400, "GRAD" 0, "opsz" 24
+    }
+.noise-bg {
+    background-image: url(https://lh3.googleusercontent.com/aida-public/AB6AXuB8rojUbZwxEBWlxiehdJAfgHh8nsb54dmkft-FyAt1pMDMy-L51yiadq2LLr6jQSB6-08Rjp7X-qBMwLtIcu7LvW6zYtmbt0kskDMB4ZnuMjDiG4nyuwLp7I3lBlD8ZATNv61v3wKxceJ7MD6VgwBHDEnXXCdTfMxAOP73EuZT4V0mDfk75juA10EJdRlDu8BW9cKoR69Xt25Hy7qdwDorWRT6nXaNiI2SjsyOBuFzT0OT7AtOAkuCcXlUiTPJExygOwJFnXCfn6VG)
+    }
+.orb {
+    filter: blur(80px);
+    position: absolute;
+    border-radius: 50%;
+    z-index: 0
+    }
+.primary-gradient-btn {
+    background: linear-gradient(135deg, #53e076 0%, #1db954 100%)
+    }
+.glass-card {
+    background-color: rgba(42, 42, 42, 0.6);
+    backdrop-filter: blur(20px)
+    }</style>
+</head>
+<body class="bg-background text-on-surface selection:bg-primary selection:text-on-primary">
+<!-- TopNavBar (Shared Component) -->
+<nav class="fixed top-0 w-full z-50 bg-[#131313]/60 backdrop-blur-xl shadow-2xl shadow-black/40 h-20 flex justify-between items-center px-8 max-w-none">
+<div class="text-xl font-bold text-[#e5e2e1] font-headline tracking-tighter">
+      The Kinetic Void
+    </div>
+<div class="hidden md:flex gap-8 items-center">
+<a class="text-[#1DB954] font-bold border-b-2 border-[#1DB954] pb-1 font-headline tracking-tighter" href="#">Home</a>
+<a class="text-[#e5e2e1]/70 hover:text-[#e5e2e1] transition-colors font-headline tracking-tighter hover:bg-[#1DB954]/10 transition-all duration-300 px-2 py-1 rounded" href="#">Projects</a>
+<a class="text-[#e5e2e1]/70 hover:text-[#e5e2e1] transition-colors font-headline tracking-tighter hover:bg-[#1DB954]/10 transition-all duration-300 px-2 py-1 rounded" href="#">News</a>
+</div>
+<button class="primary-gradient-btn text-on-primary-fixed px-6 py-2 rounded-full font-label font-bold text-xs uppercase tracking-widest active:scale-95 transition-transform duration-200">
+      Hire Me
+    </button>
+</nav>
+<!-- Hero Section -->
+<section class="relative min-h-screen flex items-center justify-center pt-20 px-8 overflow-hidden noise-bg">
+<!-- Animated Orbs -->
+<div class="orb w-96 h-96 bg-primary/10 -top-20 -left-20"></div>
+<div class="orb w-[500px] h-[500px] bg-secondary-container/10 bottom-0 -right-40"></div>
+<div class="relative z-10 max-w-6xl w-full flex flex-col md:flex-row items-center gap-16">
+<div class="flex-1 text-center md:text-left">
+<h1 class="font-headline text-6xl md:text-8xl font-extrabold tracking-tighter text-on-surface mb-6 leading-none">
+          Building the <span class="text-primary italic">Impossible</span>
+</h1>
+<div class="flex items-center justify-center md:justify-start gap-4 mb-8">
+<div class="h-[2px] w-12 bg-primary"></div>
+<p class="font-label text-xl text-primary font-medium tracking-tight">Full Stack Developer</p>
+</div>
+<p class="text-on-surface-variant text-lg max-w-xl mb-10 leading-relaxed font-body">
+          Crafting digital experiences where logic meets artistry. Navigating the kinetic void of modern web architecture with precision and purpose.
+        </p>
+<div class="flex flex-wrap gap-4 justify-center md:justify-start">
+<button class="primary-gradient-btn text-on-primary px-8 py-4 rounded-full font-label font-bold tracking-widest uppercase text-sm hover:shadow-[0_0_20px_rgba(83,224,118,0.4)] transition-all">
+            Explore My Work
+          </button>
+<button class="bg-surface-container-high/40 border border-outline-variant/15 backdrop-blur-md text-on-surface px-8 py-4 rounded-full font-label font-bold tracking-widest uppercase text-sm hover:bg-surface-container-high transition-all">
+            Get In Touch
+          </button>
+</div>
+</div>
+<div class="flex-1 relative flex justify-center">
+<!-- Floating Avatar Container -->
+<div class="relative w-72 h-72 md:w-96 md:h-96">
+<div class="absolute inset-0 rounded-full bg-primary/20 animate-pulse blur-2xl"></div>
+<div class="absolute -inset-4 rounded-full border border-primary/20 animate-spin-slow"></div>
+<img class="relative z-10 w-full h-full object-cover rounded-full shadow-2xl shadow-black/60 border-4 border-surface-container-high" data-alt="Modern close-up portrait of a professional male developer with subtle green studio lighting and tech aesthetic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBYsQApAfn1VrfbaeRSZSMC-K0DPc7xeA5rpVFR_NKL5dsAiwlFSfz1_iUADUYj2OdSd3GGSgjz_k-WTpGnxQ737p6XVpISCbQe3d9qSfBjHZE-RBEo8Y-FFDJ-JUc545ITyuEBUcdM-AKA0ILafIYubkYes7lH7j5C1UVpIyVVAB0zF2A-ZrFCoTRgC2qhniSdE1pLZdPkd-iuZv9OAbk3lpGzB9YzA_9m-ruVYJnt4ViLPQRyC27kFJKSWIr9gPp7t8I3OvF1OO8"/>
+<!-- Floating Nodes -->
+<div class="absolute top-0 -right-4 bg-surface-container-high p-4 rounded-xl shadow-xl glass-card">
+<span class="material-symbols-outlined text-primary text-3xl">terminal</span>
+</div>
+<div class="absolute bottom-8 -left-8 bg-surface-container-high p-4 rounded-xl shadow-xl glass-card">
+<span class="material-symbols-outlined text-primary text-3xl">deployed_code</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Stats Grid -->
+<section class="py-24 px-8 relative">
+<div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+<div class="bg-surface-container-low p-12 rounded-3xl flex flex-col items-center text-center shadow-2xl transition-transform hover:-translate-y-2 group">
+<span class="font-headline text-5xl font-extrabold text-primary mb-2 group-hover:scale-110 transition-transform">4+</span>
+<span class="font-label text-xs uppercase tracking-widest text-on-surface-variant">Years Experience</span>
+</div>
+<div class="bg-surface-container-low p-12 rounded-3xl flex flex-col items-center text-center shadow-2xl transition-transform hover:-translate-y-2 group">
+<span class="font-headline text-5xl font-extrabold text-primary mb-2 group-hover:scale-110 transition-transform">8+</span>
+<span class="font-label text-xs uppercase tracking-widest text-on-surface-variant">High-End Projects</span>
+</div>
+<div class="bg-surface-container-low p-12 rounded-3xl flex flex-col items-center text-center shadow-2xl transition-transform hover:-translate-y-2 group">
+<span class="font-headline text-5xl font-extrabold text-primary mb-2 group-hover:scale-110 transition-transform">3.45</span>
+<span class="font-label text-xs uppercase tracking-widest text-on-surface-variant">GPA Excellence</span>
+</div>
+</div>
+</section>
+<!-- Featured Projects (Bento Grid) -->
+<section class="py-24 px-8 max-w-7xl mx-auto">
+<div class="mb-16 flex flex-col md:flex-row md:items-end justify-between gap-8">
+<div>
+<h2 class="font-headline text-4xl md:text-6xl font-extrabold tracking-tighter mb-4 text-on-surface">Curated <span class="text-primary-container">Orbits</span></h2>
+<p class="text-on-surface-variant font-body text-lg max-w-md">A selection of technical explorations and architectural achievements.</p>
+</div>
+<a class="font-label text-primary hover:text-primary-fixed transition-colors flex items-center gap-2 text-sm uppercase tracking-widest font-bold" href="#">
+        View All Lab Work <span class="material-symbols-outlined">arrow_outward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-8">
+<!-- Project 1: Large Card -->
+<div class="md:col-span-8 group relative overflow-hidden rounded-[2rem] bg-surface-container-low aspect-video md:aspect-auto">
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10"></div>
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Abstract visualization of complex data structures and neural networks with glowing green nodes and dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDuIQRm10IhK9GYuTvaw16QiLm8H0YWfm2yFIdWhrgsY5MWEJF7XNOqxbCXbsLCqT1hBvgFKi-TQPAyeaHfsxIVQUK30ahz6sc8ZQH-MkXseqP2AvGULbQlHjXSmi9nLax6_Zxft411hew_aGKu4IiEZj15PmeO5DUUSOx9jcE3uYIjaULnK-yq8QHaMzx30eVkqWs8ig5J69H210v737Aja9KkNKZouujbjxD0wEebGCcU9CmWHJ8UZiTVrD5j7uy6YAdkwNnFuo0G"/>
+<div class="absolute bottom-0 left-0 p-10 z-20 w-full">
+<div class="flex gap-2 mb-4">
+<span class="bg-surface-container-highest/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-label uppercase tracking-widest text-primary-fixed">React</span>
+<span class="bg-surface-container-highest/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-label uppercase tracking-widest text-primary-fixed">WebGL</span>
+</div>
+<h3 class="font-headline text-3xl font-bold mb-2">Neural Nexus CMS</h3>
+<p class="text-on-surface-variant font-body text-sm max-w-md mb-6">A decentralized content engine utilizing graph databases for hyper-dynamic routing.</p>
+<button class="w-12 h-12 rounded-full border border-outline-variant/30 flex items-center justify-center group-hover:bg-primary group-hover:text-on-primary transition-all duration-300">
+<span class="material-symbols-outlined">east</span>
+</button>
+</div>
+</div>
+<!-- Project 2: Vertical Card -->
+<div class="md:col-span-4 group relative overflow-hidden rounded-[2rem] bg-surface-container-low">
+<div class="absolute inset-0 bg-gradient-to-t from-background via-transparent to-transparent z-10"></div>
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Sleek dark smartphone mockup showing a minimalist dashboard UI with spotify green accents and glassmorphism cards" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDadvQcpFcY0OIKi2GfRw_YDF0eR7H2kRF7cSJRtR4EyH3zEsu9fFv2j5uDOUxv7GrSus4mySDi40aGZIYqydtGAjZ9uAB1PZ5Aoz3jWwmoYx2gM9vY8ujkIc6D4qV71WD8JVaiNjCdLYqMEb4uin0P5ujdtLjpkIi3YPkPCY82gmE3p8VUpNTgvkKjdPxrierNScmXko9igRmZ6M9G20XicSao0xs5LzDzEQp2iUr2yM_qQwda7FAKXoE253iTrfyl8pORfgPEYN4x"/>
+<div class="absolute bottom-0 left-0 p-10 z-20">
+<div class="flex gap-2 mb-4">
+<span class="bg-surface-container-highest/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-label uppercase tracking-widest text-primary-fixed">Mobile</span>
+</div>
+<h3 class="font-headline text-2xl font-bold mb-2">Void Wallet</h3>
+<p class="text-on-surface-variant font-body text-sm mb-6">Minimalist crypto interface focusing on zero-gravity motion design.</p>
+</div>
+</div>
+<!-- Project 3: Wide Card -->
+<div class="md:col-span-12 group relative overflow-hidden rounded-[2rem] bg-surface-container-low h-80">
+<div class="absolute inset-0 bg-gradient-to-r from-background via-background/40 to-transparent z-10"></div>
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" data-alt="Professional server room with blue and green led lights glowing in the dark, representing high performance infrastructure" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDe07cb2CPn0oUSj7SeQRvp8zOoRJcpYLLviLsTli7UeZnnyIgAoQvHFjWKGTSz_N8a5s3Q8sbIeHinQU_9fHArchyIuXJ3i2uIP_Krjbr8oe4keMMzoSCBzu2eZTQRczdJ35gaG2JV8J5qKulcBsnAppxkogfdbiGhTlv-uvcz6vLft8RZGL1YnZm4rkvT4qRWFjkpZ0NjSCyeGv5xf_l1UEBn8rMpdjjNB9JibiGD-2K8NW6SwLQoDU4h3R5GlVdVHakb_VqNZM-r"/>
+<div class="absolute inset-0 flex flex-col justify-center p-12 z-20">
+<div class="flex gap-2 mb-4">
+<span class="bg-surface-container-highest/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-label uppercase tracking-widest text-primary-fixed">Infrastructure</span>
+</div>
+<h3 class="font-headline text-3xl font-bold mb-2">Atmosphere Cloud</h3>
+<p class="text-on-surface-variant font-body text-sm max-w-lg">Serverless orchestration layer for heavy-load financial transactions.</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Skills Floating Nodes -->
+<section class="py-32 px-8 overflow-hidden bg-surface-container-lowest relative">
+<div class="max-w-6xl mx-auto text-center mb-20">
+<h2 class="font-label text-xs uppercase tracking-[0.4em] text-primary mb-4">Technological Core</h2>
+<h3 class="font-headline text-5xl font-bold tracking-tighter">The Arsenal</h3>
+</div>
+<div class="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto">
+<!-- Skill Node -->
+<div class="flex items-center gap-3 bg-surface-container-high/40 border border-outline-variant/10 px-6 py-4 rounded-full glass-card hover:border-primary/50 transition-all cursor-default">
+<span class="material-symbols-outlined text-primary">javascript</span>
+<span class="font-label font-bold text-sm tracking-widest uppercase">JavaScript</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-high/40 border border-outline-variant/10 px-6 py-4 rounded-full glass-card hover:border-primary/50 transition-all cursor-default">
+<span class="material-symbols-outlined text-primary">data_object</span>
+<span class="font-label font-bold text-sm tracking-widest uppercase">TypeScript</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-high/40 border border-outline-variant/10 px-6 py-4 rounded-full glass-card hover:border-primary/50 transition-all cursor-default">
+<span class="material-symbols-outlined text-primary">token</span>
+<span class="font-label font-bold text-sm tracking-widest uppercase">React / Next.js</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-high/40 border border-outline-variant/10 px-6 py-4 rounded-full glass-card hover:border-primary/50 transition-all cursor-default">
+<span class="material-symbols-outlined text-primary">storage</span>
+<span class="font-label font-bold text-sm tracking-widest uppercase">PostgreSQL</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-high/40 border border-outline-variant/10 px-6 py-4 rounded-full glass-card hover:border-primary/50 transition-all cursor-default">
+<span class="material-symbols-outlined text-primary">cloud</span>
+<span class="font-label font-bold text-sm tracking-widest uppercase">AWS / DevOps</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-high/40 border border-outline-variant/10 px-6 py-4 rounded-full glass-card hover:border-primary/50 transition-all cursor-default">
+<span class="material-symbols-outlined text-primary">palette</span>
+<span class="font-label font-bold text-sm tracking-widest uppercase">Tailwind CSS</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-high/40 border border-outline-variant/10 px-6 py-4 rounded-full glass-card hover:border-primary/50 transition-all cursor-default">
+<span class="material-symbols-outlined text-primary">animation</span>
+<span class="font-label font-bold text-sm tracking-widest uppercase">Framer Motion</span>
+</div>
+<div class="flex items-center gap-3 bg-surface-container-high/40 border border-outline-variant/10 px-6 py-4 rounded-full glass-card hover:border-primary/50 transition-all cursor-default">
+<span class="material-symbols-outlined text-primary">api</span>
+<span class="font-label font-bold text-sm tracking-widest uppercase">GraphQL</span>
+</div>
+</div>
+</section>
+<!-- Experience Vertical Timeline -->
+<section class="py-32 px-8 max-w-4xl mx-auto">
+<div class="mb-20">
+<h2 class="font-headline text-4xl font-extrabold mb-4">Journey</h2>
+<div class="h-1 w-20 bg-primary"></div>
+</div>
+<div class="space-y-16 relative before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-[2px] before:bg-outline-variant/30">
+<!-- Exp 1 -->
+<div class="relative pl-16">
+<div class="absolute left-0 top-1 w-10 h-10 rounded-full bg-surface-container-high border-2 border-primary flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-primary text-xl">work</span>
+</div>
+<div>
+<span class="font-label text-xs text-primary font-bold tracking-widest uppercase mb-1 block">2022 — Present</span>
+<h3 class="font-headline text-2xl font-bold mb-1">Lead Full Stack Engineer</h3>
+<p class="text-on-surface-variant font-label text-sm uppercase tracking-wider mb-4">Aether Dynamics</p>
+<p class="text-on-surface-variant font-body leading-relaxed max-w-2xl">
+            Spearheading the transition to micro-frontends and implementing automated CI/CD pipelines that reduced deployment time by 40%. Directing a team of 5 developers on enterprise-grade SaaS products.
+          </p>
+</div>
+</div>
+<!-- Exp 2 -->
+<div class="relative pl-16">
+<div class="absolute left-0 top-1 w-10 h-10 rounded-full bg-surface-container-high border-2 border-outline-variant flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-surface-variant text-xl">layers</span>
+</div>
+<div>
+<span class="font-label text-xs text-on-surface-variant font-bold tracking-widest uppercase mb-1 block">2020 — 2022</span>
+<h3 class="font-headline text-2xl font-bold mb-1">Software Architect</h3>
+<p class="text-on-surface-variant font-label text-sm uppercase tracking-wider mb-4">Lumina Systems</p>
+<p class="text-on-surface-variant font-body leading-relaxed max-w-2xl">
+            Designed and maintained large-scale React applications. Focused on accessibility (WCAG 2.1) and high-performance rendering for data-heavy dashboards.
+          </p>
+</div>
+</div>
+<!-- Exp 3 -->
+<div class="relative pl-16">
+<div class="absolute left-0 top-1 w-10 h-10 rounded-full bg-surface-container-high border-2 border-outline-variant flex items-center justify-center z-10">
+<span class="material-symbols-outlined text-on-surface-variant text-xl">school</span>
+</div>
+<div>
+<span class="font-label text-xs text-on-surface-variant font-bold tracking-widest uppercase mb-1 block">2016 — 2020</span>
+<h3 class="font-headline text-2xl font-bold mb-1">Bachelor of Computer Science</h3>
+<p class="text-on-surface-variant font-label text-sm uppercase tracking-wider mb-4">Tech Institute of Excellence</p>
+<p class="text-on-surface-variant font-body leading-relaxed max-w-2xl">
+            Graduated with a 3.45 GPA. Specialized in distributed systems and Human-Computer Interaction.
+          </p>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer (Shared Component) -->
+<footer class="w-full py-12 border-t border-[#e5e2e1]/10 bg-[#131313] flex flex-col md:flex-row justify-between items-center px-12 gap-8">
+<div class="font-label text-sm text-[#e5e2e1]/40">
+      © 2024 The Kinetic Void. Built for the orbit.
+    </div>
+<div class="flex gap-8">
+<a class="text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors font-label text-sm" href="#">LinkedIn</a>
+<a class="text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors font-label text-sm" href="#">GitHub</a>
+<a class="text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors font-label text-sm" href="#">Twitter</a>
+</div>
+</footer>
+</body></html>
