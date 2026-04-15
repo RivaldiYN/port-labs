@@ -77,9 +77,10 @@ const app = new Elysia({ adapter: node() })
   // ── Global error handler ───────────────────────────────────────────────────
   .onError(({ code, error, set }) => {
     const timestamp = new Date().toISOString()
+    const msg = (error as Error).message ?? String(error)
 
     // Log error
-    console.error(`[${timestamp}] ERROR ${code}:`, error.message)
+    console.error(`[${timestamp}] ERROR ${code}:`, msg)
 
     switch (code) {
       case 'NOT_FOUND':
@@ -88,11 +89,7 @@ const app = new Elysia({ adapter: node() })
 
       case 'VALIDATION':
         set.status = 422
-        return { success: false, data: null, message: 'Validasi gagal', code, detail: error.message }
-
-      case 'UNAUTHORIZED':
-        set.status = 401
-        return { success: false, data: null, message: 'Tidak terautentikasi', code }
+        return { success: false, data: null, message: 'Validasi gagal', code, detail: msg }
 
       case 'PARSE':
         set.status = 400
@@ -106,7 +103,7 @@ const app = new Elysia({ adapter: node() })
           data: null,
           message: process.env.NODE_ENV === 'production'
             ? 'Terjadi kesalahan server'
-            : error.message,
+            : msg,
           code,
         }
     }
