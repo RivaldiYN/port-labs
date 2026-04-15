@@ -31,6 +31,7 @@ function ProjectModal({
     try {
       const techStack = techInput.split(',').map(s => s.trim()).filter(Boolean)
       await onSave({ ...form, techStack })
+      // onSave awaits fetchAll, so data is ready — close modal now
       onClose()
     } catch (e) {
       setErr((e as Error).message)
@@ -204,15 +205,15 @@ export default function CmsProjectsPage() {
     fetchAll(search)
   }, [search, fetchAll])
 
-  const handleSave = async (data: Partial<Project>) => {
+  const handleSave = async (formData: Partial<Project>) => {
     if (editProject === 'new') {
-      await createProject(data)
+      await createProject(formData)
       showToast('✅ Project berhasil dibuat')
     } else if (editProject) {
-      await updateProject(editProject.id, data)
+      await updateProject(editProject.id, formData)
       showToast('✅ Project berhasil diupdate')
     }
-    fetchAll(search)
+    await fetchAll(search)
   }
 
   const handleDelete = async () => {
@@ -220,13 +221,13 @@ export default function CmsProjectsPage() {
     await deleteProject(deleteTarget.id)
     setDeleteTarget(null)
     showToast('🗑️ Project berhasil dihapus')
-    fetchAll(search)
+    await fetchAll(search)
   }
 
   const handleToggle = async (id: string) => {
     await togglePublish(id)
     showToast('📡 Status publikasi diubah')
-    fetchAll(search)
+    await fetchAll(search)
   }
 
   const handleLogout = async () => {

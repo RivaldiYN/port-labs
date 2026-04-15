@@ -2,6 +2,17 @@ import { useState, useEffect, useCallback } from 'react'
 
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
+// Strip null and empty strings → undefined so they're omitted from JSON (avoids Elysia validation error)
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function sanitize(obj: Record<string, any>): Record<string, any> {
+  const result: Record<string, any> = {}
+  for (const [k, v] of Object.entries(obj)) {
+    if (v === null || v === '') result[k] = undefined
+    else result[k] = v
+  }
+  return result
+}
+
 export interface Project {
   id: string
   title: string
@@ -80,8 +91,11 @@ export function useCmsProjects(token: string | null) {
 
   const fetchAll = useCallback(async (search = '') => {
     if (!token) return
-    setLoading(true)
+    // Don't wipe existing data — only show loader on first fetch
     setError(null)
+    setLoading(prev => prev) // keep true only on initial load; we set it below conditionally
+    const isFirstLoad = !data.length
+    if (isFirstLoad) setLoading(true)
     try {
       const q = search ? `?search=${encodeURIComponent(search)}` : ''
       const res  = await fetch(`${API}/api/cms/projects${q}`, {
@@ -96,7 +110,7 @@ export function useCmsProjects(token: string | null) {
     } finally {
       setLoading(false)
     }
-  }, [token])
+  }, [token]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => { fetchAll() }, [fetchAll])
 
@@ -104,7 +118,7 @@ export function useCmsProjects(token: string | null) {
     const res  = await fetch(`${API}/api/cms/projects`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify(body),
+      body: JSON.stringify(sanitize(body)),
     })
     const json = await res.json()
     if (!res.ok) throw new Error(json.message ?? 'Gagal membuat project')
@@ -115,7 +129,7 @@ export function useCmsProjects(token: string | null) {
     const res  = await fetch(`${API}/api/cms/projects/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
-      body: JSON.stringify(body),
+      body: JSON.stringify(sanitize(body)),
     })
     const json = await res.json()
     if (!res.ok) throw new Error(json.message ?? 'Gagal mengupdate project')

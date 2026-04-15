@@ -6,13 +6,15 @@ import { projects } from '../../db/schema'
 import { ok } from '../../index'
 
 // ── Shared project body schema ────────────────────────────────────────────────
+const NullableStr = t.Optional(t.Union([t.String(), t.Null()]))
+
 const ProjectBody = t.Object({
   title:        t.String({ minLength: 1 }),
-  description:  t.Optional(t.String()),
-  content:      t.Optional(t.String()),
-  thumbnailUrl: t.Optional(t.String()),
-  demoUrl:      t.Optional(t.String()),
-  repoUrl:      t.Optional(t.String()),
+  description:  NullableStr,
+  content:      NullableStr,
+  thumbnailUrl: NullableStr,
+  demoUrl:      NullableStr,
+  repoUrl:      NullableStr,
   techStack:    t.Optional(t.Array(t.String())),
   isFeatured:   t.Optional(t.Boolean()),
   isPublished:  t.Optional(t.Boolean()),
