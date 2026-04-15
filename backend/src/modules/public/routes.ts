@@ -1,8 +1,9 @@
-import Elysia from 'elysia'
+import { Elysia } from 'elysia'
+import { publicProjectRoutes } from './projectRoutes'
 
 /**
- * Public routes — profile, projects, posts, experiences, skills
- * Full implementation: ISSUE-006, ISSUE-007, ISSUE-008, ISSUE-010
+ * Public routes — /api/*
+ * Aggregates all public-facing endpoints.
  */
-export const publicRoutes = new Elysia({ prefix: '/api' })
-  .get('/ping', () => ({ module: 'public', status: 'stub — see ISSUE-006 to ISSUE-010' }))
+export const publicRoutes = new Elysia()
+  .use(publicProjectRoutes)

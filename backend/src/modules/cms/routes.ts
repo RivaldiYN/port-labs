@@ -1,8 +1,15 @@
-import Elysia from 'elysia'
+import { Elysia } from 'elysia'
+import { authPlugin, requireAuth } from '../auth/routes'
+import { cmsProjectRoutes } from '../public/projectRoutes'
 
 /**
- * CMS routes — admin-only CRUD for projects, posts, media, profile
- * Full implementation: ISSUE-006 to ISSUE-010
+ * CMS routes — /api/cms/*
+ * All routes require Bearer JWT token (admin only).
  */
-export const cmsRoutes = new Elysia({ prefix: '/api/cms' })
-  .get('/ping', () => ({ module: 'cms', status: 'stub — see ISSUE-006 to ISSUE-010' }))
+export const cmsRoutes = new Elysia()
+  .use(authPlugin)
+  // Auth guard for ALL CMS routes
+  .onBeforeHandle(({ currentAdmin, set }) => {
+    return requireAuth({ currentAdmin, set })
+  })
+  .use(cmsProjectRoutes)
