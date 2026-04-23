@@ -1,10 +1,12 @@
-﻿import { Link } from "react-router-dom"
+import { Link } from "react-router-dom"
 import { useProfile } from "../hooks/useProfile"
 import { usePosts } from "../hooks/usePosts"
+import { useProjects } from "../hooks/useProjects"
 
 export default function HomePage() {
   const { data: profile } = useProfile()
   const { data: latestPosts, loading: postsLoading } = usePosts({ limit: 3, sort: "newest" })
+  const { data: featuredProjects, loading: projectsLoading } = useProjects({ limit: 4, featured: true })
 
   const heroName    = profile?.name    ?? "Rivaldi Yonathan Nainggolan"
   const heroInitials = heroName.split(" ").map((n:string) => n[0]).slice(0,3).join("").toUpperCase()
@@ -76,8 +78,44 @@ export default function HomePage() {
           <Link to="/projects" className="font-label text-[#53e076] hover:text-[#72fe8f] transition-colors flex items-center gap-2 text-sm uppercase tracking-widest font-bold">View All Lab Work <span className="material-symbols-outlined text-base" aria-hidden="true">arrow_outward</span></Link>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
-          <div className="md:col-span-8 group relative overflow-hidden rounded-[2rem] bg-[#1c1b1b] aspect-video md:aspect-auto md:h-80"><div className="absolute inset-0 bg-gradient-to-br from-[#1db954]/20 to-transparent" /><div className="absolute inset-0 flex items-center justify-center opacity-10"><span className="material-symbols-outlined text-[#53e076]" style={{fontSize:"200px"}} aria-hidden="true">monitoring</span></div><div className="absolute inset-0 bg-gradient-to-t from-[#131313] via-transparent to-transparent z-10" /><div className="absolute bottom-0 left-0 p-8 md:p-10 z-20 w-full"><div className="flex gap-2 mb-3">{["ReactJS","TypeScript","OpenStreetMap"].map(t => <span key={t} className="bg-[#353534]/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-label uppercase tracking-widest text-[#72fe8f]">{t}</span>)}</div><h3 className="font-headline text-2xl md:text-3xl font-bold mb-2 text-[#e5e2e1]">Dashboard ML Monitoring</h3><p className="text-[#bccbb9] font-body text-sm max-w-md mb-4">Real-time monitoring dashboard with ML integration and OpenStreetMap heatmap.</p></div></div>
-          <div className="md:col-span-4 group relative overflow-hidden rounded-[2rem] bg-[#1c1b1b] min-h-[280px]"><div className="absolute inset-0 bg-gradient-to-br from-[#1c5329]/30 to-transparent" /><div className="absolute inset-0 flex items-center justify-center opacity-10"><span className="material-symbols-outlined text-[#53e076]" style={{fontSize:"180px"}} aria-hidden="true">groups</span></div><div className="absolute inset-0 bg-gradient-to-t from-[#131313] via-transparent z-10" /><div className="absolute bottom-0 left-0 p-8 z-20"><div className="flex gap-2 mb-3"><span className="bg-[#353534]/60 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-label uppercase tracking-widest text-[#72fe8f]">Laravel</span></div><h3 className="font-headline text-xl md:text-2xl font-bold mb-2 text-[#e5e2e1]">HRIS — Kimia Farma</h3><p className="text-[#bccbb9] font-body text-sm">Intern HR system with payroll, attendance &amp; Redis caching.</p></div></div>
+          {projectsLoading ? (
+            <div className="md:col-span-12 py-12 flex justify-center"><div className="w-8 h-8 rounded-full border-2 border-[#1db954] border-t-transparent animate-spin" /></div>
+          ) : featuredProjects.length > 0 ? (
+            featuredProjects.map((project, index) => {
+              const isWide = index % 4 === 0 || index % 4 === 3
+              const spanClass = isWide ? "md:col-span-8 aspect-video md:aspect-auto md:h-80" : "md:col-span-4 min-h-[280px]"
+              const icon = isWide ? "monitoring" : "deployed_code"
+              
+              return (
+                <Link key={project.id} to="/projects" className={`${spanClass} group relative overflow-hidden rounded-[2rem] bg-[#1c1b1b] block`}>
+                  {project.thumbnailUrl ? (
+                    <img src={project.thumbnailUrl} alt={project.title} className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:opacity-70 transition-all duration-700 group-hover:scale-105" onError={e => (e.currentTarget.style.display = 'none')} />
+                  ) : (
+                    <>
+                      <div className={`absolute inset-0 bg-gradient-to-br ${isWide ? 'from-[#1db954]/20' : 'from-[#1c5329]/30'} to-transparent`} />
+                      <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                        <span className="material-symbols-outlined text-[#53e076]" style={{fontSize: isWide ? "200px" : "180px"}} aria-hidden="true">{icon}</span>
+                      </div>
+                    </>
+                  )}
+                  <div className={`absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/${project.thumbnailUrl ? '80' : 'transparent'} to-transparent z-10 transition-opacity duration-500`} />
+                  <div className={`absolute bottom-0 left-0 p-8 ${isWide ? 'md:p-10' : ''} z-20 w-full`}>
+                    <div className="flex gap-2 mb-3">
+                      {(project.techStack ?? []).slice(0, 3).map(t => (
+                        <span key={t} className="bg-[#353534]/80 backdrop-blur-md px-3 py-1 rounded-full text-[10px] font-label uppercase tracking-widest text-[#72fe8f] border border-[#72fe8f]/10 shadow-lg">{t}</span>
+                      ))}
+                    </div>
+                    <h3 className={`font-headline ${isWide ? 'text-2xl md:text-3xl' : 'text-xl md:text-2xl'} font-bold mb-2 text-[#e5e2e1] group-hover:text-[#53e076] transition-colors`}>{project.title}</h3>
+                    {project.description && (
+                      <p className="text-[#bccbb9] font-body text-sm max-w-md line-clamp-2">{project.description}</p>
+                    )}
+                  </div>
+                </Link>
+              )
+            })
+          ) : (
+            <div className="md:col-span-12 py-10 text-center text-[#e5e2e1]/30 font-label tracking-widest text-xs uppercase">Tidak ada project unggulan</div>
+          )}
         </div>
       </section>
 
