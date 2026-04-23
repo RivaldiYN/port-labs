@@ -2,6 +2,7 @@ import { Elysia } from 'elysia'
 import { authPlugin, requireAuth } from '../auth/routes'
 import { cmsProjectRoutes } from '../public/projectRoutes'
 import { cmsProfileRoutes } from '../public/profileRoutes'
+import { cmsPostRoutes } from '../public/postRoutes'
 
 /**
  * CMS routes — /api/cms/*
@@ -15,3 +16,4 @@ export const cmsRoutes = new Elysia()
   })
   .use(cmsProjectRoutes)
   .use(cmsProfileRoutes)
+  .use(cmsPostRoutes)

@@ -1,6 +1,7 @@
 import { Elysia } from 'elysia'
 import { publicProjectRoutes } from './projectRoutes'
 import { publicProfileRoutes } from './profileRoutes'
+import { publicPostRoutes } from './postRoutes'
 
 /**
  * Public routes — /api/*
@@ -9,3 +10,4 @@ import { publicProfileRoutes } from './profileRoutes'
 export const publicRoutes = new Elysia()
   .use(publicProjectRoutes)
   .use(publicProfileRoutes)
+  .use(publicPostRoutes)
