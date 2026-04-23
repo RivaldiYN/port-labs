@@ -10,6 +10,7 @@ import CmsDashboardPage from './pages/cms/CmsDashboardPage'
 import CmsProjectsPage from './pages/cms/CmsProjectsPage'
 import CmsProfilePage from './pages/cms/CmsProfilePage'
 import CmsPostsPage from './pages/cms/CmsPostsPage'
+import CmsMediaPage from './pages/cms/CmsMediaPage'
 import './index.css'
 
 export default function App() {
@@ -31,6 +32,7 @@ export default function App() {
           <Route path="/cms/projects" element={<RequireAuth><CmsProjectsPage /></RequireAuth>} />
           <Route path="/cms/profile" element={<RequireAuth><CmsProfilePage /></RequireAuth>} />
           <Route path="/cms/posts" element={<RequireAuth><CmsPostsPage /></RequireAuth>} />
+          <Route path="/cms/media" element={<RequireAuth><CmsMediaPage /></RequireAuth>} />
           <Route path="/cms/*" element={<RequireAuth><CmsDashboardPage /></RequireAuth>} />
         </Routes>
       </BrowserRouter>

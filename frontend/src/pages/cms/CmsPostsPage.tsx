@@ -1,7 +1,8 @@
-﻿import { useState, useCallback } from "react"
+import { useState, useCallback } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import { useCmsPosts, type Post } from "../../hooks/usePosts"
+import { useCmsMedia, type MediaItem } from "../../hooks/useMedia"
 
 const emptyForm = (): Partial<Post> => ({ title: "", excerpt: "", content: "", coverUrl: "", tags: [], isPublished: false })
 
@@ -15,11 +16,38 @@ const NAV = [
 
 const inputCls = "w-full bg-[#131313] border border-[#3d4a3d]/30 focus:border-[#1db954] focus:outline-none rounded-xl py-3 px-4 text-[#e5e2e1] text-sm transition-all focus:shadow-[0_0_0_3px_rgba(29,185,84,0.1)]"
 
-function PostModal({ post, onClose, onSave }: { post: Post | null; onClose: () => void; onSave: (d: Partial<Post>) => Promise<void> }) {
+function MediaPickerModal({ token, onPick, onClose }: { token: string | null; onPick: (url: string) => void; onClose: () => void }) {
+  const { data, loading } = useCmsMedia(token)
+  const images = data.filter(m => m.mimeType?.startsWith("image/"))
+  return (
+    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Pilih gambar dari media library">
+      <div className="bg-[#1c1b1b] rounded-3xl w-full max-w-3xl max-h-[80vh] overflow-hidden border border-[#3d4a3d]/20 shadow-2xl flex flex-col">
+        <div className="flex items-center justify-between px-6 py-5 border-b border-[#3d4a3d]/20 shrink-0">
+          <h3 className="font-headline font-bold text-[#e5e2e1]">Media Library</h3>
+          <button onClick={onClose} aria-label="Tutup" className="w-8 h-8 rounded-full bg-[#2a2a2a] flex items-center justify-center hover:bg-[#353534] transition-all"><span className="material-symbols-outlined text-lg" aria-hidden="true">close</span></button>
+        </div>
+        <div className="overflow-y-auto p-6 flex-1">
+          {loading && <div className="flex justify-center py-10"><div className="w-8 h-8 border-2 border-[#53e076] border-t-transparent rounded-full animate-spin" /></div>}
+          {!loading && images.length === 0 && <p className="text-center text-[#e5e2e1]/40 font-label text-xs py-10">Belum ada gambar. Upload di halaman Media.</p>}
+          <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
+            {images.map(m => (
+              <button key={m.id} onClick={() => { onPick(m.url); onClose() }} aria-label={`Pilih ${m.originalName ?? m.filename}`} className="group aspect-square rounded-xl overflow-hidden border-2 border-transparent hover:border-[#53e076] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#53e076]">
+                <img src={m.url} alt={m.altText ?? m.originalName ?? ""} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
+              </button>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function PostModal({ post, token, onClose, onSave }: { post: Post | null; token: string | null; onClose: () => void; onSave: (d: Partial<Post>) => Promise<void> }) {
   const [form, setForm] = useState<Partial<Post>>(post ?? emptyForm())
   const [tagInput, setTagInput] = useState((post?.tags ?? []).join(", "))
   const [saving, setSaving] = useState(false)
   const [err, setErr] = useState("")
+  const [showPicker, setShowPicker] = useState(false)
   const set = (k: keyof Post, v: unknown) => setForm(f => ({ ...f, [k]: v }))
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true); setErr("")
@@ -29,6 +57,7 @@ function PostModal({ post, onClose, onSave }: { post: Post | null; onClose: () =
   }
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label={post ? "Edit Post" : "Buat Post Baru"}>
+      {showPicker && <MediaPickerModal token={token} onPick={url => set("coverUrl", url)} onClose={() => setShowPicker(false)} />}
       <div className="bg-[#1c1b1b] rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-[#3d4a3d]/20 shadow-2xl">
         <div className="flex items-center justify-between px-8 pt-8 pb-6 border-b border-[#3d4a3d]/20">
           <h2 className="font-headline text-xl font-bold text-[#e5e2e1]">{post ? "Edit Post" : "Buat Post Baru"}</h2>
@@ -40,7 +69,13 @@ function PostModal({ post, onClose, onSave }: { post: Post | null; onClose: () =
           <div><label htmlFor="post-excerpt" className="font-label text-[10px] uppercase tracking-widest text-[#e5e2e1]/50 mb-2 block">Excerpt</label><textarea id="post-excerpt" rows={3} value={form.excerpt ?? ""} onChange={e => set("excerpt", e.target.value)} placeholder="Ringkasan singkat (auto-generate jika kosong)..." className={inputCls + " resize-none"} /></div>
           <div><label htmlFor="post-content" className="font-label text-[10px] uppercase tracking-widest text-[#e5e2e1]/50 mb-2 block">Content</label><textarea id="post-content" rows={8} value={form.content ?? ""} onChange={e => set("content", e.target.value)} placeholder="Konten post dalam markdown..." className={inputCls + " resize-none"} /></div>
           <div><label htmlFor="post-tags" className="font-label text-[10px] uppercase tracking-widest text-[#e5e2e1]/50 mb-2 block">Tags <span className="text-[#e5e2e1]/30">(pisahkan koma)</span></label><input id="post-tags" value={tagInput} onChange={e => setTagInput(e.target.value)} placeholder="elysia, typescript, react" className={inputCls} /></div>
-          <div><label htmlFor="post-cover" className="font-label text-[10px] uppercase tracking-widest text-[#e5e2e1]/50 mb-2 block">Cover URL</label><input id="post-cover" type="url" value={form.coverUrl ?? ""} onChange={e => set("coverUrl", e.target.value)} placeholder="https://..." className={inputCls} /></div>
+          <div><label htmlFor="post-cover" className="font-label text-[10px] uppercase tracking-widest text-[#e5e2e1]/50 mb-2 block">Cover URL</label>
+            <div className="flex gap-2">
+              <input id="post-cover" type="url" value={form.coverUrl ?? ""} onChange={e => set("coverUrl", e.target.value)} placeholder="https://... atau pilih dari media" className={inputCls} />
+              <button type="button" onClick={() => setShowPicker(true)} title="Pilih dari Media Library" aria-label="Pilih gambar dari media library" className="shrink-0 w-11 h-11 rounded-xl bg-[#2a2a2a] flex items-center justify-center hover:bg-[#53e076]/20 hover:text-[#53e076] border border-[#3d4a3d]/20 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#53e076]"><span className="material-symbols-outlined text-lg" aria-hidden="true">perm_media</span></button>
+            </div>
+            {form.coverUrl && form.coverUrl.startsWith("http") && <img src={form.coverUrl} alt="Cover preview" className="mt-2 w-full h-28 object-cover rounded-xl border border-[#3d4a3d]/20" onError={e => (e.currentTarget.style.display = "none")} />}
+          </div>
           <label className="flex items-center gap-3 cursor-pointer group">
             <div onClick={() => set("isPublished", !form.isPublished)} className={`w-11 h-6 rounded-full relative transition-colors duration-300 cursor-pointer ${form.isPublished ? "bg-[#1db954]" : "bg-[#353534]"}`}><div className={`absolute top-1 left-1 w-4 h-4 bg-white rounded-full shadow transition-transform duration-300 ${form.isPublished ? "translate-x-5" : "translate-x-0"}`} /></div>
             <span className="font-label text-xs uppercase tracking-widest text-[#e5e2e1]/70">Published</span>
@@ -98,7 +133,7 @@ export default function CmsPostsPage() {
 
   return (
     <div className="bg-[#131313] text-[#e5e2e1] min-h-screen flex">
-      {editPost !== null && <PostModal post={editPost === "new" ? null : editPost} onClose={() => setEditPost(null)} onSave={handleSave} />}
+      {editPost !== null && <PostModal post={editPost === "new" ? null : editPost} token={accessToken} onClose={() => setEditPost(null)} onSave={handleSave} />}
       {deleteTarget && <ConfirmModal title={deleteTarget.title} onConfirm={handleDelete} onCancel={() => setDeleteTarget(null)} />}
       {toast && <div role="status" aria-live="polite" className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#2a2a2a] border border-[#53e076]/30 px-6 py-3 rounded-full font-label text-sm text-[#e5e2e1] shadow-2xl animate-slide-up">{toast}</div>}
       {sidebarOpen && <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} aria-hidden="true" />}
