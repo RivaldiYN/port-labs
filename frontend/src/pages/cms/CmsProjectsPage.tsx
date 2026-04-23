@@ -1,4 +1,4 @@
-﻿import { useState, useCallback } from 'react'
+import { useState, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useCmsProjects, type Project } from '../../hooks/useProjects'
@@ -12,12 +12,13 @@ const emptyForm = (): Partial<Project> => ({
 
 // â”€â”€ Modal: Create / Edit â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function ProjectModal({
-  project, token, onClose, onSave,
+  project, token, onClose, onSave, onSaveSuccess,
 }: {
   project: Project | null
   token: string | null
   onClose: () => void
   onSave: (data: Partial<Project>) => Promise<void>
+  onSaveSuccess: () => void
 }) {
   const [form, setForm]       = useState<Partial<Project>>(project ?? emptyForm())
   const [techInput, setTech]  = useState((project?.techStack ?? []).join(', '))
@@ -33,13 +34,14 @@ function ProjectModal({
     try {
       const techStack = techInput.split(',').map(s => s.trim()).filter(Boolean)
       await onSave({ ...form, techStack })
-      // onSave awaits fetchAll, so data is ready â€” close modal now
-      onClose()
+      // API call succeeded — let parent close modal and refresh
+      onSaveSuccess()
     } catch (e) {
       setErr((e as Error).message)
-    } finally {
       setSaving(false)
     }
+    // Note: setSaving(false) intentionally NOT in finally
+    // because onSaveSuccess() unmounts this component
   }
 
   return (
@@ -218,15 +220,25 @@ export default function CmsProjectsPage() {
     fetchAll(search)
   }, [search, fetchAll])
 
+  // onSave: ONLY does the API call — no fetchAll here.
+  // fetchAll is triggered by handleModalClose AFTER the modal unmounts,
+  // preventing the race condition: fetchAll setState + setEditProject(null) conflicting mid-render.
   const handleSave = async (formData: Partial<Project>) => {
     if (editProject === 'new') {
       await createProject(formData)
-      showToast('âœ… Project berhasil dibuat')
     } else if (editProject) {
       await updateProject(editProject.id, formData)
-      showToast('âœ… Project berhasil diupdate')
     }
-    await fetchAll(search)
+    // fetchAll intentionally NOT called here
+  }
+
+  // Called when modal closes (cancel OR successful save)
+  const handleModalClose = async (saved = false) => {
+    setEditProject(null)          // unmount modal first
+    if (saved) {
+      await fetchAll(search)      // THEN refresh data
+      showToast('✅ Project berhasil disimpan')
+    }
   }
 
   const handleDelete = async () => {
@@ -264,8 +276,9 @@ export default function CmsProjectsPage() {
         <ProjectModal
           project={editProject === 'new' ? null : editProject}
           token={accessToken}
-          onClose={() => setEditProject(null)}
+          onClose={() => handleModalClose(false)}
           onSave={handleSave}
+          onSaveSuccess={() => handleModalClose(true)}
         />
       )}
       {deleteTarget && (

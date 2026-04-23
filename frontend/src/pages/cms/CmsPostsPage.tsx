@@ -1,4 +1,4 @@
-﻿import { useState, useCallback } from "react"
+import { useState, useCallback } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import { useCmsPosts, type Post } from "../../hooks/usePosts"
@@ -17,7 +17,7 @@ const NAV = [
 const inputCls = "w-full bg-[#131313] border border-[#3d4a3d]/30 focus:border-[#1db954] focus:outline-none rounded-xl py-3 px-4 text-[#e5e2e1] text-sm transition-all focus:shadow-[0_0_0_3px_rgba(29,185,84,0.1)]"
 
 
-function PostModal({ post, token, onClose, onSave }: { post: Post | null; token: string | null; onClose: () => void; onSave: (d: Partial<Post>) => Promise<void> }) {
+function PostModal({ post, token, onClose, onSave, onSaveSuccess }: { post: Post | null; token: string | null; onClose: () => void; onSave: (d: Partial<Post>) => Promise<void>; onSaveSuccess: () => void }) {
   const [form, setForm] = useState<Partial<Post>>(post ?? emptyForm())
   const [tagInput, setTagInput] = useState((post?.tags ?? []).join(", "))
   const [saving, setSaving] = useState(false)
@@ -25,9 +25,13 @@ function PostModal({ post, token, onClose, onSave }: { post: Post | null; token:
   const set = (k: keyof Post, v: unknown) => setForm(f => ({ ...f, [k]: v }))
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true); setErr("")
-    try { await onSave({ ...form, tags: tagInput.split(",").map(s => s.trim()).filter(Boolean) }); onClose() }
-    catch (e) { setErr((e as Error).message) }
-    finally { setSaving(false) }
+    try {
+      await onSave({ ...form, tags: tagInput.split(",").map(s => s.trim()).filter(Boolean) })
+      onSaveSuccess() // parent closes modal then refreshes
+    } catch (e) {
+      setErr((e as Error).message)
+      setSaving(false) // only reset if error; success unmounts component
+    }
   }
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label={post ? "Edit Post" : "Buat Post Baru"}>
@@ -96,9 +100,13 @@ export default function CmsPostsPage() {
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(""), 3000) }
   const handleSearch = useCallback((e: React.FormEvent) => { e.preventDefault(); fetchAll(search) }, [search, fetchAll])
   const handleSave = async (formData: Partial<Post>) => {
-    if (editPost === "new") { await createPost(formData); showToast("✅ Post berhasil dibuat") }
-    else if (editPost) { await updatePost(editPost.id, formData); showToast("✅ Post berhasil diupdate") }
-    await fetchAll(search)
+    if (editPost === "new") { await createPost(formData) }
+    else if (editPost) { await updatePost(editPost.id, formData) }
+    // fetchAll NOT here — called from handleModalClose after unmount
+  }
+  const handleModalClose = async (saved = false) => {
+    setEditPost(null)                           // close modal first
+    if (saved) { await fetchAll(search); showToast("✅ Post berhasil disimpan") }
   }
   const handleDelete = async () => { if (!deleteTarget) return; await deletePost(deleteTarget.id); setDeleteTarget(null); showToast("🗑️ Post berhasil dihapus"); await fetchAll(search) }
   const handleToggle = async (id: string) => { await togglePublish(id); showToast("📡 Status diubah"); await fetchAll(search) }
@@ -106,7 +114,7 @@ export default function CmsPostsPage() {
 
   return (
     <div className="bg-[#131313] text-[#e5e2e1] min-h-screen flex">
-      {editPost !== null && <PostModal post={editPost === "new" ? null : editPost} token={accessToken} onClose={() => setEditPost(null)} onSave={handleSave} />}
+      {editPost !== null && <PostModal post={editPost === "new" ? null : editPost} token={accessToken} onClose={() => handleModalClose(false)} onSave={handleSave} onSaveSuccess={() => handleModalClose(true)} />}
       {deleteTarget && <ConfirmModal title={deleteTarget.title} onConfirm={handleDelete} onCancel={() => setDeleteTarget(null)} />}
       {toast && <div role="status" aria-live="polite" className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 bg-[#2a2a2a] border border-[#53e076]/30 px-6 py-3 rounded-full font-label text-sm text-[#e5e2e1] shadow-2xl animate-slide-up">{toast}</div>}
       {sidebarOpen && <div className="fixed inset-0 bg-black/60 z-40 lg:hidden" onClick={() => setSidebarOpen(false)} aria-hidden="true" />}
