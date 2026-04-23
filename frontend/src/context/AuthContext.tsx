@@ -5,6 +5,7 @@ interface AuthState {
   admin:        Admin | null
   accessToken:  string | null
   isLoading:    boolean
+  isRefreshing: boolean
   isAuthenticated: boolean
   login:  (username: string, password: string) => Promise<{ ok: boolean; message: string }>
   logout: () => Promise<void>
@@ -21,12 +22,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [admin, setAdmin]               = useState<Admin | null>(null)
   const [accessToken, setAccessToken]   = useState<string | null>(null)
   const [isLoading, setIsLoading]       = useState(true)
+  const [isRefreshing, setIsRefreshing] = useState(false)
 
   // ── Refresh ──────────────────────────────────────────────────────────────────
   const refresh = useCallback(async (): Promise<boolean> => {
     const stored = localStorage.getItem(LS_REFRESH)
     if (!stored) return false
 
+    setIsRefreshing(true)
     try {
       const res = await fetch(`${API}/auth/refresh`, {
         method: 'POST',
@@ -45,6 +48,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       return true
     } catch {
       return false
+    } finally {
+      setIsRefreshing(false)
     }
   }, [])
 
@@ -107,7 +112,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   return (
     <AuthCtx.Provider value={{
-      admin, accessToken, isLoading,
+      admin, accessToken, isLoading, isRefreshing,
       isAuthenticated: !!admin && !!accessToken,
       login, logout, refresh,
     }}>

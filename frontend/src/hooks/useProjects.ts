@@ -1,6 +1,20 @@
 import { useState, useEffect, useCallback } from 'react'
 
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
+const LS_REFRESH = 'cms_refresh_token'
+
+/** Attempt to silently refresh access token; returns new token or null */
+async function silentRefresh(): Promise<string | null> {
+  const stored = localStorage.getItem(LS_REFRESH)
+  if (!stored) return null
+  try {
+    const res  = await fetch(`${API}/auth/refresh`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ refreshToken: stored }) })
+    const json = await res.json()
+    if (!res.ok || !json.success) { localStorage.removeItem(LS_REFRESH); return null }
+    localStorage.setItem(LS_REFRESH, json.data.refreshToken)
+    return json.data.accessToken as string
+  } catch { return null }
+}
 
 // Strip null and empty strings → undefined so they're omitted from JSON (avoids Elysia validation error)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -115,22 +129,32 @@ export function useCmsProjects(token: string | null) {
   useEffect(() => { fetchAll() }, [fetchAll])
 
   const createProject = async (body: Partial<Project>) => {
-    const res  = await fetch(`${API}/api/cms/projects`, {
+    const doRequest = async (tok: string) => fetch(`${API}/api/cms/projects`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
       body: JSON.stringify(sanitize(body)),
     })
+    let res  = await doRequest(token!)
+    if (res.status === 401) {
+      const newTok = await silentRefresh()
+      if (newTok) res = await doRequest(newTok)
+    }
     const json = await res.json()
     if (!res.ok) throw new Error(json.message ?? 'Gagal membuat project')
     return json.data as Project
   }
 
   const updateProject = async (id: string, body: Partial<Project>) => {
-    const res  = await fetch(`${API}/api/cms/projects/${id}`, {
+    const doRequest = async (tok: string) => fetch(`${API}/api/cms/projects/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
       body: JSON.stringify(sanitize(body)),
     })
+    let res  = await doRequest(token!)
+    if (res.status === 401) {
+      const newTok = await silentRefresh()
+      if (newTok) res = await doRequest(newTok)
+    }
     const json = await res.json()
     if (!res.ok) throw new Error(json.message ?? 'Gagal mengupdate project')
     return json.data as Project
