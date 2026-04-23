@@ -1,12 +1,24 @@
-﻿import { Elysia, t } from 'elysia'
+import { Elysia, t } from 'elysia'
 import { eq, desc, sql } from 'drizzle-orm'
 import { randomBytes } from 'crypto'
+import { writeFile, mkdir } from 'fs/promises'
+import { join } from 'path'
+import { existsSync } from 'fs'
 import * as Minio from 'minio'
 import { db } from '../../lib/db'
 import { media } from '../../db/schema'
 import { ok } from '../../index'
 
-// ── MinIO client (shared config) ──────────────────────────────────────────────
+// ── Serialize any thrown value to a readable string ───────────────────────────
+function errMsg(err: unknown): string {
+  if (err instanceof Error) return err.message
+  if (typeof err === 'string') return err
+  try { return JSON.stringify(err) } catch { return String(err) }
+}
+
+// ── MinIO client ──────────────────────────────────────────────────────────────
+let minioAvailable = false
+
 const minioClient = new Minio.Client({
   endPoint:  process.env.MINIO_ENDPOINT  ?? 'localhost',
   port:      Number(process.env.MINIO_PORT ?? 9000),
@@ -19,7 +31,8 @@ const BUCKET = process.env.MINIO_BUCKET ?? 'portfolio-media'
 
 async function ensureBucket() {
   try {
-    if (!(await minioClient.bucketExists(BUCKET))) {
+    const exists = await minioClient.bucketExists(BUCKET)
+    if (!exists) {
       await minioClient.makeBucket(BUCKET, 'us-east-1')
       const policy = JSON.stringify({
         Version: '2012-10-17',
@@ -27,11 +40,28 @@ async function ensureBucket() {
       })
       await minioClient.setBucketPolicy(BUCKET, policy)
     }
-  } catch { /* graceful fail */ }
+    minioAvailable = true
+    console.log('[Media] MinIO connected — bucket:', BUCKET)
+  } catch (e) {
+    console.warn('[Media] MinIO tidak tersedia, fallback ke disk lokal:', errMsg(e))
+    minioAvailable = false
+  }
 }
 ensureBucket()
 
-function buildUrl(objectName: string) {
+// ── Local disk fallback ───────────────────────────────────────────────────────
+const UPLOAD_DIR  = join(process.cwd(), 'uploads')
+const PUBLIC_BASE = process.env.PUBLIC_URL ?? `http://localhost:${process.env.PORT ?? 3000}`
+
+async function saveLocally(objectName: string, buffer: Buffer): Promise<string> {
+  const dir = join(UPLOAD_DIR, 'media')
+  if (!existsSync(dir)) await mkdir(dir, { recursive: true })
+  const filename = objectName.replace('media/', '')
+  await writeFile(join(dir, filename), buffer)
+  return `${PUBLIC_BASE}/uploads/media/${filename}`
+}
+
+function buildMinioUrl(objectName: string) {
   const endpoint = process.env.MINIO_ENDPOINT ?? 'localhost'
   const port     = process.env.MINIO_PORT ?? '9000'
   const proto    = process.env.MINIO_USE_SSL === 'true' ? 'https' : 'http'
@@ -39,8 +69,8 @@ function buildUrl(objectName: string) {
 }
 
 const ALLOWED_TYPES: Record<string, string> = {
-  'image/jpeg': 'jpg', 'image/png': 'png', 'image/webp': 'webp',
-  'image/gif': 'gif', 'application/pdf': 'pdf',
+  'image/jpeg': 'jpg', 'image/jpg': 'jpg', 'image/png': 'png',
+  'image/webp': 'webp', 'image/gif': 'gif', 'application/pdf': 'pdf',
 }
 
 // ── CMS Media routes ──────────────────────────────────────────────────────────
@@ -71,10 +101,12 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
       return { success: false, data: null, message: 'File diperlukan' }
     }
 
-    const ext = ALLOWED_TYPES[file.type]
+    // Normalize mime type
+    const mime = file.type || 'application/octet-stream'
+    const ext  = ALLOWED_TYPES[mime]
     if (!ext) {
       set.status = 400
-      return { success: false, data: null, message: 'Format tidak didukung. Gunakan JPG, PNG, WebP, GIF, atau PDF.' }
+      return { success: false, data: null, message: `Format tidak didukung (${mime}). Gunakan JPG, PNG, WebP, GIF, atau PDF.` }
     }
 
     const MAX = 5 * 1024 * 1024
@@ -84,59 +116,72 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
     }
 
     try {
-      const buffer      = Buffer.from(await file.arrayBuffer())
-      const timestamp   = Date.now()
-      const random      = randomBytes(4).toString('hex')
-      const safeName    = file.name.replace(/[^a-z0-9._-]/gi, '_').toLowerCase()
-      const objectName  = `media/${timestamp}-${random}-${safeName}`
+      const buffer     = Buffer.from(await file.arrayBuffer())
+      const timestamp  = Date.now()
+      const random     = randomBytes(4).toString('hex')
+      const safeName   = (file.name || `file.${ext}`).replace(/[^a-z0-9._-]/gi, '_').toLowerCase()
+      const objectName = `media/${timestamp}-${random}-${safeName}`
 
-      await minioClient.putObject(BUCKET, objectName, buffer, buffer.length, { 'Content-Type': file.type })
+      let url: string
+      let storage: string
 
-      const url = buildUrl(objectName)
+      if (minioAvailable) {
+        await minioClient.putObject(BUCKET, objectName, buffer, buffer.length, { 'Content-Type': mime })
+        url = buildMinioUrl(objectName)
+        storage = 'MinIO'
+        console.log('[Media] Uploaded to MinIO:', objectName)
+      } else {
+        url = await saveLocally(objectName, buffer)
+        storage = 'disk lokal'
+        console.log('[Media] Saved to disk (MinIO unavailable):', url)
+      }
 
       const [row] = await db.insert(media).values({
         filename:     objectName,
-        originalName: file.name,
-        mimeType:     file.type,
+        originalName: file.name || safeName,
+        mimeType:     mime,
         sizeBytes:    file.size,
         url,
         altText:      null,
       }).returning()
 
       set.status = 201
-      return ok(row, 'File berhasil diupload')
+      return ok(row, `File berhasil diupload (${storage})`)
     } catch (err) {
+      console.error('[Media] Upload error:', err)
       set.status = 500
-      return { success: false, data: null, message: `Upload gagal: ${(err as Error).message}` }
+      return { success: false, data: null, message: `Upload gagal: ${errMsg(err)}` }
     }
   }, {
     body: t.Object({ file: t.File({ maxSize: '5m' }) }),
-    detail: { tags: ['CMS'], summary: 'Upload file to MinIO and save metadata' },
+    detail: { tags: ['CMS'], summary: 'Upload file to MinIO or local disk and save metadata' },
   })
 
   // PATCH /api/cms/media/:id — update alt text
   .patch('/:id', async ({ params, body, set }) => {
     const [row] = await db.select().from(media).where(eq(media.id, params.id))
     if (!row) { set.status = 404; return { success: false, data: null, message: 'Media tidak ditemukan' } }
-    const [updated] = await db.update(media).set({ altText: (body as { altText: string }).altText ?? null }).where(eq(media.id, params.id)).returning()
+    const [updated] = await db.update(media).set({ altText: (body as { altText: string | null }).altText ?? null }).where(eq(media.id, params.id)).returning()
     return ok(updated, 'Alt text diupdate')
   }, {
     body: t.Object({ altText: t.Optional(t.Union([t.String(), t.Null()])) }),
     detail: { tags: ['CMS'], summary: 'Update media alt text' },
   })
 
-  // DELETE /api/cms/media/:id — cascade delete from MinIO + DB
+  // DELETE /api/cms/media/:id — cascade delete MinIO + DB
   .delete('/:id', async ({ params, set }) => {
     const [row] = await db.select().from(media).where(eq(media.id, params.id))
     if (!row) { set.status = 404; return { success: false, data: null, message: 'Media tidak ditemukan' } }
 
-    // Delete from MinIO first (non-fatal if fails)
-    try { await minioClient.removeObject(BUCKET, row.filename) } catch { /* ignore */ }
+    if (minioAvailable) {
+      try { await minioClient.removeObject(BUCKET, row.filename) }
+      catch (e) { console.warn('[Media] MinIO delete failed (non-fatal):', errMsg(e)) }
+    }
 
     await db.delete(media).where(eq(media.id, params.id))
     return ok({ id: params.id }, 'Media berhasil dihapus')
   }, {
-    detail: { tags: ['CMS'], summary: 'Delete media from MinIO and DB' },
+    detail: { tags: ['CMS'], summary: 'Delete media from MinIO (if available) and DB' },
   })
 
 // ── Public media route — GET /api/media (images only) ─────────────────────────

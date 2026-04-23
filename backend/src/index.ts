@@ -4,6 +4,7 @@ import { node } from '@elysiajs/node'
 import { cors } from '@elysiajs/cors'
 import { jwt } from '@elysiajs/jwt'
 import { swagger } from '@elysiajs/swagger'
+import { staticPlugin } from '@elysiajs/static'
 import { authRoutes } from './modules/auth/routes'
 import { publicRoutes } from './modules/public/routes'
 import { cmsRoutes } from './modules/cms/routes'
@@ -126,6 +127,9 @@ const app = new Elysia({ adapter: node() })
   .use(authRoutes)
   .use(publicRoutes)
   .use(cmsRoutes)
+
+  // ── Static files — local disk uploads fallback ──────────────────────────────
+  .use(staticPlugin({ assets: 'uploads', prefix: '/uploads' }))
 
   // ── 404 fallback ───────────────────────────────────────────────────────────
   .get('*', ({ set }) => {
