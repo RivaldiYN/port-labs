@@ -7,6 +7,7 @@ import PostDetailPage from './pages/PostDetailPage'
 import CmsLoginPage from './pages/cms/CmsLoginPage'
 import CmsDashboardPage from './pages/cms/CmsDashboardPage'
 import CmsProjectsPage from './pages/cms/CmsProjectsPage'
+import CmsProfilePage from './pages/cms/CmsProfilePage'
 import './index.css'
 
 export default function App() {
@@ -36,6 +37,14 @@ export default function App() {
             element={
               <RequireAuth>
                 <CmsProjectsPage />
+              </RequireAuth>
+            }
+          />
+          <Route
+            path="/cms/profile"
+            element={
+              <RequireAuth>
+                <CmsProfilePage />
               </RequireAuth>
             }
           />
