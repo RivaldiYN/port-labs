@@ -1,5 +1,5 @@
-﻿import { useState } from "react"
-import { Link, useNavigate } from "react-router-dom"
+import { useState } from "react"
+import { Link } from "react-router-dom"
 import { usePosts, useTags } from "../hooks/usePosts"
 
 const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:3000"
@@ -12,8 +12,6 @@ export default function PostsPage() {
 
   const { data: posts, meta, loading, error } = usePosts({ page, limit: 9, search, tag: activeTag || undefined, sort: "newest" })
   const { tags } = useTags()
-  const navigate = useNavigate()
-
   const handleSearch = (e: React.FormEvent) => { e.preventDefault(); setSearch(inputVal); setPage(1) }
   const handleTag = (t: string) => { setActiveTag(prev => prev === t ? "" : t); setPage(1) }
 
@@ -63,7 +61,7 @@ export default function PostsPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mb-12">
               {posts.map(post => (
                 <Link key={post.id} to={`/news/${post.slug}`} className="group bg-[#1c1b1b] rounded-3xl overflow-hidden border border-[#3d4a3d]/10 hover:border-[#53e076]/30 transition-all hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#53e076]">
-                  {post.coverUrl ? <img src={post.coverUrl} alt="" className="w-full h-48 object-cover" /> : <div className="w-full h-48 bg-gradient-to-br from-[#1db954]/10 to-[#131313] flex items-center justify-center"><span className="material-symbols-outlined text-[#53e076]/20" style={{fontSize:"80px"}} aria-hidden="true">article</span></div>}
+                  {post.coverUrl ? (<div className="w-full h-48 relative overflow-hidden bg-gradient-to-br from-[#1db954]/10 to-[#131313]"><img src={post.coverUrl} alt="" className="w-full h-full object-cover absolute inset-0" onError={e => { e.currentTarget.style.display="none" }} /><div className="absolute inset-0 flex items-center justify-center pointer-events-none"><span className="material-symbols-outlined text-[#53e076]/20" style={{fontSize:"80px"}} aria-hidden="true">article</span></div></div>) : (<div className="w-full h-48 bg-gradient-to-br from-[#1db954]/10 to-[#131313] flex items-center justify-center"><span className="material-symbols-outlined text-[#53e076]/20" style={{fontSize:"80px"}} aria-hidden="true">article</span></div>)}
                   <div className="p-6">
                     <div className="flex flex-wrap gap-2 mb-3">{(post.tags ?? []).slice(0,2).map(t => <span key={t} className="bg-[#353534] text-[#72fe8f] font-label text-[9px] font-bold px-2 py-1 rounded-md uppercase tracking-wider">{t}</span>)}</div>
                     <h2 className="font-headline font-bold text-[#e5e2e1] text-lg leading-tight mb-2 group-hover:text-[#53e076] transition-colors">{post.title}</h2>
@@ -88,7 +86,7 @@ export default function PostsPage() {
 
       <footer className="w-full py-12 border-t border-[#e5e2e1]/10 bg-[#131313]">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-8 gap-6">
-          <p className="font-label text-sm text-[#e5e2e1]/40">© {new Date().getFullYear()} Rivaldi Yonathan Nainggolan.</p>
+          <p className="font-label text-sm text-[#e5e2e1]/40">� {new Date().getFullYear()} Rivaldi Yonathan Nainggolan.</p>
           <div className="flex gap-8">{[["LinkedIn","https://linkedin.com/in/rivaldiyn"],["GitHub","https://github.com/RivaldiYN"]].map(([l,h]) => <a key={l} href={h} target="_blank" rel="noopener noreferrer" className="font-label text-sm text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors">{l}</a>)}</div>
         </div>
       </footer>

@@ -1,19 +1,21 @@
-import { useState, useCallback } from 'react'
+﻿import { useState, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useCmsProjects, type Project } from '../../hooks/useProjects'
+import { MediaPickerButton } from '../../components/MediaPickerButton'
 
-// ── Form state ────────────────────────────────────────────────────────────────
+// â”€â”€ Form state â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const emptyForm = (): Partial<Project> => ({
   title: '', description: '', content: '', thumbnailUrl: '',
   demoUrl: '', repoUrl: '', techStack: [], isFeatured: false, isPublished: false,
 })
 
-// ── Modal: Create / Edit ──────────────────────────────────────────────────────
+// â”€â”€ Modal: Create / Edit â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function ProjectModal({
-  project, onClose, onSave,
+  project, token, onClose, onSave,
 }: {
   project: Project | null
+  token: string | null
   onClose: () => void
   onSave: (data: Partial<Project>) => Promise<void>
 }) {
@@ -31,7 +33,7 @@ function ProjectModal({
     try {
       const techStack = techInput.split(',').map(s => s.trim()).filter(Boolean)
       await onSave({ ...form, techStack })
-      // onSave awaits fetchAll, so data is ready — close modal now
+      // onSave awaits fetchAll, so data is ready â€” close modal now
       onClose()
     } catch (e) {
       setErr((e as Error).message)
@@ -109,13 +111,24 @@ function ProjectModal({
             </div>
           </div>
 
-          {/* Thumbnail URL */}
+          {/* Thumbnail URL + Media Picker */}
           <div>
-            <label className="font-label text-[10px] uppercase tracking-widest text-[#e5e2e1]/50 mb-2 block">Thumbnail URL</label>
-            <input type="url" value={form.thumbnailUrl ?? ''}
-              onChange={e => set('thumbnailUrl', e.target.value)}
-              placeholder="https://..."
-              className="w-full bg-[#131313] border border-[#3d4a3d]/30 focus:border-[#1db954] focus:outline-none rounded-xl py-3 px-4 text-[#e5e2e1] text-sm transition-all focus:shadow-[0_0_0_3px_rgba(29,185,84,0.1)]" />
+            <label className="font-label text-[10px] uppercase tracking-widest text-[#e5e2e1]/50 mb-2 block">Thumbnail</label>
+            <div className="flex gap-2">
+              <input type="url" value={form.thumbnailUrl ?? ''}
+                onChange={e => set('thumbnailUrl', e.target.value)}
+                placeholder="https://... atau pilih dari media library"
+                className="w-full bg-[#131313] border border-[#3d4a3d]/30 focus:border-[#1db954] focus:outline-none rounded-xl py-3 px-4 text-[#e5e2e1] text-sm transition-all focus:shadow-[0_0_0_3px_rgba(29,185,84,0.1)]" />
+              <MediaPickerButton token={token} onPick={url => set('thumbnailUrl', url)} />
+            </div>
+            {form.thumbnailUrl && form.thumbnailUrl.startsWith('http') && (
+              <img
+                src={form.thumbnailUrl}
+                alt="Thumbnail preview"
+                className="mt-2 w-full h-32 object-cover rounded-xl border border-[#3d4a3d]/20"
+                onError={e => (e.currentTarget.style.display = 'none')}
+              />
+            )}
           </div>
 
           {/* Toggles */}
@@ -154,7 +167,7 @@ function ProjectModal({
   )
 }
 
-// ── Confirm Delete Modal ──────────────────────────────────────────────────────
+// â”€â”€ Confirm Delete Modal â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function ConfirmModal({ title, onConfirm, onCancel }: { title: string; onConfirm: () => void; onCancel: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -181,7 +194,7 @@ function ConfirmModal({ title, onConfirm, onCancel }: { title: string; onConfirm
   )
 }
 
-// ── Main CMS Projects Page ────────────────────────────────────────────────────
+// â”€â”€ Main CMS Projects Page â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export default function CmsProjectsPage() {
   const { admin, logout, accessToken }    = useAuth()
   const navigate                          = useNavigate()
@@ -208,10 +221,10 @@ export default function CmsProjectsPage() {
   const handleSave = async (formData: Partial<Project>) => {
     if (editProject === 'new') {
       await createProject(formData)
-      showToast('✅ Project berhasil dibuat')
+      showToast('âœ… Project berhasil dibuat')
     } else if (editProject) {
       await updateProject(editProject.id, formData)
-      showToast('✅ Project berhasil diupdate')
+      showToast('âœ… Project berhasil diupdate')
     }
     await fetchAll(search)
   }
@@ -220,13 +233,13 @@ export default function CmsProjectsPage() {
     if (!deleteTarget) return
     await deleteProject(deleteTarget.id)
     setDeleteTarget(null)
-    showToast('🗑️ Project berhasil dihapus')
+    showToast('ðŸ—‘ï¸ Project berhasil dihapus')
     await fetchAll(search)
   }
 
   const handleToggle = async (id: string) => {
     await togglePublish(id)
-    showToast('📡 Status publikasi diubah')
+    showToast('ðŸ“¡ Status publikasi diubah')
     await fetchAll(search)
   }
 
@@ -250,6 +263,7 @@ export default function CmsProjectsPage() {
       {editProject !== null && (
         <ProjectModal
           project={editProject === 'new' ? null : editProject}
+          token={accessToken}
           onClose={() => setEditProject(null)}
           onSave={handleSave}
         />
@@ -321,7 +335,7 @@ export default function CmsProjectsPage() {
             <h1 className="font-headline text-3xl md:text-4xl font-extrabold tracking-tighter text-[#e5e2e1]">
               Projects<span className="text-[#53e076]">.</span>
             </h1>
-            <p className="text-[#e5e2e1]/50 text-sm mt-1">Kelola semua project — published & drafts</p>
+            <p className="text-[#e5e2e1]/50 text-sm mt-1">Kelola semua project â€” published & drafts</p>
           </div>
           <button onClick={() => setEditProject('new')}
             className="bg-[#53e076] hover:bg-[#1db954] text-[#002108] font-bold py-3 px-6 rounded-full flex items-center gap-2 transition-all active:scale-95 group shrink-0">

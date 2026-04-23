@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react"
+﻿import { useState, useCallback } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import { useCmsPosts, type Post } from "../../hooks/usePosts"
-import { useCmsMedia, type MediaItem } from "../../hooks/useMedia"
+import { MediaPickerButton } from "../../components/MediaPickerButton"
 
 const emptyForm = (): Partial<Post> => ({ title: "", excerpt: "", content: "", coverUrl: "", tags: [], isPublished: false })
 
@@ -16,38 +16,12 @@ const NAV = [
 
 const inputCls = "w-full bg-[#131313] border border-[#3d4a3d]/30 focus:border-[#1db954] focus:outline-none rounded-xl py-3 px-4 text-[#e5e2e1] text-sm transition-all focus:shadow-[0_0_0_3px_rgba(29,185,84,0.1)]"
 
-function MediaPickerModal({ token, onPick, onClose }: { token: string | null; onPick: (url: string) => void; onClose: () => void }) {
-  const { data, loading } = useCmsMedia(token)
-  const images = data.filter(m => m.mimeType?.startsWith("image/"))
-  return (
-    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label="Pilih gambar dari media library">
-      <div className="bg-[#1c1b1b] rounded-3xl w-full max-w-3xl max-h-[80vh] overflow-hidden border border-[#3d4a3d]/20 shadow-2xl flex flex-col">
-        <div className="flex items-center justify-between px-6 py-5 border-b border-[#3d4a3d]/20 shrink-0">
-          <h3 className="font-headline font-bold text-[#e5e2e1]">Media Library</h3>
-          <button onClick={onClose} aria-label="Tutup" className="w-8 h-8 rounded-full bg-[#2a2a2a] flex items-center justify-center hover:bg-[#353534] transition-all"><span className="material-symbols-outlined text-lg" aria-hidden="true">close</span></button>
-        </div>
-        <div className="overflow-y-auto p-6 flex-1">
-          {loading && <div className="flex justify-center py-10"><div className="w-8 h-8 border-2 border-[#53e076] border-t-transparent rounded-full animate-spin" /></div>}
-          {!loading && images.length === 0 && <p className="text-center text-[#e5e2e1]/40 font-label text-xs py-10">Belum ada gambar. Upload di halaman Media.</p>}
-          <div className="grid grid-cols-3 sm:grid-cols-4 gap-3">
-            {images.map(m => (
-              <button key={m.id} onClick={() => { onPick(m.url); onClose() }} aria-label={`Pilih ${m.originalName ?? m.filename}`} className="group aspect-square rounded-xl overflow-hidden border-2 border-transparent hover:border-[#53e076] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#53e076]">
-                <img src={m.url} alt={m.altText ?? m.originalName ?? ""} className="w-full h-full object-cover group-hover:scale-105 transition-transform" loading="lazy" />
-              </button>
-            ))}
-          </div>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 function PostModal({ post, token, onClose, onSave }: { post: Post | null; token: string | null; onClose: () => void; onSave: (d: Partial<Post>) => Promise<void> }) {
   const [form, setForm] = useState<Partial<Post>>(post ?? emptyForm())
   const [tagInput, setTagInput] = useState((post?.tags ?? []).join(", "))
   const [saving, setSaving] = useState(false)
   const [err, setErr] = useState("")
-  const [showPicker, setShowPicker] = useState(false)
   const set = (k: keyof Post, v: unknown) => setForm(f => ({ ...f, [k]: v }))
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault(); setSaving(true); setErr("")
@@ -57,7 +31,6 @@ function PostModal({ post, token, onClose, onSave }: { post: Post | null; token:
   }
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" aria-label={post ? "Edit Post" : "Buat Post Baru"}>
-      {showPicker && <MediaPickerModal token={token} onPick={url => set("coverUrl", url)} onClose={() => setShowPicker(false)} />}
       <div className="bg-[#1c1b1b] rounded-3xl w-full max-w-2xl max-h-[90vh] overflow-y-auto border border-[#3d4a3d]/20 shadow-2xl">
         <div className="flex items-center justify-between px-8 pt-8 pb-6 border-b border-[#3d4a3d]/20">
           <h2 className="font-headline text-xl font-bold text-[#e5e2e1]">{post ? "Edit Post" : "Buat Post Baru"}</h2>
@@ -72,7 +45,7 @@ function PostModal({ post, token, onClose, onSave }: { post: Post | null; token:
           <div><label htmlFor="post-cover" className="font-label text-[10px] uppercase tracking-widest text-[#e5e2e1]/50 mb-2 block">Cover URL</label>
             <div className="flex gap-2">
               <input id="post-cover" type="url" value={form.coverUrl ?? ""} onChange={e => set("coverUrl", e.target.value)} placeholder="https://... atau pilih dari media" className={inputCls} />
-              <button type="button" onClick={() => setShowPicker(true)} title="Pilih dari Media Library" aria-label="Pilih gambar dari media library" className="shrink-0 w-11 h-11 rounded-xl bg-[#2a2a2a] flex items-center justify-center hover:bg-[#53e076]/20 hover:text-[#53e076] border border-[#3d4a3d]/20 transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#53e076]"><span className="material-symbols-outlined text-lg" aria-hidden="true">perm_media</span></button>
+              <MediaPickerButton token={token} onPick={url => set("coverUrl", url)} />
             </div>
             {form.coverUrl && form.coverUrl.startsWith("http") && <img src={form.coverUrl} alt="Cover preview" className="mt-2 w-full h-28 object-cover rounded-xl border border-[#3d4a3d]/20" onError={e => (e.currentTarget.style.display = "none")} />}
           </div>
