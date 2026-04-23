@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import RequireAuth from './components/auth/RequireAuth'
@@ -12,8 +13,19 @@ import CmsProfilePage from './pages/cms/CmsProfilePage'
 import CmsPostsPage from './pages/cms/CmsPostsPage'
 import CmsMediaPage from './pages/cms/CmsMediaPage'
 import './index.css'
+import AOS from 'aos'
+import 'aos/dist/aos.css'
 
 export default function App() {
+  useEffect(() => {
+    AOS.init({
+      once: true,
+      duration: 800,
+      offset: 50,
+      easing: 'ease-out-cubic',
+    })
+  }, [])
+
   return (
     <AuthProvider>
       <BrowserRouter>
