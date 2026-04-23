@@ -9,7 +9,7 @@ interface AuthState {
   isAuthenticated: boolean
   login:  (username: string, password: string) => Promise<{ ok: boolean; message: string }>
   logout: () => Promise<void>
-  refresh: () => Promise<boolean>
+  refresh: () => Promise<string | null>
 }
 
 const AuthCtx = createContext<AuthState | null>(null)
@@ -25,9 +25,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isRefreshing, setIsRefreshing] = useState(false)
 
   // ── Refresh ──────────────────────────────────────────────────────────────────
-  const refresh = useCallback(async (): Promise<boolean> => {
+  const refresh = useCallback(async (): Promise<string | null> => {
     const stored = localStorage.getItem(LS_REFRESH)
-    if (!stored) return false
+    if (!stored) return null
 
     setIsRefreshing(true)
     try {
@@ -41,13 +41,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         localStorage.removeItem(LS_REFRESH)
         setAdmin(null)
         setAccessToken(null)
-        return false
+        return null
       }
       setAccessToken(json.data.accessToken)
       localStorage.setItem(LS_REFRESH, json.data.refreshToken)
-      return true
+      return json.data.accessToken
     } catch {
-      return false
+      return null
     } finally {
       setIsRefreshing(false)
     }

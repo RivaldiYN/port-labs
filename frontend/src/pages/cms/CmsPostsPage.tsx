@@ -95,7 +95,7 @@ export default function CmsPostsPage() {
   const [deleteTarget, setDeleteTarget] = useState<Post | null>(null)
   const [toast, setToast] = useState("")
   const [loggingOut, setLoggingOut] = useState(false)
-  const { data, loading, error, fetchAll, createPost, updatePost, deletePost, togglePublish } = useCmsPosts(accessToken)
+  const { data, loading, error, fetchAll, createPost, updatePost, deletePost, togglePublish } = useCmsPosts()
 
   const showToast = (msg: string) => { setToast(msg); setTimeout(() => setToast(""), 3000) }
   const handleSearch = useCallback((e: React.FormEvent) => { e.preventDefault(); fetchAll(search) }, [search, fetchAll])

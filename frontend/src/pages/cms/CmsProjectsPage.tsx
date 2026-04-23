@@ -208,7 +208,7 @@ export default function CmsProjectsPage() {
   const [loggingOut, setLoggingOut]       = useState(false)
 
   const { data, loading, error, fetchAll, createProject, updateProject, deleteProject, togglePublish } =
-    useCmsProjects(accessToken)
+    useCmsProjects()
 
   const showToast = (msg: string) => {
     setToast(msg)

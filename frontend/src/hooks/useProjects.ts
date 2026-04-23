@@ -1,20 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { useAuth } from '../context/AuthContext'
 
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
-const LS_REFRESH = 'cms_refresh_token'
-
-/** Attempt to silently refresh access token; returns new token or null */
-async function silentRefresh(): Promise<string | null> {
-  const stored = localStorage.getItem(LS_REFRESH)
-  if (!stored) return null
-  try {
-    const res  = await fetch(`${API}/auth/refresh`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ refreshToken: stored }) })
-    const json = await res.json()
-    if (!res.ok || !json.success) { localStorage.removeItem(LS_REFRESH); return null }
-    localStorage.setItem(LS_REFRESH, json.data.refreshToken)
-    return json.data.accessToken as string
-  } catch { return null }
-}
 
 // Strip null and empty strings → undefined so they're omitted from JSON (avoids Elysia validation error)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -97,34 +84,43 @@ export function useProjects(params: FetchParams = {}) {
 }
 
 // ── CMS API helpers (auth required) ──────────────────────────────────────────
-export function useCmsProjects(token: string | null) {
+export function useCmsProjects() {
+  const { accessToken: token, refresh } = useAuth()
   const [data, setData]       = useState<Project[]>([])
   const [meta, setMeta]       = useState<ProjectMeta | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState<string | null>(null)
+  const isFirstLoad           = useRef(true)
 
   const fetchAll = useCallback(async (search = '') => {
     if (!token) return
-    // Don't wipe existing data — only show loader on first fetch
     setError(null)
-    setLoading(prev => prev) // keep true only on initial load; we set it below conditionally
-    const isFirstLoad = !data.length
-    if (isFirstLoad) setLoading(true)
-    try {
+    if (isFirstLoad.current) setLoading(true)
+    
+    const doFetch = async (tok: string) => {
       const q = search ? `?search=${encodeURIComponent(search)}` : ''
-      const res  = await fetch(`${API}/api/cms/projects${q}`, {
-        headers: { Authorization: `Bearer ${token}` },
+      return fetch(`${API}/api/cms/projects${q}`, {
+        headers: { Authorization: `Bearer ${tok}` },
       })
+    }
+
+    try {
+      let res = await doFetch(token)
+      if (res.status === 401) {
+        const newTok = await refresh()
+        if (newTok) res = await doFetch(newTok)
+      }
       const json = await res.json()
       if (!res.ok) throw new Error(json.message ?? 'Gagal mengambil data')
       setData(json.data ?? [])
       setMeta(json.meta ?? null)
+      isFirstLoad.current = false
     } catch (err) {
       setError((err as Error).message)
     } finally {
       setLoading(false)
     }
-  }, [token]) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [token, refresh])
 
   useEffect(() => { fetchAll() }, [fetchAll])
 
@@ -136,7 +132,7 @@ export function useCmsProjects(token: string | null) {
     })
     let res  = await doRequest(token!)
     if (res.status === 401) {
-      const newTok = await silentRefresh()
+      const newTok = await refresh()
       if (newTok) res = await doRequest(newTok)
     }
     const json = await res.json()
@@ -152,7 +148,7 @@ export function useCmsProjects(token: string | null) {
     })
     let res  = await doRequest(token!)
     if (res.status === 401) {
-      const newTok = await silentRefresh()
+      const newTok = await refresh()
       if (newTok) res = await doRequest(newTok)
     }
     const json = await res.json()
@@ -161,24 +157,35 @@ export function useCmsProjects(token: string | null) {
   }
 
   const deleteProject = async (id: string) => {
-    const res  = await fetch(`${API}/api/cms/projects/${id}`, {
+    const doRequest = async (tok: string) => fetch(`${API}/api/cms/projects/${id}`, {
       method: 'DELETE',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${tok}` },
     })
+    let res  = await doRequest(token!)
+    if (res.status === 401) {
+      const newTok = await refresh()
+      if (newTok) res = await doRequest(newTok)
+    }
     const json = await res.json()
     if (!res.ok) throw new Error(json.message ?? 'Gagal menghapus project')
     return json.data
   }
 
   const togglePublish = async (id: string) => {
-    const res  = await fetch(`${API}/api/cms/projects/${id}/publish`, {
+    const doRequest = async (tok: string) => fetch(`${API}/api/cms/projects/${id}/publish`, {
       method: 'PATCH',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${tok}` },
     })
+    let res  = await doRequest(token!)
+    if (res.status === 401) {
+      const newTok = await refresh()
+      if (newTok) res = await doRequest(newTok)
+    }
     const json = await res.json()
     if (!res.ok) throw new Error(json.message ?? 'Gagal toggle publish')
     return json.data as Project
   }
+
 
   return { data, meta, loading, error, fetchAll, createProject, updateProject, deleteProject, togglePublish }
 }

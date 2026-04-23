@@ -1,4 +1,5 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
+import { useAuth } from '../context/AuthContext'
 
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
@@ -78,69 +79,103 @@ export function useTags() {
 }
 
 // ── CMS hook ──────────────────────────────────────────────────────────────────
-export function useCmsPosts(token: string | null) {
+export function useCmsPosts() {
+  const { accessToken: token, refresh } = useAuth()
   const [data, setData]       = useState<Post[]>([])
   const [meta, setMeta]       = useState<PostMeta | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError]     = useState<string | null>(null)
+  const isFirstLoad           = useRef(true)
 
   const fetchAll = useCallback(async (search = '') => {
     if (!token) return
     setError(null)
-    const isFirst = !data.length
-    if (isFirst) setLoading(true)
-    try {
+    if (isFirstLoad.current) setLoading(true)
+    
+    const doFetch = async (tok: string) => {
       const q   = search ? `?search=${encodeURIComponent(search)}` : ''
-      const res = await fetch(`${API}/api/cms/posts${q}`, {
-        headers: { Authorization: `Bearer ${token}` },
+      return fetch(`${API}/api/cms/posts${q}`, {
+        headers: { Authorization: `Bearer ${tok}` },
       })
+    }
+
+    try {
+      let res = await doFetch(token)
+      if (res.status === 401) {
+        const newTok = await refresh()
+        if (newTok) res = await doFetch(newTok)
+      }
       const json = await res.json()
       if (!res.ok) throw new Error(json.message ?? 'Gagal mengambil posts')
       setData(json.data ?? [])
       setMeta(json.meta ?? null)
-    } catch (e) { setError((e as Error).message) }
-    finally     { setLoading(false) }
-  }, [token]) // eslint-disable-line
+      isFirstLoad.current = false
+    } catch (e) { 
+      setError((e as Error).message) 
+    } finally { 
+      setLoading(false) 
+    }
+  }, [token, refresh]) // eslint-disable-line
 
   useEffect(() => { fetchAll() }, [fetchAll])
 
   const createPost = async (body: Partial<Post>) => {
-    const res  = await fetch(`${API}/api/cms/posts`, {
+    const doRequest = async (tok: string) => fetch(`${API}/api/cms/posts`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
       body:    JSON.stringify(sanitize(body as Record<string, unknown>)),
     })
+    let res = await doRequest(token!)
+    if (res.status === 401) {
+      const newTok = await refresh()
+      if (newTok) res = await doRequest(newTok)
+    }
     const json = await res.json()
     if (!res.ok) throw new Error(json.message ?? 'Gagal membuat post')
     return json.data as Post
   }
 
   const updatePost = async (id: string, body: Partial<Post>) => {
-    const res  = await fetch(`${API}/api/cms/posts/${id}`, {
+    const doRequest = async (tok: string) => fetch(`${API}/api/cms/posts/${id}`, {
       method: 'PUT',
-      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
+      headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
       body:    JSON.stringify(sanitize(body as Record<string, unknown>)),
     })
+    let res = await doRequest(token!)
+    if (res.status === 401) {
+      const newTok = await refresh()
+      if (newTok) res = await doRequest(newTok)
+    }
     const json = await res.json()
     if (!res.ok) throw new Error(json.message ?? 'Gagal mengupdate post')
     return json.data as Post
   }
 
   const deletePost = async (id: string) => {
-    const res  = await fetch(`${API}/api/cms/posts/${id}`, {
+    const doRequest = async (tok: string) => fetch(`${API}/api/cms/posts/${id}`, {
       method:  'DELETE',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${tok}` },
     })
+    let res = await doRequest(token!)
+    if (res.status === 401) {
+      const newTok = await refresh()
+      if (newTok) res = await doRequest(newTok)
+    }
     const json = await res.json()
     if (!res.ok) throw new Error(json.message ?? 'Gagal menghapus post')
     return json.data
   }
 
   const togglePublish = async (id: string) => {
-    const res  = await fetch(`${API}/api/cms/posts/${id}/publish`, {
+    const doRequest = async (tok: string) => fetch(`${API}/api/cms/posts/${id}/publish`, {
       method:  'PATCH',
-      headers: { Authorization: `Bearer ${token}` },
+      headers: { Authorization: `Bearer ${tok}` },
     })
+    let res = await doRequest(token!)
+    if (res.status === 401) {
+      const newTok = await refresh()
+      if (newTok) res = await doRequest(newTok)
+    }
     const json = await res.json()
     if (!res.ok) throw new Error(json.message ?? 'Gagal toggle publish')
     return json.data as Post
