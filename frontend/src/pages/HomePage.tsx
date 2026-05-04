@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom"
+﻿import { Link } from "react-router-dom"
 import { useProfile } from "../hooks/useProfile"
 import { usePosts } from "../hooks/usePosts"
 import { useProjects } from "../hooks/useProjects"
@@ -51,7 +51,7 @@ export default function HomePage() {
               <div className="absolute -inset-4 rounded-full border border-[#53e076]/20 animate-spin-slow" />
               {profile?.avatarUrl
                 ? <img src={profile.avatarUrl} alt={heroName} className="relative z-10 w-full h-full rounded-full object-cover shadow-2xl shadow-black/60 border-4 border-[#2a2a2a]" />
-                : <div className="relative z-10 w-full h-full rounded-full shadow-2xl shadow-black/60 border-4 border-[#2a2a2a] bg-gradient-to-br from-[#1db954]/30 via-[#1c1b1b] to-[#131313] flex items-center justify-center"><div className="text-center"><div className="text-5xl md:text-7xl font-headline font-black text-[#53e076] tracking-tighter leading-none">{heroInitials}</div><div className="text-xs font-label text-[#bccbb9]/60 tracking-widest mt-2">{profile?.location ?? "ITERA · 3.45"}</div></div></div>
+                : <div className="relative z-10 w-full h-full rounded-full shadow-2xl shadow-black/60 border-4 border-[#2a2a2a] bg-gradient-to-br from-[#1db954]/30 via-[#1c1b1b] to-[#131313] flex items-center justify-center"><div className="text-center"><div className="text-5xl md:text-7xl font-headline font-black text-[#53e076] tracking-tighter leading-none">{heroInitials}</div><div className="text-xs font-label text-[#bccbb9]/60 tracking-widest mt-2">{profile?.location ?? "ITERA Â· 3.45"}</div></div></div>
               }
               <div className="absolute top-0 -right-4 bg-[#2a2a2a] p-3 rounded-xl shadow-xl glass-card animate-float"><span className="material-symbols-outlined text-[#53e076] text-2xl" aria-hidden="true">terminal</span></div>
               <div className="absolute bottom-8 -left-8 bg-[#2a2a2a] p-3 rounded-xl shadow-xl glass-card animate-float" style={{ animationDelay: "1.5s" }}><span className="material-symbols-outlined text-[#53e076] text-2xl" aria-hidden="true">deployed_code</span></div>
@@ -122,7 +122,7 @@ export default function HomePage() {
       <section className="py-28 px-6 md:px-8 max-w-4xl mx-auto" aria-label="Experience Timeline">
         <div data-aos="fade-right" className="mb-16"><h2 className="font-headline text-3xl md:text-4xl font-extrabold mb-3 text-[#e5e2e1]">Journey</h2><div className="h-1 w-16 bg-[#53e076] rounded-full" /></div>
         <div className="space-y-12 md:space-y-16 relative before:absolute before:left-[19px] before:top-2 before:bottom-2 before:w-[2px] before:bg-[#3d4a3d]/40">
-          {[{ period: "2025 — 2026", role: "Frontend Developer", company: "PT Technova Solusi Integrasi", desc: "Developing ReactJS monitoring dashboard with OpenStreetMap & ML integration.", active: true }, { period: "2025 — 2026", role: "Full Stack Developer Intern", company: "PT Kimia Farma Tbk", desc: "Built internal HRIS using Laravel + PostgreSQL + Redis caching.", active: false }, { period: "2021 — Present", role: "Bachelor of Informatics", company: "ITERA — Institut Teknologi Sumatera", desc: "GPA 3.45. Specialized in distributed systems and human-computer interaction.", active: false, icon: "school" }].map(({ period, role, company, desc, active, icon }, idx) => (
+          {[{ period: "2025 â€” 2026", role: "Frontend Developer", company: "PT Technova Solusi Integrasi", desc: "Developing ReactJS monitoring dashboard with OpenStreetMap & ML integration.", active: true }, { period: "2025 â€” 2026", role: "Full Stack Developer Intern", company: "PT Kimia Farma Tbk", desc: "Built internal HRIS using Laravel + PostgreSQL + Redis caching.", active: false }, { period: "2021 â€” Present", role: "Bachelor of Informatics", company: "ITERA â€” Institut Teknologi Sumatera", desc: "GPA 3.45. Specialized in distributed systems and human-computer interaction.", active: false, icon: "school" }].map(({ period, role, company, desc, active, icon }, idx) => (
             <div key={role} data-aos="fade-up" data-aos-delay={idx * 150} className="relative pl-14">
               <div className={`absolute left-0 top-1 w-10 h-10 rounded-full flex items-center justify-center z-10 ${active ? "bg-[#2a2a2a] border-2 border-[#53e076]" : "bg-[#2a2a2a] border-2 border-[#3d4a3d]"}`}><span className={`material-symbols-outlined text-xl ${active ? "text-[#53e076]" : "text-[#bccbb9]"}`} aria-hidden="true">{icon || "work"}</span></div>
               <span className={`font-label text-xs font-bold tracking-widest uppercase mb-1 block ${active ? "text-[#53e076]" : "text-[#bccbb9]"}`}>{period}</span>
@@ -158,7 +158,7 @@ export default function HomePage() {
 
       <footer className="w-full py-12 border-t border-[#e5e2e1]/10 bg-[#131313]">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-8 gap-6">
-          <p className="font-label text-sm text-[#e5e2e1]/40">© {new Date().getFullYear()} Rivaldi Yonathan Nainggolan. Built for the orbit.</p>
+          <p className="font-label text-sm text-[#e5e2e1]/40">Â© {new Date().getFullYear()} Rivaldi Yonathan Nainggolan. Built for the orbit.</p>
           <div className="flex gap-8">{[[" LinkedIn", linkedinUrl], ["GitHub", githubUrl], ["Email", `mailto:${contactEmail}`]].map(([label, href]) => <a key={label} href={href} target="_blank" rel="noopener noreferrer" className="text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors font-label text-sm">{label}</a>)}</div>
         </div>
       </footer>

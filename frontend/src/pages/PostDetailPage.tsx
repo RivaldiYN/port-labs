@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react"
+﻿import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 
 const API = import.meta.env.VITE_API_URL ?? "backend"
@@ -25,7 +25,7 @@ export default function PostDetailPage() {
       .finally(() => setLoading(false))
   }, [slug])
 
-  const readTime = post?.content ? `${Math.ceil(post.content.split(/\s+/).length / 200)} MIN READ` : "© MIN READ"
+  const readTime = post?.content ? `${Math.ceil(post.content.split(/\s+/).length / 200)} MIN READ` : "Â© MIN READ"
 
   return (
     <div className="bg-[#131313] text-[#e5e2e1] min-h-screen font-body">
@@ -113,7 +113,7 @@ export default function PostDetailPage() {
 
       <footer className="w-full py-12 border-t border-[#e5e2e1]/10 bg-[#131313] mt-12">
         <div className="flex flex-col md:flex-row justify-between items-center px-8 w-full max-w-7xl mx-auto gap-6">
-          <p className="font-label text-sm text-[#e5e2e1]/40">� {new Date().getFullYear()} Rivaldi Yonathan Nainggolan.</p>
+          <p className="font-label text-sm text-[#e5e2e1]/40">ï¿½ {new Date().getFullYear()} Rivaldi Yonathan Nainggolan.</p>
           <div className="flex gap-8">{[["LinkedIn", "https://linkedin.com/in/rivaldiyn"], ["GitHub", "https://github.com/RivaldiYN"]].map(([l, h]) => <a key={l} href={h} target="_blank" rel="noopener noreferrer" className="font-label text-sm text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors">{l}</a>)}</div>
         </div>
       </footer>

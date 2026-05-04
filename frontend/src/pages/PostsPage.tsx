@@ -1,4 +1,4 @@
-import { useState } from "react"
+﻿import { useState } from "react"
 import { Link } from "react-router-dom"
 import { usePosts, useTags } from "../hooks/usePosts"
 
@@ -86,7 +86,7 @@ export default function PostsPage() {
 
       <footer className="w-full py-12 border-t border-[#e5e2e1]/10 bg-[#131313]">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-8 gap-6">
-          <p className="font-label text-sm text-[#e5e2e1]/40">� {new Date().getFullYear()} Rivaldi Yonathan Nainggolan.</p>
+          <p className="font-label text-sm text-[#e5e2e1]/40">© {new Date().getFullYear()} Rivaldi Yonathan Nainggolan.</p>
           <div className="flex gap-8">{[["LinkedIn","https://linkedin.com/in/rivaldiyn"],["GitHub","https://github.com/RivaldiYN"]].map(([l,h]) => <a key={l} href={h} target="_blank" rel="noopener noreferrer" className="font-label text-sm text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors">{l}</a>)}</div>
         </div>
       </footer>

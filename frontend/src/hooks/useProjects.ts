@@ -1,9 +1,9 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+﻿import { useState, useEffect, useCallback, useRef } from 'react'
 import { useAuth } from '../context/AuthContext'
 
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
-// Strip null and empty strings → undefined so they're omitted from JSON (avoids Elysia validation error)
+// Strip null and empty strings â†’ undefined so they're omitted from JSON (avoids Elysia validation error)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function sanitize(obj: Record<string, any>): Record<string, any> {
   const result: Record<string, any> = {}
@@ -83,7 +83,7 @@ export function useProjects(params: FetchParams = {}) {
   return { data, meta, loading, error, refetch: fetch_ }
 }
 
-// ── CMS API helpers (auth required) ──────────────────────────────────────────
+// â”€â”€ CMS API helpers (auth required) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export function useCmsProjects() {
   const { accessToken: token, refresh } = useAuth()
   const [data, setData]       = useState<Project[]>([])

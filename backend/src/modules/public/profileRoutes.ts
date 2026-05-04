@@ -1,4 +1,4 @@
-import { Elysia, t } from 'elysia'
+﻿import { Elysia, t } from 'elysia'
 import { eq } from 'drizzle-orm'
 import { createHash } from 'crypto'
 import { db } from '../../lib/db'
@@ -6,7 +6,7 @@ import { profile } from '../../db/schema'
 import { ok } from '../../index'
 import * as Minio from 'minio'
 
-// ── MinIO client ──────────────────────────────────────────────────────────────
+// â”€â”€ MinIO client â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const minioClient = new Minio.Client({
   endPoint:  process.env.MINIO_ENDPOINT  ?? 'localhost',
   port:      Number(process.env.MINIO_PORT ?? 9000),
@@ -35,14 +35,14 @@ async function ensureBucket() {
       await minioClient.setBucketPolicy(BUCKET, policy)
     }
   } catch {
-    // MinIO might not be running — continue gracefully
+    // MinIO might not be running â€” continue gracefully
   }
 }
 
 // Ensure bucket on startup
 ensureBucket()
 
-// ── Profile body schema ───────────────────────────────────────────────────────
+// â”€â”€ Profile body schema â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const ProfileBody = t.Object({
   name:        t.Optional(t.String({ minLength: 1, maxLength: 100 })),
   tagline:     t.Optional(t.Union([t.String(), t.Null()])),
@@ -55,7 +55,7 @@ const ProfileBody = t.Object({
   avatarUrl:   t.Optional(t.Union([t.String(), t.Null()])),
 })
 
-// ── Public route — GET /api/profile ──────────────────────────────────────────
+// â”€â”€ Public route â€” GET /api/profile â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const publicProfileRoutes = new Elysia()
   .get('/api/profile', async ({ set }) => {
     const rows = await db.select().from(profile).limit(1)
@@ -68,15 +68,15 @@ export const publicProfileRoutes = new Elysia()
     detail: { tags: ['Public'], summary: 'Get public profile data' },
   })
 
-// ── CMS routes — /api/cms/profile (admin only) ───────────────────────────────
+// â”€â”€ CMS routes â€” /api/cms/profile (admin only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const cmsProfileRoutes = new Elysia()
 
-  // PUT /api/cms/profile — update profile
+  // PUT /api/cms/profile â€” update profile
   .put('/api/cms/profile', async ({ body, set }) => {
     const rows = await db.select().from(profile).limit(1)
 
     if (!rows.length) {
-      // No profile yet — create one (upsert pattern)
+      // No profile yet â€” create one (upsert pattern)
       if (!body.name) {
         set.status = 400
         return { success: false, data: null, message: 'Field "name" diperlukan untuk profil baru' }
@@ -117,7 +117,7 @@ export const cmsProfileRoutes = new Elysia()
     detail: { tags: ['CMS'], summary: 'Update profile (upsert)' },
   })
 
-  // POST /api/cms/profile/avatar — upload avatar to MinIO
+  // POST /api/cms/profile/avatar â€” upload avatar to MinIO
   .post('/api/cms/profile/avatar', async ({ body, set }) => {
     const file = (body as { avatar: File }).avatar
 
@@ -174,5 +174,5 @@ export const cmsProfileRoutes = new Elysia()
     body: t.Object({
       avatar: t.File({ type: 'image/*', maxSize: '5m' }),
     }),
-    detail: { tags: ['CMS'], summary: 'Upload avatar to MinIO — returns avatarUrl' },
+    detail: { tags: ['CMS'], summary: 'Upload avatar to MinIO â€” returns avatarUrl' },
   })

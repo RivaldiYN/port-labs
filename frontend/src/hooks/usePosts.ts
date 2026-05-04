@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+﻿import { useState, useEffect, useCallback, useRef } from 'react'
 import { useAuth } from '../context/AuthContext'
 
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
@@ -33,7 +33,7 @@ export interface PostMeta {
   totalPages: number
 }
 
-// ── Public hook ───────────────────────────────────────────────────────────────
+// â”€â”€ Public hook â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export function usePosts(params: {
   page?: number; limit?: number; search?: string; tag?: string; tags?: string; sort?: string
 } = {}) {
@@ -78,7 +78,7 @@ export function useTags() {
   return { tags, loading }
 }
 
-// ── CMS hook ──────────────────────────────────────────────────────────────────
+// â”€â”€ CMS hook â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export function useCmsPosts() {
   const { accessToken: token, refresh } = useAuth()
   const [data, setData]       = useState<Post[]>([])

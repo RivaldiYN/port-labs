@@ -1,18 +1,18 @@
-import { Elysia, t } from 'elysia'
+﻿import { Elysia, t } from 'elysia'
 import { eq, and, ilike, sql, desc, asc, arrayContains, arrayOverlaps } from 'drizzle-orm'
 import slugify from 'slugify'
 import { db } from '../../lib/db'
 import { posts } from '../../db/schema'
 import { ok } from '../../index'
 
-// ── Helpers ───────────────────────────────────────────────────────────────────
+// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function autoExcerpt(content: string | null | undefined, max = 160): string | null {
   if (!content) return null
   const plain = content.replace(/[#*`>_\-\[\]()!]/g, '').replace(/\s+/g, ' ').trim()
-  return plain.length > max ? plain.slice(0, max).trimEnd() + '…' : plain
+  return plain.length > max ? plain.slice(0, max).trimEnd() + 'â€¦' : plain
 }
 
-// ── Shared body schema ────────────────────────────────────────────────────────
+// â”€â”€ Shared body schema â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const NullableStr = t.Optional(t.Union([t.String(), t.Null()]))
 
 const PostBody = t.Object({
@@ -24,10 +24,10 @@ const PostBody = t.Object({
   isPublished: t.Optional(t.Boolean()),
 })
 
-// ── Public routes — /api/posts ────────────────────────────────────────────────
+// â”€â”€ Public routes â€” /api/posts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const publicPostRoutes = new Elysia({ prefix: '/api/posts' })
 
-  // GET /api/posts/tags — must be before /:slug
+  // GET /api/posts/tags â€” must be before /:slug
   .get('/tags', async () => {
     // Aggregate all distinct tags from published posts
     const rows = await db
@@ -126,7 +126,7 @@ export const publicPostRoutes = new Elysia({ prefix: '/api/posts' })
     detail: { tags: ['Public'], summary: 'Get published post by slug' },
   })
 
-// ── CMS routes — /api/cms/posts (admin only) ──────────────────────────────────
+// â”€â”€ CMS routes â€” /api/cms/posts (admin only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const cmsPostRoutes = new Elysia({ prefix: '/api/cms/posts' })
 
   // GET /api/cms/posts
@@ -258,7 +258,7 @@ export const cmsPostRoutes = new Elysia({ prefix: '/api/cms/posts' })
     detail: { tags: ['CMS'], summary: 'Delete post by ID' },
   })
 
-  // PATCH /api/cms/posts/:id/publish — toggle
+  // PATCH /api/cms/posts/:id/publish â€” toggle
   .patch('/:id/publish', async ({ params, set }) => {
     const [existing] = await db.select().from(posts).where(eq(posts.id, params.id))
     if (!existing) {

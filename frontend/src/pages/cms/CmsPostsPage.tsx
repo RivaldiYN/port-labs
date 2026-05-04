@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react"
+﻿import { useState, useCallback } from "react"
 import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../../context/AuthContext"
 import { useCmsPosts, type Post } from "../../hooks/usePosts"
@@ -102,14 +102,14 @@ export default function CmsPostsPage() {
   const handleSave = async (formData: Partial<Post>) => {
     if (editPost === "new") { await createPost(formData) }
     else if (editPost) { await updatePost(editPost.id, formData) }
-    // fetchAll NOT here — called from handleModalClose after unmount
+    // fetchAll NOT here â€” called from handleModalClose after unmount
   }
   const handleModalClose = async (saved = false) => {
     setEditPost(null)                           // close modal first
-    if (saved) { await fetchAll(search); showToast("✅ Post berhasil disimpan") }
+    if (saved) { await fetchAll(search); showToast("âœ… Post berhasil disimpan") }
   }
-  const handleDelete = async () => { if (!deleteTarget) return; await deletePost(deleteTarget.id); setDeleteTarget(null); showToast("🗑️ Post berhasil dihapus"); await fetchAll(search) }
-  const handleToggle = async (id: string) => { await togglePublish(id); showToast("📡 Status diubah"); await fetchAll(search) }
+  const handleDelete = async () => { if (!deleteTarget) return; await deletePost(deleteTarget.id); setDeleteTarget(null); showToast("ðŸ—‘ï¸ Post berhasil dihapus"); await fetchAll(search) }
+  const handleToggle = async (id: string) => { await togglePublish(id); showToast("ðŸ“¡ Status diubah"); await fetchAll(search) }
   const handleLogout = async () => { setLoggingOut(true); await logout(); navigate("/cms/login", { replace: true }) }
 
   return (
@@ -144,7 +144,7 @@ export default function CmsPostsPage() {
           <span className="font-headline font-bold text-[#1DB954] tracking-widest text-sm uppercase">Posts</span>
         </div>
         <header className="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-4">
-          <div><h1 className="font-headline text-3xl md:text-4xl font-extrabold tracking-tighter text-[#e5e2e1]">Posts<span className="text-[#53e076]">.</span></h1><p className="text-[#e5e2e1]/50 text-sm mt-1">Kelola semua post — published &amp; drafts</p></div>
+          <div><h1 className="font-headline text-3xl md:text-4xl font-extrabold tracking-tighter text-[#e5e2e1]">Posts<span className="text-[#53e076]">.</span></h1><p className="text-[#e5e2e1]/50 text-sm mt-1">Kelola semua post â€” published &amp; drafts</p></div>
           <button onClick={() => setEditPost("new")} className="bg-[#53e076] hover:bg-[#1db954] text-[#002108] font-bold py-3 px-6 rounded-full flex items-center gap-2 transition-all active:scale-95 group shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#53e076]">
             <span className="material-symbols-outlined text-lg group-hover:rotate-90 transition-transform duration-300" aria-hidden="true">add</span>
             <span className="font-label text-xs uppercase tracking-widest">New Post</span>

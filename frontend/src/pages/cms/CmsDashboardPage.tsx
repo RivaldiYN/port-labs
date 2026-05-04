@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
@@ -19,7 +19,7 @@ const STATS = [
 
 const ACTIVITY = [
   { name: 'Dashboard ML Monitoring',              type: 'Project', status: 'Published', time: '2h ago',  live: true  },
-  { name: 'HRIS — PT Kimia Farma',               type: 'Project', status: 'Published', time: '5h ago',  live: true  },
+  { name: 'HRIS â€” PT Kimia Farma',               type: 'Project', status: 'Published', time: '5h ago',  live: true  },
   { name: 'Antigravity Portfolio',               type: 'Project', status: 'Published', time: '1d ago',  live: true  },
   { name: 'Kenapa Saya Memilih Elysia.js',       type: 'Post',    status: 'Published', time: '4d ago',  live: true  },
   { name: 'Membangun WCAG 2.1 AA Compliant Site',type: 'Post',    status: 'Draft',     time: '5d ago',  live: false },
@@ -42,7 +42,7 @@ export default function CmsDashboardPage() {
   return (
     <div className="bg-[#131313] text-[#e5e2e1] min-h-screen font-body flex">
 
-      {/* ── Mobile overlay ─────────────────────────────────────── */}
+      {/* â”€â”€ Mobile overlay â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/60 z-40 lg:hidden"
@@ -50,7 +50,7 @@ export default function CmsDashboardPage() {
         />
       )}
 
-      {/* ── Sidebar ────────────────────────────────────────────── */}
+      {/* â”€â”€ Sidebar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <aside className={`fixed left-0 top-0 h-screen w-64 bg-[#1c1b1b] flex flex-col py-8
         shadow-[20px_0_40px_rgba(0,0,0,0.4)] z-50 transition-transform duration-300
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
@@ -116,7 +116,7 @@ export default function CmsDashboardPage() {
         </div>
       </aside>
 
-      {/* ── Main ───────────────────────────────────────────────── */}
+      {/* â”€â”€ Main â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <main className="lg:ml-64 min-h-screen flex-1 bg-[#131313] p-6 md:p-10 xl:p-12">
 
         {/* Mobile top-bar */}
@@ -140,7 +140,7 @@ export default function CmsDashboardPage() {
               Overview<span className="text-[#53e076]">.</span>
             </h2>
             <p className="text-[#e5e2e1]/60 text-sm md:text-base">
-              Halo, <span className="text-[#53e076] font-semibold">{admin?.username ?? '—'}</span> — sistem aktif dan sinkronisasi berjalan.
+              Halo, <span className="text-[#53e076] font-semibold">{admin?.username ?? 'â€”'}</span> â€” sistem aktif dan sinkronisasi berjalan.
             </p>
           </div>
           <button className="bg-[#53e076] hover:bg-[#1db954] text-[#002108] font-bold py-3 px-6 md:py-4 md:px-8

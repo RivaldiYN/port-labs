@@ -1,4 +1,4 @@
-import { Elysia, t } from 'elysia'
+﻿import { Elysia, t } from 'elysia'
 import { eq, desc, sql } from 'drizzle-orm'
 import { randomBytes } from 'crypto'
 import { writeFile, mkdir } from 'fs/promises'
@@ -9,14 +9,14 @@ import { db } from '../../lib/db'
 import { media } from '../../db/schema'
 import { ok } from '../../index'
 
-// ── Serialize any thrown value to a readable string ───────────────────────────
+// â”€â”€ Serialize any thrown value to a readable string â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 function errMsg(err: unknown): string {
   if (err instanceof Error) return err.message
   if (typeof err === 'string') return err
   try { return JSON.stringify(err) } catch { return String(err) }
 }
 
-// ── MinIO client ──────────────────────────────────────────────────────────────
+// â”€â”€ MinIO client â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 let minioAvailable = false
 
 const minioClient = new Minio.Client({
@@ -41,7 +41,7 @@ async function ensureBucket() {
       await minioClient.setBucketPolicy(BUCKET, policy)
     }
     minioAvailable = true
-    console.log('[Media] MinIO connected — bucket:', BUCKET)
+    console.log('[Media] MinIO connected â€” bucket:', BUCKET)
   } catch (e) {
     console.warn('[Media] MinIO tidak tersedia, fallback ke disk lokal:', errMsg(e))
     minioAvailable = false
@@ -49,7 +49,7 @@ async function ensureBucket() {
 }
 ensureBucket()
 
-// ── Local disk fallback ───────────────────────────────────────────────────────
+// â”€â”€ Local disk fallback â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const UPLOAD_DIR  = join(process.cwd(), 'uploads')
 const PUBLIC_BASE = process.env.PUBLIC_URL ?? `http://localhost:${process.env.PORT ?? 3000}`
 
@@ -73,7 +73,7 @@ const ALLOWED_TYPES: Record<string, string> = {
   'image/webp': 'webp', 'image/gif': 'gif', 'application/pdf': 'pdf',
 }
 
-// ── CMS Media routes ──────────────────────────────────────────────────────────
+// â”€â”€ CMS Media routes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
 
   // GET /api/cms/media
@@ -157,7 +157,7 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
     detail: { tags: ['CMS'], summary: 'Upload file to MinIO or local disk and save metadata' },
   })
 
-  // PATCH /api/cms/media/:id — update alt text
+  // PATCH /api/cms/media/:id â€” update alt text
   .patch('/:id', async ({ params, body, set }) => {
     const [row] = await db.select().from(media).where(eq(media.id, params.id))
     if (!row) { set.status = 404; return { success: false, data: null, message: 'Media tidak ditemukan' } }
@@ -168,7 +168,7 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
     detail: { tags: ['CMS'], summary: 'Update media alt text' },
   })
 
-  // DELETE /api/cms/media/:id — cascade delete MinIO + DB
+  // DELETE /api/cms/media/:id â€” cascade delete MinIO + DB
   .delete('/:id', async ({ params, set }) => {
     const [row] = await db.select().from(media).where(eq(media.id, params.id))
     if (!row) { set.status = 404; return { success: false, data: null, message: 'Media tidak ditemukan' } }
@@ -184,7 +184,7 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
     detail: { tags: ['CMS'], summary: 'Delete media from MinIO (if available) and DB' },
   })
 
-// ── Public media route — GET /api/media (images only) ─────────────────────────
+// â”€â”€ Public media route â€” GET /api/media (images only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const publicMediaRoutes = new Elysia({ prefix: '/api/media' })
   .get('/', async ({ query }) => {
     const limit  = Math.min(50, Math.max(1, Number(query.limit ?? 20)))

@@ -1,11 +1,11 @@
-import { Elysia, t } from 'elysia'
+﻿import { Elysia, t } from 'elysia'
 import { eq, and, ilike, sql, desc, asc, arrayContains } from 'drizzle-orm'
 import slugify from 'slugify'
 import { db } from '../../lib/db'
 import { projects } from '../../db/schema'
 import { ok } from '../../index'
 
-// ── Shared project body schema ────────────────────────────────────────────────
+// â”€â”€ Shared project body schema â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 const NullableStr = t.Optional(t.Union([t.String(), t.Null()]))
 
 const ProjectBody = t.Object({
@@ -20,7 +20,7 @@ const ProjectBody = t.Object({
   isPublished:  t.Optional(t.Boolean()),
 })
 
-// ── Public routes — /api/projects ────────────────────────────────────────────
+// â”€â”€ Public routes â€” /api/projects â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const publicProjectRoutes = new Elysia({ prefix: '/api/projects' })
 
   // GET /api/projects
@@ -89,10 +89,10 @@ export const publicProjectRoutes = new Elysia({ prefix: '/api/projects' })
     detail: { tags: ['Public'], summary: 'Get project detail by slug' },
   })
 
-// ── CMS routes — /api/cms/projects (admin only) ──────────────────────────────
+// â”€â”€ CMS routes â€” /api/cms/projects (admin only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export const cmsProjectRoutes = new Elysia({ prefix: '/api/cms/projects' })
 
-  // GET /api/cms/projects — list all including drafts
+  // GET /api/cms/projects â€” list all including drafts
   .get('/', async ({ query }) => {
     const page   = Math.max(1, Number(query.page  ?? 1))
     const limit  = Math.min(100, Math.max(1, Number(query.limit ?? 20)))
@@ -218,7 +218,7 @@ export const cmsProjectRoutes = new Elysia({ prefix: '/api/cms/projects' })
     detail: { tags: ['CMS'], summary: 'Delete project by ID' },
   })
 
-  // PATCH /api/cms/projects/:id/publish — toggle published
+  // PATCH /api/cms/projects/:id/publish â€” toggle published
   .patch('/:id/publish', async ({ params, set }) => {
     const [existing] = await db.select().from(projects).where(eq(projects.id, params.id))
     if (!existing) {

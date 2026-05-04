@@ -1,4 +1,4 @@
-import 'dotenv/config'
+﻿import 'dotenv/config'
 import { drizzle } from 'drizzle-orm/postgres-js'
 import { migrate } from 'drizzle-orm/postgres-js/migrator'
 import postgres from 'postgres'
@@ -8,7 +8,7 @@ import { fileURLToPath } from 'url'
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 async function runMigrations() {
-  console.log('🔌 Connecting to database...')
+  console.log('ðŸ”Œ Connecting to database...')
 
   if (!process.env.DATABASE_URL) {
     throw new Error('DATABASE_URL is not set in .env')
@@ -19,17 +19,17 @@ async function runMigrations() {
   const db = drizzle(migrationClient)
 
   try {
-    console.log('⚡ Running migrations...')
+    console.log('âš¡ Running migrations...')
     await migrate(db, {
       migrationsFolder: path.join(__dirname, 'migrations'),
     })
-    console.log('✅ All migrations applied successfully!')
+    console.log('âœ… All migrations applied successfully!')
   } catch (error) {
-    console.error('❌ Migration failed:', error)
+    console.error('âŒ Migration failed:', error)
     process.exit(1)
   } finally {
     await migrationClient.end()
-    console.log('🔌 Database connection closed.')
+    console.log('ðŸ”Œ Database connection closed.')
   }
 }
 

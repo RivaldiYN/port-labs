@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+﻿import { useState, useEffect, useCallback } from 'react'
 
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
@@ -16,7 +16,7 @@ export interface Profile {
   updatedAt:   string | null
 }
 
-// ── Public hook — read-only ───────────────────────────────────────────────────
+// â”€â”€ Public hook â€” read-only â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export function useProfile() {
   const [data, setData]       = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)
@@ -42,7 +42,7 @@ export function useProfile() {
   return { data, loading, error, refetch: fetch_ }
 }
 
-// ── CMS hook — read + update + avatar upload ──────────────────────────────────
+// â”€â”€ CMS hook â€” read + update + avatar upload â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 export function useCmsProfile(token: string | null) {
   const [data, setData]       = useState<Profile | null>(null)
   const [loading, setLoading] = useState(true)

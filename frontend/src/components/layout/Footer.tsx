@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+﻿import { Link } from 'react-router-dom'
 
 export default function Footer() {
   return (
@@ -9,7 +9,7 @@ export default function Footer() {
             Rivaldi<span className="text-[#1DB954]">.</span>
           </Link>
           <p className="font-label text-xs text-[#e5e2e1]/40 mt-1 tracking-widest">
-            © {new Date().getFullYear()} Rivaldi Yonathan Nainggolan. Built for the orbit.
+            Â© {new Date().getFullYear()} Rivaldi Yonathan Nainggolan. Built for the orbit.
           </p>
         </div>
         <div className="flex gap-8">

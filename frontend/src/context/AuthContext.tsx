@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
+﻿import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
 
 interface Admin { id: string; username: string; email: string }
 interface AuthState {
@@ -24,7 +24,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading]       = useState(true)
   const [isRefreshing, setIsRefreshing] = useState(false)
 
-  // ── Refresh ──────────────────────────────────────────────────────────────────
+  // â”€â”€ Refresh â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const refresh = useCallback(async (): Promise<string | null> => {
     const stored = localStorage.getItem(LS_REFRESH)
     if (!stored) return null
@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, [])
 
-  // ── Restore session on mount ─────────────────────────────────────────────────
+  // â”€â”€ Restore session on mount â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   useEffect(() => {
     const stored = localStorage.getItem(LS_ADMIN)
     if (stored) {
@@ -62,14 +62,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     refresh().finally(() => setIsLoading(false))
   }, [refresh])
 
-  // ── Auto-refresh every 13 minutes ────────────────────────────────────────────
+  // â”€â”€ Auto-refresh every 13 minutes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   useEffect(() => {
     if (!accessToken) return
     const id = setInterval(() => { refresh() }, 13 * 60 * 1000)
     return () => clearInterval(id)
   }, [accessToken, refresh])
 
-  // ── Login ─────────────────────────────────────────────────────────────────────
+  // â”€â”€ Login â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const login = async (username: string, password: string) => {
     try {
       const res = await fetch(`${API}/auth/login`, {
@@ -92,7 +92,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }
 
-  // ── Logout ────────────────────────────────────────────────────────────────────
+  // â”€â”€ Logout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
   const logout = async () => {
     const rt = localStorage.getItem(LS_REFRESH)
     if (rt) {

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { useProjects } from '../hooks/useProjects'
 
@@ -44,7 +44,7 @@ export default function ProjectsPage() {
 
   return (
     <div className="bg-[#131313] text-[#e5e2e1] min-h-screen">
-      {/* ── Navbar ─────────────────────────────────────────────── */}
+      {/* â”€â”€ Navbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <nav className="fixed top-0 w-full z-50 bg-[#131313]/60 backdrop-blur-xl shadow-2xl shadow-black/40 h-20 flex justify-between items-center px-6 md:px-8">
         <Link to="/" className="text-xl font-bold text-[#e5e2e1] font-headline tracking-tighter">
           Rivaldi<span className="text-[#1DB954]">.</span>
@@ -174,12 +174,12 @@ export default function ProjectsPage() {
                       {project.title}
                     </h3>
                     <p className="text-[#e5e2e1]/50 text-sm mb-4 line-clamp-2 font-body leading-relaxed flex-grow">
-                      {project.description ?? '—'}
+                      {project.description ?? 'â€”'}
                     </p>
 
                     <div className="mt-auto flex items-center justify-between pt-4 border-t border-[#3d4a3d]/10">
                       <span className="text-[#e5e2e1]/30 font-label text-xs">
-                        {project.publishedAt ? new Date(project.publishedAt).getFullYear() : '—'}
+                        {project.publishedAt ? new Date(project.publishedAt).getFullYear() : 'â€”'}
                       </span>
                       <div className="flex gap-2">
                         {project.repoUrl && (
@@ -251,7 +251,7 @@ export default function ProjectsPage() {
       {/* Footer */}
       <footer className="w-full py-12 border-t border-[#e5e2e1]/10 bg-[#131313]">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center px-8 gap-6">
-          <p className="font-label text-sm text-[#e5e2e1]/40">© {new Date().getFullYear()} Rivaldi Yonathan Nainggolan.</p>
+          <p className="font-label text-sm text-[#e5e2e1]/40">Â© {new Date().getFullYear()} Rivaldi Yonathan Nainggolan.</p>
           <div className="flex gap-8">
             {[['LinkedIn', 'https://linkedin.com/in/rivaldiyn'], ['GitHub', 'https://github.com/RivaldiYN']].map(([l, h]) => (
               <a key={l} href={h} target="_blank" rel="noopener noreferrer"

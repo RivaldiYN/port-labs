@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+﻿import { useState, useRef, useCallback } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 import { useCmsProfile } from '../../hooks/useProfile'
@@ -84,9 +84,9 @@ export default function CmsProfilePage() {
         payload[k] = v.trim() === '' ? null : v.trim()
       }
       await updateProfile(payload)
-      showToast('✅ Profil berhasil disimpan')
+      showToast('âœ… Profil berhasil disimpan')
     } catch (err) {
-      showToast(`❌ ${(err as Error).message}`, 'error')
+      showToast(`âŒ ${(err as Error).message}`, 'error')
     } finally {
       setSaving(false)
     }
@@ -94,7 +94,7 @@ export default function CmsProfilePage() {
 
   const processFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
-      showToast('❌ File harus berupa gambar', 'error')
+      showToast('âŒ File harus berupa gambar', 'error')
       return
     }
     const preview = URL.createObjectURL(file)
@@ -102,9 +102,9 @@ export default function CmsProfilePage() {
     setUploading(true)
     try {
       await uploadAvatar(file)
-      showToast('✅ Avatar berhasil diupload')
+      showToast('âœ… Avatar berhasil diupload')
     } catch (err) {
-      showToast(`❌ ${(err as Error).message}`, 'error')
+      showToast(`âŒ ${(err as Error).message}`, 'error')
       setAvatarPreview(null)
     } finally {
       setUploading(false)
@@ -133,7 +133,7 @@ export default function CmsProfilePage() {
   return (
     <div className="bg-[#131313] text-[#e5e2e1] min-h-screen flex">
 
-      {/* ── Toast ───────────────────────────────────────────────────── */}
+      {/* â”€â”€ Toast â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {toast && (
         <div
           role="status"
@@ -148,7 +148,7 @@ export default function CmsProfilePage() {
         </div>
       )}
 
-      {/* ── Mobile overlay ──────────────────────────────────────────── */}
+      {/* â”€â”€ Mobile overlay â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/60 z-40 lg:hidden"
@@ -157,7 +157,7 @@ export default function CmsProfilePage() {
         />
       )}
 
-      {/* ── Sidebar ─────────────────────────────────────────────────── */}
+      {/* â”€â”€ Sidebar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <aside
         aria-label="Sidebar navigasi CMS"
         className={`fixed left-0 top-0 h-screen w-64 bg-[#1c1b1b] flex flex-col py-8
@@ -226,7 +226,7 @@ export default function CmsProfilePage() {
         </div>
       </aside>
 
-      {/* ── Main ────────────────────────────────────────────────────── */}
+      {/* â”€â”€ Main â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
       <main className="lg:ml-64 min-h-screen flex-1 p-6 md:p-10 xl:p-12">
 
         {/* Mobile topbar */}
@@ -279,7 +279,7 @@ export default function CmsProfilePage() {
           <form onSubmit={handleSave} noValidate>
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 md:gap-8">
 
-              {/* ── Left: Avatar card ──────────────────────────────── */}
+              {/* â”€â”€ Left: Avatar card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
               <section
                 aria-label="Foto profil"
                 className="xl:col-span-4 bg-[#1c1b1b] rounded-3xl p-6 md:p-8 border border-[#3d4a3d]/10 flex flex-col items-center text-center"
@@ -352,7 +352,7 @@ export default function CmsProfilePage() {
                 </div>
 
                 <p className="mt-6 text-[10px] text-[#e5e2e1]/25 font-label leading-relaxed">
-                  Klik avatar atau drag &amp; drop gambar.<br/>Maks 5MB · JPEG, PNG, WebP
+                  Klik avatar atau drag &amp; drop gambar.<br/>Maks 5MB Â· JPEG, PNG, WebP
                 </p>
 
                 {profile?.updatedAt && (
@@ -362,7 +362,7 @@ export default function CmsProfilePage() {
                 )}
               </section>
 
-              {/* ── Right: Form fields ─────────────────────────────── */}
+              {/* â”€â”€ Right: Form fields â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
               <section
                 aria-label="Form edit profil"
                 className="xl:col-span-8 bg-[#1c1b1b] rounded-3xl p-6 md:p-8 border border-[#3d4a3d]/10"
@@ -400,7 +400,7 @@ export default function CmsProfilePage() {
                       type="text"
                       value={form.tagline}
                       onChange={e => setForm(f => ({ ...f, tagline: e.target.value }))}
-                      placeholder="Full-Stack Developer · UI/UX Enthusiast"
+                      placeholder="Full-Stack Developer Â· UI/UX Enthusiast"
                       className={inputCls}
                     />
                   </div>

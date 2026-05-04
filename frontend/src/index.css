@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap');
+﻿@import url('https://fonts.googleapis.com/css2?family=Epilogue:wght@700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600&family=Space+Grotesk:wght@400;500;700&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap');
 
 @import "tailwindcss";
 
 @theme {
-  /* ── Colors: Obsidian Spectrum ─────────────────────────────── */
+  /* â”€â”€ Colors: Obsidian Spectrum â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --color-background:              #131313;
   --color-surface:                 #131313;
   --color-surface-dim:             #131313;
@@ -23,7 +23,7 @@
   --color-outline:                 #869585;
   --color-outline-variant:         #3d4a3d;
 
-  /* Primary — Spotify Green */
+  /* Primary â€” Spotify Green */
   --color-primary:                 #53e076;
   --color-primary-fixed:           #72fe8f;
   --color-primary-fixed-dim:       #53e076;
@@ -59,18 +59,18 @@
   --color-on-error:                #690005;
   --color-on-error-container:      #ffdad6;
 
-  /* ── Typography ────────────────────────────────────────────── */
+  /* â”€â”€ Typography â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --font-headline: 'Epilogue', sans-serif;
   --font-body:     'Plus Jakarta Sans', sans-serif;
   --font-label:    'Space Grotesk', sans-serif;
 
-  /* ── Border Radius ─────────────────────────────────────────── */
+  /* â”€â”€ Border Radius â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
   --radius:    0.25rem;
   --radius-lg: 0.5rem;
   --radius-xl: 0.75rem;
 }
 
-/* ── Base ─────────────────────────────────────────────────────── */
+/* â”€â”€ Base â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 *, *::before, *::after { box-sizing: border-box; }
 
 html { scroll-behavior: smooth; }
@@ -85,14 +85,14 @@ body {
 
 ::selection { background-color: #1db954; color: #002108; }
 
-/* ── Material Icons ───────────────────────────────────────────── */
+/* â”€â”€ Material Icons â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .material-symbols-outlined {
   font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
   user-select: none;
 }
 .icon-filled { font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
 
-/* ── Utilities ────────────────────────────────────────────────── */
+/* â”€â”€ Utilities â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .noise-bg {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
 }
@@ -123,7 +123,7 @@ body {
   pointer-events: none;
 }
 
-/* ── Prose (Post Detail) ──────────────────────────────────────── */
+/* â”€â”€ Prose (Post Detail) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .prose h1, .prose h2, .prose h3 {
   font-family: 'Epilogue', sans-serif;
   letter-spacing: -0.02em;
@@ -145,7 +145,7 @@ body {
 .prose code { font-family: 'Space Grotesk', monospace; color: #53e076; font-size: 0.9em; }
 .prose ul { list-style: none; padding-left: 0; }
 .prose ul li { position: relative; padding-left: 1.5rem; margin-bottom: 0.75rem; color: rgba(229,226,225,0.8); }
-.prose ul li::before { content: "→"; position: absolute; left: 0; color: #1db954; font-weight: bold; }
+.prose ul li::before { content: "â†’"; position: absolute; left: 0; color: #1db954; font-weight: bold; }
 .prose blockquote {
   border-left: 4px solid #1db954;
   padding: 1rem 1.5rem;
@@ -157,7 +157,7 @@ body {
 .prose h2 { font-size: 1.875rem; font-weight: 700; margin-top: 4rem; margin-bottom: 1.5rem; }
 .prose h3 { font-size: 1.5rem; font-weight: 700; margin-top: 3rem; margin-bottom: 1rem; }
 
-/* ── Animations ──────────────────────────────────────────────── */
+/* â”€â”€ Animations â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 @keyframes float-slow {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-12px); }
@@ -179,7 +179,7 @@ body {
 .animate-glow      { animation: pulse-glow 3s ease-in-out infinite; }
 .animate-slide-up  { animation: slide-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
 
-/* ── Scrollbar ───────────────────────────────────────────────── */
+/* â”€â”€ Scrollbar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: #131313; }
 ::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 9999px; }
