@@ -1,8 +1,8 @@
-﻿import { useState } from "react"
+import { useState } from "react"
 import { Link } from "react-router-dom"
 import { usePosts, useTags } from "../hooks/usePosts"
 
-const API_BASE = import.meta.env.VITE_API_URL ?? "backend"
+const API_BASE = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
 export default function PostsPage() {
   const [search, setSearch] = useState("")

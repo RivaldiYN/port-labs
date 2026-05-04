@@ -1,4 +1,4 @@
-﻿import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, useCallback, type ReactNode } from 'react'
 
 interface Admin { id: string; username: string; email: string }
 interface AuthState {
@@ -14,7 +14,7 @@ interface AuthState {
 
 const AuthCtx = createContext<AuthState | null>(null)
 
-const API = import.meta.env.VITE_API_URL ?? 'backend'
+const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 const LS_REFRESH = 'cms_refresh_token'
 const LS_ADMIN = 'cms_admin'
 

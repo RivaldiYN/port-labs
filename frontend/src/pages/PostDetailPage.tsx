@@ -1,7 +1,7 @@
-﻿import { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 
-const API = import.meta.env.VITE_API_URL ?? "backend"
+const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
 interface Post {
   id: string; title: string; slug: string; excerpt: string | null; content: string | null
