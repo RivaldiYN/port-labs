@@ -23,7 +23,7 @@ const app = new Elysia({ adapter: node() })
 
   // ── Plugins ───────────────────────────────────────────────────────────────
   .use(cors({
-    origin: process.env.FRONTEND_URL ?? 'http://localhost:5173',
+    origin: process.env.NODE_ENV === 'production' ? true : true,
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
