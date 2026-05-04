@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom'
 const NAV_LINKS = [
   { to: '/', label: 'Home' },
   { to: '/projects', label: 'Projects' },
-  { to: '/news/architecting-the-antigravity-interface', label: 'News' },
+  { to: '/posts', label: 'Notes' },
 ]
 
 export default function Navbar() {
@@ -22,9 +22,8 @@ export default function Navbar() {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-500 ${
-        scrolled ? 'bg-[#131313]/80 shadow-2xl shadow-black/40' : 'bg-transparent'
-      } backdrop-blur-xl h-20 flex items-center justify-between px-6 md:px-8`}
+      className={`fixed top-0 w-full z-50 transition-all duration-500 ${scrolled ? 'bg-[#131313]/80 shadow-2xl shadow-black/40' : 'bg-transparent'
+        } backdrop-blur-xl h-20 flex items-center justify-between px-6 md:px-8`}
     >
       {/* Logo */}
       <Link
@@ -37,16 +36,15 @@ export default function Navbar() {
       {/* Desktop Nav */}
       <div className="hidden md:flex gap-8 items-center">
         {NAV_LINKS.map(({ to, label }) => {
-          const active = pathname === to || (label === 'News' && pathname.startsWith('/news'))
+          const active = pathname === to || (label === 'Notes' && pathname.startsWith('/news'))
           return (
             <Link
               key={to}
               to={to}
-              className={`font-headline tracking-tighter text-sm transition-all duration-300 px-2 py-1 rounded ${
-                active
-                  ? 'text-[#1DB954] font-bold border-b-2 border-[#1DB954] pb-0'
-                  : 'text-[#e5e2e1]/70 hover:text-[#e5e2e1] hover:bg-[#1DB954]/10'
-              }`}
+              className={`font-headline tracking-tighter text-sm transition-all duration-300 px-2 py-1 rounded ${active
+                ? 'text-[#1DB954] font-bold border-b-2 border-[#1DB954] pb-0'
+                : 'text-[#e5e2e1]/70 hover:text-[#e5e2e1] hover:bg-[#1DB954]/10'
+                }`}
             >
               {label}
             </Link>

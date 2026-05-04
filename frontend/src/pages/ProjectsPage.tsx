@@ -19,16 +19,16 @@ function getIcon(techStack: string[] | null): string {
 
 export default function ProjectsPage() {
   const [activeTech, setActiveTech] = useState('')
-  const [search, setSearch]         = useState('')
+  const [search, setSearch] = useState('')
   const [searchInput, setSearchInput] = useState('')
-  const [page, setPage]             = useState(1)
+  const [page, setPage] = useState(1)
 
   const { data: projects, meta, loading, error } = useProjects({
     page,
     limit: 9,
-    tech:   activeTech || undefined,
-    search: search    || undefined,
-    sort:   'newest',
+    tech: activeTech || undefined,
+    search: search || undefined,
+    sort: 'newest',
   })
 
   const handleSearch = (e: React.FormEvent) => {
@@ -50,7 +50,7 @@ export default function ProjectsPage() {
           Rivaldi<span className="text-[#1DB954]">.</span>
         </Link>
         <div className="hidden md:flex gap-8 items-center">
-          {[['/', 'Home'], ['/projects', 'Projects'], ['/news/architecting-the-antigravity-interface', 'News']].map(([to, label]) => (
+          {[['/', 'Home'], ['/projects', 'Projects'], ['/posts', 'Notes']].map(([to, label]) => (
             <Link key={to} to={to}
               className={`font-headline tracking-tighter text-sm px-2 py-1 rounded transition-all duration-300 ${to === '/projects' ? 'text-[#1DB954] font-bold border-b-2 border-[#1DB954]' : 'text-[#e5e2e1]/70 hover:text-[#e5e2e1] hover:bg-[#1DB954]/10'}`}>
               {label}
@@ -84,11 +84,10 @@ export default function ProjectsPage() {
             <div className="flex flex-wrap gap-2 p-1 bg-[#1c1b1b] rounded-full w-fit">
               {FILTER_TABS.map(tab => (
                 <button key={tab} onClick={() => handleFilterTab(tab)}
-                  className={`px-4 py-2 rounded-full font-label text-xs font-bold tracking-widest uppercase transition-all ${
-                    (tab === 'All' && !activeTech) || tab === activeTech
-                      ? 'bg-[#1db954] text-[#002108]'
-                      : 'text-[#e5e2e1]/50 hover:text-[#e5e2e1] hover:bg-[#2a2a2a]'
-                  }`}>
+                  className={`px-4 py-2 rounded-full font-label text-xs font-bold tracking-widest uppercase transition-all ${(tab === 'All' && !activeTech) || tab === activeTech
+                    ? 'bg-[#1db954] text-[#002108]'
+                    : 'text-[#e5e2e1]/50 hover:text-[#e5e2e1] hover:bg-[#2a2a2a]'
+                    }`}>
                   {tab}
                 </button>
               ))}
@@ -232,9 +231,8 @@ export default function ProjectsPage() {
 
               {Array.from({ length: meta.totalPages }, (_, i) => i + 1).map(p => (
                 <button key={p} onClick={() => setPage(p)}
-                  className={`w-10 h-10 rounded-xl font-label text-xs font-bold transition-all ${
-                    p === page ? 'bg-[#1db954] text-[#002108]' : 'bg-[#1c1b1b] text-[#e5e2e1]/60 hover:bg-[#2a2a2a]'
-                  }`}>
+                  className={`w-10 h-10 rounded-xl font-label text-xs font-bold transition-all ${p === page ? 'bg-[#1db954] text-[#002108]' : 'bg-[#1c1b1b] text-[#e5e2e1]/60 hover:bg-[#2a2a2a]'
+                    }`}>
                   {p}
                 </button>
               ))}
