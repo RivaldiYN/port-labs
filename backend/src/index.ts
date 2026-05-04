@@ -1,4 +1,4 @@
-﻿import 'dotenv/config'
+import 'dotenv/config'
 import { Elysia } from 'elysia'
 import { node } from '@elysiajs/node'
 import { cors } from '@elysiajs/cors'
@@ -9,7 +9,7 @@ import { authRoutes } from './modules/auth/routes'
 import { publicRoutes } from './modules/public/routes'
 import { cmsRoutes } from './modules/cms/routes'
 
-// â”€â”€ Response format helper â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ── Response format helper ─────────────────────────────────────────────────
 export function ok<T>(data: T, message = 'OK', meta?: Record<string, unknown>) {
   return { success: true, data, message, ...(meta ? { meta } : {}) }
 }
@@ -18,10 +18,10 @@ export function fail(message: string, status = 400) {
   return { success: false, data: null, message, status }
 }
 
-// â”€â”€ App â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const app = new Elysia({ adapter: node() })
+// ── App ────────────────────────────────────────────────────────────────────
+const app = process.env.VERCEL ? new Elysia() : new Elysia({ adapter: node() })
 
-  // â”€â”€ Plugins â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Plugins ───────────────────────────────────────────────────────────────
   .use(cors({
     origin: process.env.NODE_ENV === 'production' ? true : true,
     credentials: true,
@@ -41,14 +41,14 @@ const app = new Elysia({ adapter: node() })
       info: {
         title: 'Antigravity Portfolio API',
         version: '1.0.0',
-        description: 'REST API untuk Antigravity Portfolio â€” Rivaldi Yonathan Nainggolan',
+        description: 'REST API untuk Antigravity Portfolio — Rivaldi Yonathan Nainggolan',
         contact: { name: 'Rivaldi', email: 'aldinggln9@gmail.com' },
       },
       tags: [
-        { name: 'Health',  description: 'Server health check' },
-        { name: 'Auth',   description: 'Autentikasi admin (login, refresh, logout)' },
-        { name: 'Public', description: 'Endpoint publik â€” profile, projects, posts' },
-        { name: 'CMS',    description: 'Content management â€” auth required' },
+        { name: 'Health', description: 'Server health check' },
+        { name: 'Auth', description: 'Autentikasi admin (login, refresh, logout)' },
+        { name: 'Public', description: 'Endpoint publik — profile, projects, posts' },
+        { name: 'CMS', description: 'Content management — auth required' },
       ],
       components: {
         securitySchemes: {
@@ -58,11 +58,11 @@ const app = new Elysia({ adapter: node() })
     },
   }))
 
-  // â”€â”€ Request logger â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Request logger ─────────────────────────────────────────────────────────
   .onRequest(({ request }) => {
     const start = Date.now()
-    // Attach start time for response hook
-    ;(request as Request & { _start?: number })._start = start
+      // Attach start time for response hook
+      ; (request as Request & { _start?: number })._start = start
   })
 
   .onAfterResponse(({ request, set }) => {
@@ -72,10 +72,10 @@ const app = new Elysia({ adapter: node() })
     const url = new URL(request.url).pathname
     const status = set.status ?? 200
     const timestamp = new Date().toISOString()
-    console.log(`[${timestamp}] ${method} ${url} â†’ ${status} (${duration}ms)`)
+    console.log(`[${timestamp}] ${method} ${url} → ${status} (${duration}ms)`)
   })
 
-  // â”€â”€ Global error handler â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Global error handler ───────────────────────────────────────────────────
   .onError(({ code, error, set }) => {
     const timestamp = new Date().toISOString()
     const msg = (error as Error).message ?? String(error)
@@ -110,7 +110,7 @@ const app = new Elysia({ adapter: node() })
     }
   })
 
-  // â”€â”€ Health check â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Health check ───────────────────────────────────────────────────────────
   .get('/health', () => {
     return ok({
       status: 'ok',
@@ -123,15 +123,15 @@ const app = new Elysia({ adapter: node() })
     detail: { tags: ['Health'], summary: 'Health check endpoint' },
   })
 
-  // â”€â”€ Routes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Routes ─────────────────────────────────────────────────────────────────
   .use(authRoutes)
   .use(publicRoutes)
   .use(cmsRoutes)
 
-  // â”€â”€ Static files â€” local disk uploads fallback â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── Static files — local disk uploads fallback ──────────────────────────────
   .use(staticPlugin({ assets: 'uploads', prefix: '/uploads' }))
 
-  // â”€â”€ 404 fallback â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // ── 404 fallback ───────────────────────────────────────────────────────────
   .get('*', ({ set }) => {
     set.status = 404
     return { success: false, data: null, message: 'Route tidak ditemukan' }
