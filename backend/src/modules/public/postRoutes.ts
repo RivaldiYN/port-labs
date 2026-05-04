@@ -5,29 +5,29 @@ import { db } from '../../lib/db'
 import { posts } from '../../db/schema'
 import { ok } from '../../index'
 
-// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ Helpers  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 function autoExcerpt(content: string | null | undefined, max = 160): string | null {
   if (!content) return null
   const plain = content.replace(/[#*`>_\-\[\]()!]/g, '').replace(/\s+/g, ' ').trim()
-  return plain.length > max ? plain.slice(0, max).trimEnd() + 'â€¦' : plain
+  return plain.length > max ? plain.slice(0, max).trimEnd() + ' €¦' : plain
 }
 
-// â”€â”€ Shared body schema â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ Shared body schema  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 const NullableStr = t.Optional(t.Union([t.String(), t.Null()]))
 
 const PostBody = t.Object({
-  title:       t.String({ minLength: 1, maxLength: 200 }),
-  excerpt:     NullableStr,
-  content:     NullableStr,
-  coverUrl:    NullableStr,
-  tags:        t.Optional(t.Array(t.String())),
+  title: t.String({ minLength: 1, maxLength: 200 }),
+  excerpt: NullableStr,
+  content: NullableStr,
+  coverUrl: NullableStr,
+  tags: t.Optional(t.Array(t.String())),
   isPublished: t.Optional(t.Boolean()),
 })
 
-// â”€â”€ Public routes â€” /api/posts â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ Public routes    /api/posts  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const publicPostRoutes = new Elysia({ prefix: '/api/posts' })
 
-  // GET /api/posts/tags â€” must be before /:slug
+  // GET /api/posts/tags    must be before /:slug
   .get('/tags', async () => {
     // Aggregate all distinct tags from published posts
     const rows = await db
@@ -47,12 +47,12 @@ export const publicPostRoutes = new Elysia({ prefix: '/api/posts' })
 
   // GET /api/posts
   .get('/', async ({ query }) => {
-    const page   = Math.max(1, Number(query.page  ?? 1))
-    const limit  = Math.min(50, Math.max(1, Number(query.limit ?? 9)))
+    const page = Math.max(1, Number(query.page ?? 1))
+    const limit = Math.min(50, Math.max(1, Number(query.limit ?? 9)))
     const offset = (page - 1) * limit
     const search = query.search as string | undefined
-    const tag    = query.tag    as string | undefined
-    const sort   = (query.sort ?? 'newest') as 'newest' | 'oldest'
+    const tag = query.tag as string | undefined
+    const sort = (query.sort ?? 'newest') as 'newest' | 'oldest'
 
     // Base condition: only published
     const conditions: ReturnType<typeof eq>[] = [eq(posts.isPublished, true) as ReturnType<typeof eq>]
@@ -86,7 +86,7 @@ export const publicPostRoutes = new Elysia({ prefix: '/api/posts' })
       .from(posts)
       .where(where)
 
-    const total      = countRow?.total ?? 0
+    const total = countRow?.total ?? 0
     const totalPages = Math.ceil(total / limit)
 
     const rows = await db
@@ -100,12 +100,12 @@ export const publicPostRoutes = new Elysia({ prefix: '/api/posts' })
     return ok(rows, 'Posts berhasil diambil', { page, limit, total, totalPages })
   }, {
     query: t.Object({
-      page:   t.Optional(t.String()),
-      limit:  t.Optional(t.String()),
+      page: t.Optional(t.String()),
+      limit: t.Optional(t.String()),
       search: t.Optional(t.String()),
-      tag:    t.Optional(t.String()),
-      tags:   t.Optional(t.String()),
-      sort:   t.Optional(t.String()),
+      tag: t.Optional(t.String()),
+      tags: t.Optional(t.String()),
+      sort: t.Optional(t.String()),
     }),
     detail: { tags: ['Public'], summary: 'List published posts (paginated, searchable, filterable)' },
   })
@@ -126,13 +126,13 @@ export const publicPostRoutes = new Elysia({ prefix: '/api/posts' })
     detail: { tags: ['Public'], summary: 'Get published post by slug' },
   })
 
-// â”€â”€ CMS routes â€” /api/cms/posts (admin only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ CMS routes    /api/cms/posts (admin only)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const cmsPostRoutes = new Elysia({ prefix: '/api/cms/posts' })
 
   // GET /api/cms/posts
   .get('/', async ({ query }) => {
-    const page   = Math.max(1, Number(query.page  ?? 1))
-    const limit  = Math.min(100, Math.max(1, Number(query.limit ?? 20)))
+    const page = Math.max(1, Number(query.page ?? 1))
+    const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)))
     const offset = (page - 1) * limit
     const search = query.search as string | undefined
 
@@ -159,8 +159,8 @@ export const cmsPostRoutes = new Elysia({ prefix: '/api/cms/posts' })
     return ok(rows, 'CMS posts', { page, limit, total, totalPages: Math.ceil(total / limit) })
   }, {
     query: t.Object({
-      page:   t.Optional(t.String()),
-      limit:  t.Optional(t.String()),
+      page: t.Optional(t.String()),
+      limit: t.Optional(t.String()),
       search: t.Optional(t.String()),
     }),
     detail: { tags: ['CMS'], summary: 'List all posts including drafts (admin)' },
@@ -178,15 +178,15 @@ export const cmsPostRoutes = new Elysia({ prefix: '/api/cms/posts' })
 
     // Auto-generate excerpt if not provided
     const excerpt = body.excerpt ?? autoExcerpt(body.content)
-    const now     = new Date()
+    const now = new Date()
 
     const [post] = await db.insert(posts).values({
-      title:       body.title,
+      title: body.title,
       slug,
       excerpt,
-      content:     body.content ?? null,
-      coverUrl:    body.coverUrl ?? null,
-      tags:        body.tags ?? [],
+      content: body.content ?? null,
+      coverUrl: body.coverUrl ?? null,
+      tags: body.tags ?? [],
       isPublished: body.isPublished ?? false,
       publishedAt: body.isPublished ? now : null,
     }).returning()
@@ -218,7 +218,7 @@ export const cmsPostRoutes = new Elysia({ prefix: '/api/cms/posts' })
       }
     }
 
-    const published   = body.isPublished ?? existing.isPublished
+    const published = body.isPublished ?? existing.isPublished
     const publishedAt = published && !existing.publishedAt ? new Date() : existing.publishedAt
 
     // Auto-generate excerpt if content changed and excerpt not provided
@@ -228,15 +228,15 @@ export const cmsPostRoutes = new Elysia({ prefix: '/api/cms/posts' })
       : (existing.excerpt ?? autoExcerpt(newContent))
 
     const [updated] = await db.update(posts).set({
-      title:       body.title     ?? existing.title,
+      title: body.title ?? existing.title,
       slug,
-      excerpt:     newExcerpt,
-      content:     newContent,
-      coverUrl:    body.coverUrl  !== undefined ? body.coverUrl  : existing.coverUrl,
-      tags:        body.tags      ?? existing.tags,
+      excerpt: newExcerpt,
+      content: newContent,
+      coverUrl: body.coverUrl !== undefined ? body.coverUrl : existing.coverUrl,
+      tags: body.tags ?? existing.tags,
       isPublished: published,
       publishedAt,
-      updatedAt:   new Date(),
+      updatedAt: new Date(),
     }).where(eq(posts.id, params.id)).returning()
 
     return ok(updated, 'Post berhasil diupdate')
@@ -258,7 +258,7 @@ export const cmsPostRoutes = new Elysia({ prefix: '/api/cms/posts' })
     detail: { tags: ['CMS'], summary: 'Delete post by ID' },
   })
 
-  // PATCH /api/cms/posts/:id/publish â€” toggle
+  // PATCH /api/cms/posts/:id/publish    toggle
   .patch('/:id/publish', async ({ params, set }) => {
     const [existing] = await db.select().from(posts).where(eq(posts.id, params.id))
     if (!existing) {
@@ -270,7 +270,7 @@ export const cmsPostRoutes = new Elysia({ prefix: '/api/cms/posts' })
     const [updated] = await db.update(posts).set({
       isPublished: newPublished,
       publishedAt: newPublished && !existing.publishedAt ? new Date() : existing.publishedAt,
-      updatedAt:   new Date(),
+      updatedAt: new Date(),
     }).where(eq(posts.id, params.id)).returning()
 
     return ok(updated, `Post ${newPublished ? 'dipublikasikan' : 'dijadikan draft'}`)

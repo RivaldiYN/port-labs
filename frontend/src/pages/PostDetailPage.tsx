@@ -25,7 +25,7 @@ export default function PostDetailPage() {
       .finally(() => setLoading(false))
   }, [slug])
 
-  const readTime = post?.content ? `${Math.ceil(post.content.split(/\s+/).length / 200)} MIN READ` : "Â© MIN READ"
+  const readTime = post?.content ? `${Math.ceil(post.content.split(/\s+/).length / 200)} MIN READ` : " © MIN READ"
 
   return (
     <div className="bg-[#131313] text-[#e5e2e1] min-h-screen font-body">

@@ -5,7 +5,7 @@ import { publicPostRoutes } from './postRoutes'
 import { publicMediaRoutes } from './mediaRoutes'
 
 /**
- * Public routes â€” /api/*
+ * Public routes    /api/*
  * Aggregates all public-facing endpoints.
  */
 export const publicRoutes = new Elysia()

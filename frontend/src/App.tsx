@@ -36,10 +36,10 @@ export default function App() {
           <Route path="/posts" element={<PostsPage />} />
           <Route path="/news/:slug" element={<PostDetailPage />} />
 
-          {/* CMS â€” Public (unauthenticated only) */}
+          {/* CMS    Public (unauthenticated only) */}
           <Route path="/cms/login" element={<CmsLoginPage />} />
 
-          {/* CMS â€” Protected */}
+          {/* CMS    Protected */}
           <Route path="/cms" element={<RequireAuth><CmsDashboardPage /></RequireAuth>} />
           <Route path="/cms/projects" element={<RequireAuth><CmsProjectsPage /></RequireAuth>} />
           <Route path="/cms/profile" element={<RequireAuth><CmsProfilePage /></RequireAuth>} />

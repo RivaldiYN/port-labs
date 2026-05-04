@@ -4,62 +4,62 @@ import { useAuth } from '../../context/AuthContext'
 import { useCmsProfile } from '../../hooks/useProfile'
 
 const NAV = [
-  { icon: 'dashboard',     label: 'Dashboard', path: '/cms' },
-  { icon: 'person',        label: 'Profile',   path: '/cms/profile', active: true },
-  { icon: 'rocket_launch', label: 'Projects',  path: '/cms/projects' },
-  { icon: 'edit_note',     label: 'Posts',     path: '/cms/posts' },
-  { icon: 'perm_media',    label: 'Media',     path: '/cms/media' },
+  { icon: 'dashboard', label: 'Dashboard', path: '/cms' },
+  { icon: 'person', label: 'Profile', path: '/cms/profile', active: true },
+  { icon: 'rocket_launch', label: 'Projects', path: '/cms/projects' },
+  { icon: 'edit_note', label: 'Posts', path: '/cms/posts' },
+  { icon: 'perm_media', label: 'Media', path: '/cms/media' },
 ]
 
 interface FormState {
-  name:        string
-  tagline:     string
-  bio:         string
-  email:       string
-  githubUrl:   string
+  name: string
+  tagline: string
+  bio: string
+  email: string
+  githubUrl: string
   linkedinUrl: string
-  location:    string
-  resumeUrl:   string
+  location: string
+  resumeUrl: string
 }
 
 export default function CmsProfilePage() {
   const { admin, logout, accessToken } = useAuth()
-  const navigate                        = useNavigate()
-  const [sidebarOpen, setSidebarOpen]   = useState(false)
-  const [loggingOut, setLoggingOut]     = useState(false)
-  const [saving, setSaving]             = useState(false)
-  const [uploading, setUploading]       = useState(false)
-  const [toast, setToast]               = useState<{ msg: string; type: 'success' | 'error' } | null>(null)
+  const navigate = useNavigate()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [loggingOut, setLoggingOut] = useState(false)
+  const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
+  const [toast, setToast] = useState<{ msg: string; type: 'success' | 'error' } | null>(null)
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
-  const [dragOver, setDragOver]           = useState(false)
+  const [dragOver, setDragOver] = useState(false)
   const fileRef = useRef<HTMLInputElement>(null)
 
   const { data: profile, loading, error, fetchProfile, updateProfile, uploadAvatar } =
     useCmsProfile(accessToken)
 
   const [form, setForm] = useState<FormState>({
-    name:        '',
-    tagline:     '',
-    bio:         '',
-    email:       '',
-    githubUrl:   '',
+    name: '',
+    tagline: '',
+    bio: '',
+    email: '',
+    githubUrl: '',
     linkedinUrl: '',
-    location:    '',
-    resumeUrl:   '',
+    location: '',
+    resumeUrl: '',
   })
 
   // Sync form with fetched profile once
   const [synced, setSynced] = useState(false)
   if (profile && !synced) {
     setForm({
-      name:        profile.name        ?? '',
-      tagline:     profile.tagline     ?? '',
-      bio:         profile.bio         ?? '',
-      email:       profile.email       ?? '',
-      githubUrl:   profile.githubUrl   ?? '',
+      name: profile.name ?? '',
+      tagline: profile.tagline ?? '',
+      bio: profile.bio ?? '',
+      email: profile.email ?? '',
+      githubUrl: profile.githubUrl ?? '',
       linkedinUrl: profile.linkedinUrl ?? '',
-      location:    profile.location    ?? '',
-      resumeUrl:   profile.resumeUrl   ?? '',
+      location: profile.location ?? '',
+      resumeUrl: profile.resumeUrl ?? '',
     })
     setSynced(true)
   }
@@ -84,9 +84,9 @@ export default function CmsProfilePage() {
         payload[k] = v.trim() === '' ? null : v.trim()
       }
       await updateProfile(payload)
-      showToast('âœ… Profil berhasil disimpan')
+      showToast(' œ… Profil berhasil disimpan')
     } catch (err) {
-      showToast(`âŒ ${(err as Error).message}`, 'error')
+      showToast(` Œ ${(err as Error).message}`, 'error')
     } finally {
       setSaving(false)
     }
@@ -94,7 +94,7 @@ export default function CmsProfilePage() {
 
   const processFile = async (file: File) => {
     if (!file.type.startsWith('image/')) {
-      showToast('âŒ File harus berupa gambar', 'error')
+      showToast(' Œ File harus berupa gambar', 'error')
       return
     }
     const preview = URL.createObjectURL(file)
@@ -102,9 +102,9 @@ export default function CmsProfilePage() {
     setUploading(true)
     try {
       await uploadAvatar(file)
-      showToast('âœ… Avatar berhasil diupload')
+      showToast(' œ… Avatar berhasil diupload')
     } catch (err) {
-      showToast(`âŒ ${(err as Error).message}`, 'error')
+      showToast(` Œ ${(err as Error).message}`, 'error')
       setAvatarPreview(null)
     } finally {
       setUploading(false)
@@ -124,7 +124,7 @@ export default function CmsProfilePage() {
   }
 
   const avatarSrc = avatarPreview ?? profile?.avatarUrl ?? null
-  const initials   = (form.name || admin?.username || 'A').charAt(0).toUpperCase()
+  const initials = (form.name || admin?.username || 'A').charAt(0).toUpperCase()
 
   const inputCls = `w-full bg-[#131313] border border-[#3d4a3d]/30 focus:border-[#1db954]
     focus:outline-none rounded-xl py-3 px-4 text-[#e5e2e1] text-sm transition-all
@@ -133,7 +133,7 @@ export default function CmsProfilePage() {
   return (
     <div className="bg-[#131313] text-[#e5e2e1] min-h-screen flex">
 
-      {/* â”€â”€ Toast â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/*  ”€ ”€ Toast  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ */}
       {toast && (
         <div
           role="status"
@@ -148,7 +148,7 @@ export default function CmsProfilePage() {
         </div>
       )}
 
-      {/* â”€â”€ Mobile overlay â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/*  ”€ ”€ Mobile overlay  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/60 z-40 lg:hidden"
@@ -157,7 +157,7 @@ export default function CmsProfilePage() {
         />
       )}
 
-      {/* â”€â”€ Sidebar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/*  ”€ ”€ Sidebar  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ */}
       <aside
         aria-label="Sidebar navigasi CMS"
         className={`fixed left-0 top-0 h-screen w-64 bg-[#1c1b1b] flex flex-col py-8
@@ -226,7 +226,7 @@ export default function CmsProfilePage() {
         </div>
       </aside>
 
-      {/* â”€â”€ Main â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/*  ”€ ”€ Main  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ */}
       <main className="lg:ml-64 min-h-screen flex-1 p-6 md:p-10 xl:p-12">
 
         {/* Mobile topbar */}
@@ -279,7 +279,7 @@ export default function CmsProfilePage() {
           <form onSubmit={handleSave} noValidate>
             <div className="grid grid-cols-1 xl:grid-cols-12 gap-6 md:gap-8">
 
-              {/* â”€â”€ Left: Avatar card â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+              {/*  ”€ ”€ Left: Avatar card  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ */}
               <section
                 aria-label="Foto profil"
                 className="xl:col-span-4 bg-[#1c1b1b] rounded-3xl p-6 md:p-8 border border-[#3d4a3d]/10 flex flex-col items-center text-center"
@@ -337,10 +337,10 @@ export default function CmsProfilePage() {
 
                 <div className="mt-6 w-full pt-6 border-t border-[#3d4a3d]/20 space-y-3 text-left">
                   {[
-                    { icon: 'location_on',  val: form.location,    label: 'Lokasi' },
-                    { icon: 'mail',         val: form.email,       label: 'Email' },
-                    { icon: 'code',         val: form.githubUrl,   label: 'GitHub' },
-                    { icon: 'work',         val: form.linkedinUrl, label: 'LinkedIn' },
+                    { icon: 'location_on', val: form.location, label: 'Lokasi' },
+                    { icon: 'mail', val: form.email, label: 'Email' },
+                    { icon: 'code', val: form.githubUrl, label: 'GitHub' },
+                    { icon: 'work', val: form.linkedinUrl, label: 'LinkedIn' },
                   ].map(({ icon, val, label }) => (
                     <div key={label} className="flex items-center gap-3">
                       <span className="material-symbols-outlined text-[#53e076] text-base shrink-0" aria-hidden="true">{icon}</span>
@@ -352,7 +352,7 @@ export default function CmsProfilePage() {
                 </div>
 
                 <p className="mt-6 text-[10px] text-[#e5e2e1]/25 font-label leading-relaxed">
-                  Klik avatar atau drag &amp; drop gambar.<br/>Maks 5MB Â· JPEG, PNG, WebP
+                  Klik avatar atau drag &amp; drop gambar.<br />Maks 5MB  · JPEG, PNG, WebP
                 </p>
 
                 {profile?.updatedAt && (
@@ -362,7 +362,7 @@ export default function CmsProfilePage() {
                 )}
               </section>
 
-              {/* â”€â”€ Right: Form fields â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+              {/*  ”€ ”€ Right: Form fields  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ */}
               <section
                 aria-label="Form edit profil"
                 className="xl:col-span-8 bg-[#1c1b1b] rounded-3xl p-6 md:p-8 border border-[#3d4a3d]/10"
@@ -400,7 +400,7 @@ export default function CmsProfilePage() {
                       type="text"
                       value={form.tagline}
                       onChange={e => setForm(f => ({ ...f, tagline: e.target.value }))}
-                      placeholder="Full-Stack Developer Â· UI/UX Enthusiast"
+                      placeholder="Full-Stack Developer  · UI/UX Enthusiast"
                       className={inputCls}
                     />
                   </div>

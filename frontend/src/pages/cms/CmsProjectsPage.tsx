@@ -4,13 +4,13 @@ import { useAuth } from '../../context/AuthContext'
 import { useCmsProjects, type Project } from '../../hooks/useProjects'
 import { MediaPickerButton } from '../../components/MediaPickerButton'
 
-// Ã¢â€â‚¬Ã¢â€â‚¬ Form state Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// Ã¢ € ‚¬Ã¢ € ‚¬ Form state Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬
 const emptyForm = (): Partial<Project> => ({
   title: '', description: '', content: '', thumbnailUrl: '',
   demoUrl: '', repoUrl: '', techStack: [], isFeatured: false, isPublished: false,
 })
 
-// Ã¢â€â‚¬Ã¢â€â‚¬ Modal: Create / Edit Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// Ã¢ € ‚¬Ã¢ € ‚¬ Modal: Create / Edit Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬
 function ProjectModal({
   project, token, onClose, onSave, onSaveSuccess,
 }: {
@@ -20,10 +20,10 @@ function ProjectModal({
   onSave: (data: Partial<Project>) => Promise<void>
   onSaveSuccess: () => void
 }) {
-  const [form, setForm]       = useState<Partial<Project>>(project ?? emptyForm())
-  const [techInput, setTech]  = useState((project?.techStack ?? []).join(', '))
-  const [saving, setSaving]   = useState(false)
-  const [err, setErr]         = useState('')
+  const [form, setForm] = useState<Partial<Project>>(project ?? emptyForm())
+  const [techInput, setTech] = useState((project?.techStack ?? []).join(', '))
+  const [saving, setSaving] = useState(false)
+  const [err, setErr] = useState('')
 
   const set = (k: keyof Project, v: unknown) => setForm(f => ({ ...f, [k]: v }))
 
@@ -34,7 +34,7 @@ function ProjectModal({
     try {
       const techStack = techInput.split(',').map(s => s.trim()).filter(Boolean)
       await onSave({ ...form, techStack })
-      // API call succeeded â€” let parent close modal and refresh
+      // API call succeeded    let parent close modal and refresh
       onSaveSuccess()
     } catch (e) {
       setErr((e as Error).message)
@@ -169,7 +169,7 @@ function ProjectModal({
   )
 }
 
-// Ã¢â€â‚¬Ã¢â€â‚¬ Confirm Delete Modal Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// Ã¢ € ‚¬Ã¢ € ‚¬ Confirm Delete Modal Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬
 function ConfirmModal({ title, onConfirm, onCancel }: { title: string; onConfirm: () => void; onCancel: () => void }) {
   return (
     <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
@@ -196,16 +196,16 @@ function ConfirmModal({ title, onConfirm, onCancel }: { title: string; onConfirm
   )
 }
 
-// Ã¢â€â‚¬Ã¢â€â‚¬ Main CMS Projects Page Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬Ã¢â€â‚¬
+// Ã¢ € ‚¬Ã¢ € ‚¬ Main CMS Projects Page Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬Ã¢ € ‚¬
 export default function CmsProjectsPage() {
-  const { admin, logout, accessToken }    = useAuth()
-  const navigate                          = useNavigate()
-  const [sidebarOpen, setSidebarOpen]     = useState(false)
-  const [search, setSearch]               = useState('')
-  const [editProject, setEditProject]     = useState<Project | null | 'new'>(null)
-  const [deleteTarget, setDeleteTarget]   = useState<Project | null>(null)
-  const [toast, setToast]                 = useState('')
-  const [loggingOut, setLoggingOut]       = useState(false)
+  const { admin, logout, accessToken } = useAuth()
+  const navigate = useNavigate()
+  const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [search, setSearch] = useState('')
+  const [editProject, setEditProject] = useState<Project | null | 'new'>(null)
+  const [deleteTarget, setDeleteTarget] = useState<Project | null>(null)
+  const [toast, setToast] = useState('')
+  const [loggingOut, setLoggingOut] = useState(false)
 
   const { data, loading, error, fetchAll, createProject, updateProject, deleteProject, togglePublish } =
     useCmsProjects()
@@ -220,7 +220,7 @@ export default function CmsProjectsPage() {
     fetchAll(search)
   }, [search, fetchAll])
 
-  // onSave: ONLY does the API call â€” no fetchAll here.
+  // onSave: ONLY does the API call    no fetchAll here.
   // fetchAll is triggered by handleModalClose AFTER the modal unmounts,
   // preventing the race condition: fetchAll setState + setEditProject(null) conflicting mid-render.
   const handleSave = async (formData: Partial<Project>) => {
@@ -237,7 +237,7 @@ export default function CmsProjectsPage() {
     setEditProject(null)          // unmount modal first
     if (saved) {
       await fetchAll(search)      // THEN refresh data
-      showToast('âœ… Project berhasil disimpan')
+      showToast(' œ… Project berhasil disimpan')
     }
   }
 
@@ -245,13 +245,13 @@ export default function CmsProjectsPage() {
     if (!deleteTarget) return
     await deleteProject(deleteTarget.id)
     setDeleteTarget(null)
-    showToast('Ã°Å¸â€”â€˜Ã¯Â¸Â Project berhasil dihapus')
+    showToast('Ã°Å¸   €˜Ã¯ ¸  Project berhasil dihapus')
     await fetchAll(search)
   }
 
   const handleToggle = async (id: string) => {
     await togglePublish(id)
-    showToast('Ã°Å¸â€œÂ¡ Status publikasi diubah')
+    showToast('Ã°Å¸ €œ ¡ Status publikasi diubah')
     await fetchAll(search)
   }
 
@@ -348,7 +348,7 @@ export default function CmsProjectsPage() {
             <h1 className="font-headline text-3xl md:text-4xl font-extrabold tracking-tighter text-[#e5e2e1]">
               Projects<span className="text-[#53e076]">.</span>
             </h1>
-            <p className="text-[#e5e2e1]/50 text-sm mt-1">Kelola semua project Ã¢â‚¬â€ published & drafts</p>
+            <p className="text-[#e5e2e1]/50 text-sm mt-1">Kelola semua project Ã¢ ‚¬ € published & drafts</p>
           </div>
           <button onClick={() => setEditProject('new')}
             className="bg-[#53e076] hover:bg-[#1db954] text-[#002108] font-bold py-3 px-6 rounded-full flex items-center gap-2 transition-all active:scale-95 group shrink-0">

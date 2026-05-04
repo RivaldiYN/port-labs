@@ -102,11 +102,11 @@ export default function CmsPostsPage() {
   const handleSave = async (formData: Partial<Post>) => {
     if (editPost === "new") { await createPost(formData) }
     else if (editPost) { await updatePost(editPost.id, formData) }
-    // fetchAll NOT here â€” called from handleModalClose after unmount
+    // fetchAll NOT here    called from handleModalClose after unmount
   }
   const handleModalClose = async (saved = false) => {
     setEditPost(null)                           // close modal first
-    if (saved) { await fetchAll(search); showToast("âœ… Post berhasil disimpan") }
+    if (saved) { await fetchAll(search); showToast(" œ… Post berhasil disimpan") }
   }
   const handleDelete = async () => { if (!deleteTarget) return; await deletePost(deleteTarget.id); setDeleteTarget(null); showToast("ðŸ—‘ï¸ Post berhasil dihapus"); await fetchAll(search) }
   const handleToggle = async (id: string) => { await togglePublish(id); showToast("ðŸ“¡ Status diubah"); await fetchAll(search) }
@@ -144,7 +144,7 @@ export default function CmsPostsPage() {
           <span className="font-headline font-bold text-[#1DB954] tracking-widest text-sm uppercase">Posts</span>
         </div>
         <header className="flex flex-col sm:flex-row sm:items-center justify-between mb-10 gap-4">
-          <div><h1 className="font-headline text-3xl md:text-4xl font-extrabold tracking-tighter text-[#e5e2e1]">Posts<span className="text-[#53e076]">.</span></h1><p className="text-[#e5e2e1]/50 text-sm mt-1">Kelola semua post â€” published &amp; drafts</p></div>
+          <div><h1 className="font-headline text-3xl md:text-4xl font-extrabold tracking-tighter text-[#e5e2e1]">Posts<span className="text-[#53e076]">.</span></h1><p className="text-[#e5e2e1]/50 text-sm mt-1">Kelola semua post    published &amp; drafts</p></div>
           <button onClick={() => setEditPost("new")} className="bg-[#53e076] hover:bg-[#1db954] text-[#002108] font-bold py-3 px-6 rounded-full flex items-center gap-2 transition-all active:scale-95 group shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#53e076]">
             <span className="material-symbols-outlined text-lg group-hover:rotate-90 transition-transform duration-300" aria-hidden="true">add</span>
             <span className="font-label text-xs uppercase tracking-widest">New Post</span>
@@ -172,7 +172,7 @@ export default function CmsPostsPage() {
                     {data.map(p => (
                       <tr key={p.id} className="group hover:bg-[#2a2a2a]/50 transition-colors">
                         <td className="px-6 py-5"><p className="font-headline font-bold text-sm text-[#e5e2e1] max-w-xs truncate">{p.title}</p><p className="text-[#e5e2e1]/30 font-label text-[10px] mt-0.5">{p.slug}</p></td>
-                        <td className="px-4 py-5"><div className="flex flex-wrap gap-1 max-w-[180px]">{(p.tags ?? []).slice(0,3).map(t => <span key={t} className="bg-[#353534] text-[#72fe8f] font-label text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">{t}</span>)}</div></td>
+                        <td className="px-4 py-5"><div className="flex flex-wrap gap-1 max-w-[180px]">{(p.tags ?? []).slice(0, 3).map(t => <span key={t} className="bg-[#353534] text-[#72fe8f] font-label text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">{t}</span>)}</div></td>
                         <td className="px-4 py-5 text-center">
                           <button onClick={() => handleToggle(p.id)} title={p.isPublished ? "Jadikan Draft" : "Publish"} className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full font-label text-[10px] font-bold uppercase tracking-wider transition-all hover:scale-105 ${p.isPublished ? "bg-[#1db954]/20 text-[#53e076] hover:bg-[#1db954]/30" : "bg-[#353534] text-[#e5e2e1]/50 hover:bg-[#2a2a2a]"}`}>
                             <span className={`w-1.5 h-1.5 rounded-full ${p.isPublished ? "bg-[#53e076] animate-pulse" : "bg-[#e5e2e1]/30"}`} aria-hidden="true" />
@@ -197,7 +197,7 @@ export default function CmsPostsPage() {
                     <div className="min-w-0"><p className="font-headline font-bold text-sm text-[#e5e2e1] truncate">{p.title}</p><p className="text-[#e5e2e1]/30 font-label text-[10px] mt-0.5">{p.slug}</p></div>
                     <button onClick={() => handleToggle(p.id)} className={`shrink-0 px-3 py-1 rounded-full font-label text-[10px] font-bold uppercase tracking-wider ${p.isPublished ? "bg-[#1db954]/20 text-[#53e076]" : "bg-[#353534] text-[#e5e2e1]/50"}`}>{p.isPublished ? "Published" : "Draft"}</button>
                   </div>
-                  <div className="flex flex-wrap gap-1 mb-3">{(p.tags ?? []).slice(0,4).map(t => <span key={t} className="bg-[#353534] text-[#72fe8f] font-label text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">{t}</span>)}</div>
+                  <div className="flex flex-wrap gap-1 mb-3">{(p.tags ?? []).slice(0, 4).map(t => <span key={t} className="bg-[#353534] text-[#72fe8f] font-label text-[9px] font-bold px-2 py-0.5 rounded-md uppercase tracking-wider">{t}</span>)}</div>
                   <div className="flex gap-2 pt-3 border-t border-[#3d4a3d]/10">
                     <button onClick={() => setEditPost(p)} className="flex-1 py-2 rounded-xl bg-[#2a2a2a] text-[#e5e2e1]/70 font-label text-xs uppercase tracking-widest hover:bg-[#53e076]/20 hover:text-[#53e076] transition-all flex items-center justify-center gap-1.5"><span className="material-symbols-outlined text-sm" aria-hidden="true">edit</span> Edit</button>
                     <button onClick={() => setDeleteTarget(p)} className="flex-1 py-2 rounded-xl bg-[#2a2a2a] text-[#e5e2e1]/70 font-label text-xs uppercase tracking-widest hover:bg-[#93000a]/20 hover:text-[#ffb4ab] transition-all flex items-center justify-center gap-1.5"><span className="material-symbols-outlined text-sm" aria-hidden="true">delete</span> Hapus</button>

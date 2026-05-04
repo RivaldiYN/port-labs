@@ -1,5 +1,5 @@
 ﻿/**
- * create-admin.ts â€” CLI to create the first admin user
+ * create-admin.ts    CLI to create the first admin user
  * Usage: npm run create-admin
  *   or with args: USERNAME=rivaldi EMAIL=admin@example.com PASSWORD=secret123 npm run create-admin
  */
@@ -47,33 +47,33 @@ async function prompt(question: string, hidden = false): Promise<string> {
 }
 
 async function main() {
-  console.log('\nðŸš€ Antigravity Portfolio â€” Create Admin\n')
+  console.log('\nðŸš€ Antigravity Portfolio    Create Admin\n')
 
   const username = process.env.USERNAME || await prompt('Username     : ')
-  const email    = process.env.EMAIL    || await prompt('Email        : ')
+  const email = process.env.EMAIL || await prompt('Email        : ')
   const password = process.env.PASSWORD || await prompt('Password     : ', true)
 
   if (!username || !email || !password) {
-    console.error('âŒ Username, email, dan password wajib diisi.')
+    console.error(' Œ Username, email, dan password wajib diisi.')
     process.exit(1)
   }
 
   if (password.length < 8) {
-    console.error('âŒ Password minimal 8 karakter.')
+    console.error(' Œ Password minimal 8 karakter.')
     process.exit(1)
   }
 
   // Check existing
   const [existing] = await db.select().from(adminUsers).where(eq(adminUsers.username, username))
   if (existing) {
-    console.error(`âŒ Admin dengan username "${username}" sudah ada.`)
+    console.error(` Œ Admin dengan username "${username}" sudah ada.`)
     process.exit(1)
   }
 
   const passwordHash = await hash(password, 12)
   const [admin] = await db.insert(adminUsers).values({ username, email, passwordHash }).returning()
 
-  console.log('\nâœ… Admin berhasil dibuat!')
+  console.log('\n œ… Admin berhasil dibuat!')
   console.log(`   ID       : ${admin.id}`)
   console.log(`   Username : ${admin.username}`)
   console.log(`   Email    : ${admin.email}`)
@@ -82,6 +82,6 @@ async function main() {
 }
 
 main().catch(err => {
-  console.error('âŒ Error:', err.message)
+  console.error(' Œ Error:', err.message)
   process.exit(1)
 })

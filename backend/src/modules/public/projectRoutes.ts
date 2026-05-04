@@ -5,39 +5,39 @@ import { db } from '../../lib/db'
 import { projects } from '../../db/schema'
 import { ok } from '../../index'
 
-// â”€â”€ Shared project body schema â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ Shared project body schema  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 const NullableStr = t.Optional(t.Union([t.String(), t.Null()]))
 
 const ProjectBody = t.Object({
-  title:        t.String({ minLength: 1 }),
-  description:  NullableStr,
-  content:      NullableStr,
+  title: t.String({ minLength: 1 }),
+  description: NullableStr,
+  content: NullableStr,
   thumbnailUrl: NullableStr,
-  demoUrl:      NullableStr,
-  repoUrl:      NullableStr,
-  techStack:    t.Optional(t.Array(t.String())),
-  isFeatured:   t.Optional(t.Boolean()),
-  isPublished:  t.Optional(t.Boolean()),
+  demoUrl: NullableStr,
+  repoUrl: NullableStr,
+  techStack: t.Optional(t.Array(t.String())),
+  isFeatured: t.Optional(t.Boolean()),
+  isPublished: t.Optional(t.Boolean()),
 })
 
-// â”€â”€ Public routes â€” /api/projects â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ Public routes    /api/projects  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const publicProjectRoutes = new Elysia({ prefix: '/api/projects' })
 
   // GET /api/projects
   .get('/', async ({ query }) => {
-    const page     = Math.max(1, Number(query.page  ?? 1))
-    const limit    = Math.min(50, Math.max(1, Number(query.limit ?? 6)))
-    const offset   = (page - 1) * limit
+    const page = Math.max(1, Number(query.page ?? 1))
+    const limit = Math.min(50, Math.max(1, Number(query.limit ?? 6)))
+    const offset = (page - 1) * limit
     const featured = query.featured === 'true'
-    const tech     = query.tech as string | undefined
-    const search   = query.search as string | undefined
-    const sort     = (query.sort ?? 'newest') as 'newest' | 'oldest'
+    const tech = query.tech as string | undefined
+    const search = query.search as string | undefined
+    const sort = (query.sort ?? 'newest') as 'newest' | 'oldest'
 
     // Build WHERE conditions
     const conditions = [eq(projects.isPublished, true)]
-    if (featured)            conditions.push(eq(projects.isFeatured, true))
-    if (tech)                conditions.push(arrayContains(projects.techStack, [tech]))
-    if (search)              conditions.push(ilike(projects.title, `%${search}%`))
+    if (featured) conditions.push(eq(projects.isFeatured, true))
+    if (tech) conditions.push(arrayContains(projects.techStack, [tech]))
+    if (search) conditions.push(ilike(projects.title, `%${search}%`))
 
     const where = conditions.length === 1 ? conditions[0] : and(...conditions)
 
@@ -47,7 +47,7 @@ export const publicProjectRoutes = new Elysia({ prefix: '/api/projects' })
       .from(projects)
       .where(where)
 
-    const total      = countRow?.total ?? 0
+    const total = countRow?.total ?? 0
     const totalPages = Math.ceil(total / limit)
 
     // Fetch rows
@@ -62,12 +62,12 @@ export const publicProjectRoutes = new Elysia({ prefix: '/api/projects' })
     return ok(rows, 'Projects berhasil diambil', { page, limit, total, totalPages })
   }, {
     query: t.Object({
-      page:     t.Optional(t.String()),
-      limit:    t.Optional(t.String()),
+      page: t.Optional(t.String()),
+      limit: t.Optional(t.String()),
       featured: t.Optional(t.String()),
-      tech:     t.Optional(t.String()),
-      search:   t.Optional(t.String()),
-      sort:     t.Optional(t.String()),
+      tech: t.Optional(t.String()),
+      search: t.Optional(t.String()),
+      sort: t.Optional(t.String()),
     }),
     detail: { tags: ['Public'], summary: 'List published projects (paginated, filterable)' },
   })
@@ -89,13 +89,13 @@ export const publicProjectRoutes = new Elysia({ prefix: '/api/projects' })
     detail: { tags: ['Public'], summary: 'Get project detail by slug' },
   })
 
-// â”€â”€ CMS routes â€” /api/cms/projects (admin only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ CMS routes    /api/cms/projects (admin only)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const cmsProjectRoutes = new Elysia({ prefix: '/api/cms/projects' })
 
-  // GET /api/cms/projects â€” list all including drafts
+  // GET /api/cms/projects    list all including drafts
   .get('/', async ({ query }) => {
-    const page   = Math.max(1, Number(query.page  ?? 1))
-    const limit  = Math.min(100, Math.max(1, Number(query.limit ?? 20)))
+    const page = Math.max(1, Number(query.page ?? 1))
+    const limit = Math.min(100, Math.max(1, Number(query.limit ?? 20)))
     const offset = (page - 1) * limit
     const search = query.search as string | undefined
 
@@ -120,8 +120,8 @@ export const cmsProjectRoutes = new Elysia({ prefix: '/api/cms/projects' })
     return ok(rows, 'CMS projects', { page, limit, total, totalPages: Math.ceil(total / limit) })
   }, {
     query: t.Object({
-      page:   t.Optional(t.String()),
-      limit:  t.Optional(t.String()),
+      page: t.Optional(t.String()),
+      limit: t.Optional(t.String()),
       search: t.Optional(t.String()),
     }),
     detail: { tags: ['CMS'], summary: 'List all projects including drafts' },
@@ -140,17 +140,17 @@ export const cmsProjectRoutes = new Elysia({ prefix: '/api/cms/projects' })
 
     const now = new Date()
     const [project] = await db.insert(projects).values({
-      title:        body.title,
+      title: body.title,
       slug,
-      description:  body.description,
-      content:      body.content,
+      description: body.description,
+      content: body.content,
       thumbnailUrl: body.thumbnailUrl,
-      demoUrl:      body.demoUrl,
-      repoUrl:      body.repoUrl,
-      techStack:    body.techStack ?? [],
-      isFeatured:   body.isFeatured ?? false,
-      isPublished:  body.isPublished ?? false,
-      publishedAt:  body.isPublished ? now : undefined,
+      demoUrl: body.demoUrl,
+      repoUrl: body.repoUrl,
+      techStack: body.techStack ?? [],
+      isFeatured: body.isFeatured ?? false,
+      isPublished: body.isPublished ?? false,
+      publishedAt: body.isPublished ? now : undefined,
     }).returning()
 
     set.status = 201
@@ -180,22 +180,22 @@ export const cmsProjectRoutes = new Elysia({ prefix: '/api/cms/projects' })
       }
     }
 
-    const published   = body.isPublished ?? existing.isPublished
+    const published = body.isPublished ?? existing.isPublished
     const publishedAt = published && !existing.publishedAt ? new Date() : existing.publishedAt
 
     const [updated] = await db.update(projects).set({
-      title:        body.title        ?? existing.title,
+      title: body.title ?? existing.title,
       slug,
-      description:  body.description  !== undefined ? body.description  : existing.description,
-      content:      body.content      !== undefined ? body.content      : existing.content,
-      thumbnailUrl: body.thumbnailUrl  !== undefined ? body.thumbnailUrl : existing.thumbnailUrl,
-      demoUrl:      body.demoUrl       !== undefined ? body.demoUrl      : existing.demoUrl,
-      repoUrl:      body.repoUrl       !== undefined ? body.repoUrl      : existing.repoUrl,
-      techStack:    body.techStack    ?? existing.techStack,
-      isFeatured:   body.isFeatured   !== undefined ? body.isFeatured   : existing.isFeatured,
-      isPublished:  published,
+      description: body.description !== undefined ? body.description : existing.description,
+      content: body.content !== undefined ? body.content : existing.content,
+      thumbnailUrl: body.thumbnailUrl !== undefined ? body.thumbnailUrl : existing.thumbnailUrl,
+      demoUrl: body.demoUrl !== undefined ? body.demoUrl : existing.demoUrl,
+      repoUrl: body.repoUrl !== undefined ? body.repoUrl : existing.repoUrl,
+      techStack: body.techStack ?? existing.techStack,
+      isFeatured: body.isFeatured !== undefined ? body.isFeatured : existing.isFeatured,
+      isPublished: published,
       publishedAt,
-      updatedAt:    new Date(),
+      updatedAt: new Date(),
     }).where(eq(projects.id, params.id)).returning()
 
     return ok(updated, 'Project berhasil diupdate')
@@ -218,7 +218,7 @@ export const cmsProjectRoutes = new Elysia({ prefix: '/api/cms/projects' })
     detail: { tags: ['CMS'], summary: 'Delete project by ID' },
   })
 
-  // PATCH /api/cms/projects/:id/publish â€” toggle published
+  // PATCH /api/cms/projects/:id/publish    toggle published
   .patch('/:id/publish', async ({ params, set }) => {
     const [existing] = await db.select().from(projects).where(eq(projects.id, params.id))
     if (!existing) {
@@ -230,7 +230,7 @@ export const cmsProjectRoutes = new Elysia({ prefix: '/api/cms/projects' })
     const [updated] = await db.update(projects).set({
       isPublished: newPublished,
       publishedAt: newPublished && !existing.publishedAt ? new Date() : existing.publishedAt,
-      updatedAt:   new Date(),
+      updatedAt: new Date(),
     }).where(eq(projects.id, params.id)).returning()
 
     return ok(updated, `Project ${newPublished ? 'dipublikasikan' : 'dijadikan draft'}`)

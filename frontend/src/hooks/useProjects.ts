@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
-// Strip null and empty strings â†’ undefined so they're omitted from JSON (avoids Elysia validation error)
+// Strip null and empty strings  †’ undefined so they're omitted from JSON (avoids Elysia validation error)
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function sanitize(obj: Record<string, any>): Record<string, any> {
   const result: Record<string, any> = {}
@@ -48,22 +48,22 @@ interface FetchParams {
 }
 
 export function useProjects(params: FetchParams = {}) {
-  const [data, setData]     = useState<Project[]>([])
-  const [meta, setMeta]     = useState<ProjectMeta | null>(null)
+  const [data, setData] = useState<Project[]>([])
+  const [meta, setMeta] = useState<ProjectMeta | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError]   = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const fetch_ = useCallback(async () => {
     setLoading(true)
     setError(null)
     try {
       const q = new URLSearchParams()
-      if (params.page)     q.set('page',     String(params.page))
-      if (params.limit)    q.set('limit',    String(params.limit))
+      if (params.page) q.set('page', String(params.page))
+      if (params.limit) q.set('limit', String(params.limit))
       if (params.featured) q.set('featured', 'true')
-      if (params.tech)     q.set('tech',     params.tech)
-      if (params.search)   q.set('search',   params.search)
-      if (params.sort)     q.set('sort',     params.sort)
+      if (params.tech) q.set('tech', params.tech)
+      if (params.search) q.set('search', params.search)
+      if (params.sort) q.set('sort', params.sort)
 
       const res = await fetch(`${API}/api/projects?${q}`)
       const json = await res.json()
@@ -83,20 +83,20 @@ export function useProjects(params: FetchParams = {}) {
   return { data, meta, loading, error, refetch: fetch_ }
 }
 
-// â”€â”€ CMS API helpers (auth required) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ CMS API helpers (auth required)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export function useCmsProjects() {
   const { accessToken: token, refresh } = useAuth()
-  const [data, setData]       = useState<Project[]>([])
-  const [meta, setMeta]       = useState<ProjectMeta | null>(null)
+  const [data, setData] = useState<Project[]>([])
+  const [meta, setMeta] = useState<ProjectMeta | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError]     = useState<string | null>(null)
-  const isFirstLoad           = useRef(true)
+  const [error, setError] = useState<string | null>(null)
+  const isFirstLoad = useRef(true)
 
   const fetchAll = useCallback(async (search = '') => {
     if (!token) return
     setError(null)
     if (isFirstLoad.current) setLoading(true)
-    
+
     const doFetch = async (tok: string) => {
       const q = search ? `?search=${encodeURIComponent(search)}` : ''
       return fetch(`${API}/api/cms/projects${q}`, {
@@ -130,7 +130,7 @@ export function useCmsProjects() {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
       body: JSON.stringify(sanitize(body)),
     })
-    let res  = await doRequest(token!)
+    let res = await doRequest(token!)
     if (res.status === 401) {
       const newTok = await refresh()
       if (newTok) res = await doRequest(newTok)
@@ -146,7 +146,7 @@ export function useCmsProjects() {
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
       body: JSON.stringify(sanitize(body)),
     })
-    let res  = await doRequest(token!)
+    let res = await doRequest(token!)
     if (res.status === 401) {
       const newTok = await refresh()
       if (newTok) res = await doRequest(newTok)
@@ -161,7 +161,7 @@ export function useCmsProjects() {
       method: 'DELETE',
       headers: { Authorization: `Bearer ${tok}` },
     })
-    let res  = await doRequest(token!)
+    let res = await doRequest(token!)
     if (res.status === 401) {
       const newTok = await refresh()
       if (newTok) res = await doRequest(newTok)
@@ -176,7 +176,7 @@ export function useCmsProjects() {
       method: 'PATCH',
       headers: { Authorization: `Bearer ${tok}` },
     })
-    let res  = await doRequest(token!)
+    let res = await doRequest(token!)
     if (res.status === 401) {
       const newTok = await refresh()
       if (newTok) res = await doRequest(newTok)

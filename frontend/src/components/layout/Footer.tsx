@@ -9,7 +9,7 @@ export default function Footer() {
             Rivaldi<span className="text-[#1DB954]">.</span>
           </Link>
           <p className="font-label text-xs text-[#e5e2e1]/40 mt-1 tracking-widest">
-            Â© {new Date().getFullYear()} Rivaldi Yonathan Nainggolan. Built for the orbit.
+            © {new Date().getFullYear()} Rivaldi Yonathan Nainggolan. Built for the orbit.
           </p>
         </div>
         <div className="flex gap-8">

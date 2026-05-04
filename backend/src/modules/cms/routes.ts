@@ -6,7 +6,7 @@ import { cmsPostRoutes } from '../public/postRoutes'
 import { cmsMediaRoutes } from '../public/mediaRoutes'
 
 /**
- * CMS routes â€” /api/cms/*
+ * CMS routes    /api/cms/*
  * All routes require Bearer JWT token (admin only).
  */
 export const cmsRoutes = new Elysia()

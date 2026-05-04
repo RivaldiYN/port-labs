@@ -13,52 +13,52 @@ function sanitize(obj: Record<string, any>): Record<string, any> {
 }
 
 export interface Post {
-  id:          string
-  title:       string
-  slug:        string
-  excerpt:     string | null
-  content:     string | null
-  coverUrl:    string | null
-  tags:        string[] | null
+  id: string
+  title: string
+  slug: string
+  excerpt: string | null
+  content: string | null
+  coverUrl: string | null
+  tags: string[] | null
   isPublished: boolean
   publishedAt: string | null
-  createdAt:   string
-  updatedAt:   string
+  createdAt: string
+  updatedAt: string
 }
 
 export interface PostMeta {
-  page:       number
-  limit:      number
-  total:      number
+  page: number
+  limit: number
+  total: number
   totalPages: number
 }
 
-// â”€â”€ Public hook â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ Public hook  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export function usePosts(params: {
   page?: number; limit?: number; search?: string; tag?: string; tags?: string; sort?: string
 } = {}) {
-  const [data, setData]       = useState<Post[]>([])
-  const [meta, setMeta]       = useState<PostMeta | null>(null)
+  const [data, setData] = useState<Post[]>([])
+  const [meta, setMeta] = useState<PostMeta | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError]     = useState<string | null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   const fetch_ = useCallback(async () => {
     setLoading(true); setError(null)
     try {
       const q = new URLSearchParams()
-      if (params.page)   q.set('page',   String(params.page))
-      if (params.limit)  q.set('limit',  String(params.limit))
+      if (params.page) q.set('page', String(params.page))
+      if (params.limit) q.set('limit', String(params.limit))
       if (params.search) q.set('search', params.search)
-      if (params.tag)    q.set('tag',    params.tag)
-      if (params.tags)   q.set('tags',   params.tags)
-      if (params.sort)   q.set('sort',   params.sort)
-      const res  = await fetch(`${API}/api/posts?${q}`)
+      if (params.tag) q.set('tag', params.tag)
+      if (params.tags) q.set('tags', params.tags)
+      if (params.sort) q.set('sort', params.sort)
+      const res = await fetch(`${API}/api/posts?${q}`)
       const json = await res.json()
       if (!res.ok) throw new Error(json.message ?? 'Gagal mengambil posts')
       setData(json.data ?? [])
       setMeta(json.meta ?? null)
     } catch (e) { setError((e as Error).message) }
-    finally     { setLoading(false) }
+    finally { setLoading(false) }
   }, [params.page, params.limit, params.search, params.tag, params.tags, params.sort]) // eslint-disable-line
 
   useEffect(() => { fetch_() }, [fetch_])
@@ -66,34 +66,34 @@ export function usePosts(params: {
 }
 
 export function useTags() {
-  const [tags, setTags]       = useState<string[]>([])
+  const [tags, setTags] = useState<string[]>([])
   const [loading, setLoading] = useState(true)
   useEffect(() => {
     fetch(`${API}/api/posts/tags`)
       .then(r => r.json())
       .then(j => setTags(j.data ?? []))
-      .catch(() => {})
+      .catch(() => { })
       .finally(() => setLoading(false))
   }, [])
   return { tags, loading }
 }
 
-// â”€â”€ CMS hook â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ CMS hook  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export function useCmsPosts() {
   const { accessToken: token, refresh } = useAuth()
-  const [data, setData]       = useState<Post[]>([])
-  const [meta, setMeta]       = useState<PostMeta | null>(null)
+  const [data, setData] = useState<Post[]>([])
+  const [meta, setMeta] = useState<PostMeta | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError]     = useState<string | null>(null)
-  const isFirstLoad           = useRef(true)
+  const [error, setError] = useState<string | null>(null)
+  const isFirstLoad = useRef(true)
 
   const fetchAll = useCallback(async (search = '') => {
     if (!token) return
     setError(null)
     if (isFirstLoad.current) setLoading(true)
-    
+
     const doFetch = async (tok: string) => {
-      const q   = search ? `?search=${encodeURIComponent(search)}` : ''
+      const q = search ? `?search=${encodeURIComponent(search)}` : ''
       return fetch(`${API}/api/cms/posts${q}`, {
         headers: { Authorization: `Bearer ${tok}` },
       })
@@ -110,10 +110,10 @@ export function useCmsPosts() {
       setData(json.data ?? [])
       setMeta(json.meta ?? null)
       isFirstLoad.current = false
-    } catch (e) { 
-      setError((e as Error).message) 
-    } finally { 
-      setLoading(false) 
+    } catch (e) {
+      setError((e as Error).message)
+    } finally {
+      setLoading(false)
     }
   }, [token, refresh]) // eslint-disable-line
 
@@ -123,7 +123,7 @@ export function useCmsPosts() {
     const doRequest = async (tok: string) => fetch(`${API}/api/cms/posts`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
-      body:    JSON.stringify(sanitize(body as Record<string, unknown>)),
+      body: JSON.stringify(sanitize(body as Record<string, unknown>)),
     })
     let res = await doRequest(token!)
     if (res.status === 401) {
@@ -139,7 +139,7 @@ export function useCmsPosts() {
     const doRequest = async (tok: string) => fetch(`${API}/api/cms/posts/${id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${tok}` },
-      body:    JSON.stringify(sanitize(body as Record<string, unknown>)),
+      body: JSON.stringify(sanitize(body as Record<string, unknown>)),
     })
     let res = await doRequest(token!)
     if (res.status === 401) {
@@ -153,7 +153,7 @@ export function useCmsPosts() {
 
   const deletePost = async (id: string) => {
     const doRequest = async (tok: string) => fetch(`${API}/api/cms/posts/${id}`, {
-      method:  'DELETE',
+      method: 'DELETE',
       headers: { Authorization: `Bearer ${tok}` },
     })
     let res = await doRequest(token!)
@@ -168,7 +168,7 @@ export function useCmsPosts() {
 
   const togglePublish = async (id: string) => {
     const doRequest = async (tok: string) => fetch(`${API}/api/cms/posts/${id}/publish`, {
-      method:  'PATCH',
+      method: 'PATCH',
       headers: { Authorization: `Bearer ${tok}` },
     })
     let res = await doRequest(token!)

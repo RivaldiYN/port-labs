@@ -7,13 +7,13 @@ import { db } from '../../lib/db'
 import { adminUsers, refreshTokens } from '../../db/schema'
 import { ok } from '../../index'
 
-// â”€â”€ Rate limiter (in-memory, per IP) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ Rate limiter (in-memory, per IP)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 const loginAttempts = new Map<string, { count: number; resetAt: number }>()
 const MAX_ATTEMPTS = 5
-const WINDOW_MS    = 60_000 // 1 minute
+const WINDOW_MS = 60_000 // 1 minute
 
 function checkRateLimit(ip: string): boolean {
-  const now  = Date.now()
+  const now = Date.now()
   const entry = loginAttempts.get(ip)
 
   if (!entry || now > entry.resetAt) {
@@ -25,7 +25,7 @@ function checkRateLimit(ip: string): boolean {
   return true
 }
 
-// â”€â”€ Helpers â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ Helpers  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 function generateRefreshToken(): string {
   return randomBytes(64).toString('hex')
 }
@@ -36,7 +36,7 @@ function hashToken(raw: string): string {
 
 const REFRESH_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
 
-// â”€â”€ Auth plugin (derive currentAdmin into context) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ Auth plugin (derive currentAdmin into context)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const authPlugin = new Elysia({ name: 'auth-plugin' })
   .use(jwt({
     name: 'jwt',
@@ -60,16 +60,16 @@ export const authPlugin = new Elysia({ name: 'auth-plugin' })
     return { currentAdmin: admin ?? null }
   })
 
-// â”€â”€ requireAuth guard â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ requireAuth guard  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function requireAuth({ currentAdmin, set }: { currentAdmin: unknown; set: any }) {
   if (!currentAdmin) {
     set.status = 401
-    return { success: false, data: null, message: 'Tidak terautentikasi â€” token diperlukan', code: 'UNAUTHORIZED' }
+    return { success: false, data: null, message: 'Tidak terautentikasi    token diperlukan', code: 'UNAUTHORIZED' }
   }
 }
 
-// â”€â”€ Auth routes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ Auth routes  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const authRoutes = new Elysia({ prefix: '/auth' })
   .use(jwt({
     name: 'jwt',
@@ -78,11 +78,11 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
   }))
   .use(authPlugin)
 
-  // POST /auth/login â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // POST /auth/login  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
   .post('/login', async ({ body, jwt, set, request }) => {
     const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-        ?? request.headers.get('x-real-ip')
-        ?? '0.0.0.0'
+      ?? request.headers.get('x-real-ip')
+      ?? '0.0.0.0'
 
     // Rate limit
     if (!checkRateLimit(ip)) {
@@ -112,15 +112,15 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
     }
 
     // Generate tokens
-    const accessToken  = await jwt.sign({ sub: admin.id, username: admin.username })
-    const rawRefresh   = generateRefreshToken()
+    const accessToken = await jwt.sign({ sub: admin.id, username: admin.username })
+    const rawRefresh = generateRefreshToken()
     const hashedRefresh = hashToken(rawRefresh)
-    const expiresAt    = new Date(Date.now() + REFRESH_TTL_MS)
+    const expiresAt = new Date(Date.now() + REFRESH_TTL_MS)
 
     // Store refresh token (delete old ones for this admin first for cleanliness)
     await db.insert(refreshTokens).values({
-      adminId:   admin.id,
-      token:     hashedRefresh,
+      adminId: admin.id,
+      token: hashedRefresh,
       expiresAt,
     })
 
@@ -135,14 +135,14 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
       username: t.String({ minLength: 1 }),
       password: t.String({ minLength: 1 }),
     }),
-    detail: { tags: ['Auth'], summary: 'Login admin â€” returns accessToken + refreshToken' },
+    detail: { tags: ['Auth'], summary: 'Login admin    returns accessToken + refreshToken' },
   })
 
-  // POST /auth/refresh â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // POST /auth/refresh  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
   .post('/refresh', async ({ body, jwt, set }) => {
     const { refreshToken: rawToken } = body
     const hashed = hashToken(rawToken)
-    const now    = new Date()
+    const now = new Date()
 
     // Find valid token in DB
     const [record] = await db
@@ -172,14 +172,14 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
     // Rotate: delete old, insert new refresh token
     await db.delete(refreshTokens).where(eq(refreshTokens.id, record.id))
 
-    const newAccessToken  = await jwt.sign({ sub: admin.id, username: admin.username })
-    const newRawRefresh   = generateRefreshToken()
+    const newAccessToken = await jwt.sign({ sub: admin.id, username: admin.username })
+    const newRawRefresh = generateRefreshToken()
     const newHashedRefresh = hashToken(newRawRefresh)
-    const newExpiresAt    = new Date(Date.now() + REFRESH_TTL_MS)
+    const newExpiresAt = new Date(Date.now() + REFRESH_TTL_MS)
 
     await db.insert(refreshTokens).values({
-      adminId:   admin.id,
-      token:     newHashedRefresh,
+      adminId: admin.id,
+      token: newHashedRefresh,
       expiresAt: newExpiresAt,
     })
 
@@ -190,10 +190,10 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
     }, 'Token diperbarui')
   }, {
     body: t.Object({ refreshToken: t.String({ minLength: 1 }) }),
-    detail: { tags: ['Auth'], summary: 'Refresh access token â€” rotates refresh token' },
+    detail: { tags: ['Auth'], summary: 'Refresh access token    rotates refresh token' },
   })
 
-  // POST /auth/logout â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // POST /auth/logout  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
   .post('/logout', async ({ body, set }) => {
     const { refreshToken: rawToken } = body
     const hashed = hashToken(rawToken)
@@ -204,18 +204,18 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
     return ok(null, 'Logout berhasil')
   }, {
     body: t.Object({ refreshToken: t.String({ minLength: 1 }) }),
-    detail: { tags: ['Auth'], summary: 'Logout â€” revoke refresh token' },
+    detail: { tags: ['Auth'], summary: 'Logout    revoke refresh token' },
   })
 
-  // GET /auth/me â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+  // GET /auth/me  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
   .get('/me', async ({ currentAdmin, set }) => {
     const guard = requireAuth({ currentAdmin, set })
     if (guard) return guard
 
     return ok(currentAdmin, 'Info admin')
   }, {
-    detail: { tags: ['Auth'], summary: 'Get current admin info â€” requires Bearer token' },
+    detail: { tags: ['Auth'], summary: 'Get current admin info    requires Bearer token' },
   })
 
-  // GET /auth/ping (stub override) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-  .get('/ping', () => ({ module: 'auth', status: 'ok â€” see ISSUE-005 âœ…' }))
+  // GET /auth/ping (stub override)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+  .get('/ping', () => ({ module: 'auth', status: 'ok    see ISSUE-005  œ…' }))

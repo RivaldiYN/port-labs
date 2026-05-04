@@ -9,21 +9,21 @@ import { db } from '../../lib/db'
 import { media } from '../../db/schema'
 import { ok } from '../../index'
 
-// â”€â”€ Serialize any thrown value to a readable string â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ Serialize any thrown value to a readable string  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 function errMsg(err: unknown): string {
   if (err instanceof Error) return err.message
   if (typeof err === 'string') return err
   try { return JSON.stringify(err) } catch { return String(err) }
 }
 
-// â”€â”€ MinIO client â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ MinIO client  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 let minioAvailable = false
 
 const minioClient = new Minio.Client({
-  endPoint:  process.env.MINIO_ENDPOINT  ?? 'localhost',
-  port:      Number(process.env.MINIO_PORT ?? 9000),
-  useSSL:    process.env.MINIO_USE_SSL === 'true',
-  accessKey: process.env.MINIO_USER     ?? 'minioadmin',
+  endPoint: process.env.MINIO_ENDPOINT ?? 'localhost',
+  port: Number(process.env.MINIO_PORT ?? 9000),
+  useSSL: process.env.MINIO_USE_SSL === 'true',
+  accessKey: process.env.MINIO_USER ?? 'minioadmin',
   secretKey: process.env.MINIO_PASSWORD ?? 'minioadmin123',
 })
 
@@ -41,7 +41,7 @@ async function ensureBucket() {
       await minioClient.setBucketPolicy(BUCKET, policy)
     }
     minioAvailable = true
-    console.log('[Media] MinIO connected â€” bucket:', BUCKET)
+    console.log('[Media] MinIO connected    bucket:', BUCKET)
   } catch (e) {
     console.warn('[Media] MinIO tidak tersedia, fallback ke disk lokal:', errMsg(e))
     minioAvailable = false
@@ -49,8 +49,8 @@ async function ensureBucket() {
 }
 ensureBucket()
 
-// â”€â”€ Local disk fallback â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-const UPLOAD_DIR  = join(process.cwd(), 'uploads')
+//  ”€ ”€ Local disk fallback  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+const UPLOAD_DIR = join(process.cwd(), 'uploads')
 const PUBLIC_BASE = process.env.PUBLIC_URL ?? `http://localhost:${process.env.PORT ?? 3000}`
 
 async function saveLocally(objectName: string, buffer: Buffer): Promise<string> {
@@ -63,8 +63,8 @@ async function saveLocally(objectName: string, buffer: Buffer): Promise<string> 
 
 function buildMinioUrl(objectName: string) {
   const endpoint = process.env.MINIO_ENDPOINT ?? 'localhost'
-  const port     = process.env.MINIO_PORT ?? '9000'
-  const proto    = process.env.MINIO_USE_SSL === 'true' ? 'https' : 'http'
+  const port = process.env.MINIO_PORT ?? '9000'
+  const proto = process.env.MINIO_USE_SSL === 'true' ? 'https' : 'http'
   return `${proto}://${endpoint}:${port}/${BUCKET}/${objectName}`
 }
 
@@ -73,13 +73,13 @@ const ALLOWED_TYPES: Record<string, string> = {
   'image/webp': 'webp', 'image/gif': 'gif', 'application/pdf': 'pdf',
 }
 
-// â”€â”€ CMS Media routes â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ CMS Media routes  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
 
   // GET /api/cms/media
   .get('/', async ({ query }) => {
-    const page   = Math.max(1, Number(query.page  ?? 1))
-    const limit  = Math.min(100, Math.max(1, Number(query.limit ?? 24)))
+    const page = Math.max(1, Number(query.page ?? 1))
+    const limit = Math.min(100, Math.max(1, Number(query.limit ?? 24)))
     const offset = (page - 1) * limit
 
     const [countRow] = await db.select({ total: sql<number>`COUNT(*)::int` }).from(media)
@@ -103,7 +103,7 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
 
     // Normalize mime type
     const mime = file.type || 'application/octet-stream'
-    const ext  = ALLOWED_TYPES[mime]
+    const ext = ALLOWED_TYPES[mime]
     if (!ext) {
       set.status = 400
       return { success: false, data: null, message: `Format tidak didukung (${mime}). Gunakan JPG, PNG, WebP, GIF, atau PDF.` }
@@ -116,10 +116,10 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
     }
 
     try {
-      const buffer     = Buffer.from(await file.arrayBuffer())
-      const timestamp  = Date.now()
-      const random     = randomBytes(4).toString('hex')
-      const safeName   = (file.name || `file.${ext}`).replace(/[^a-z0-9._-]/gi, '_').toLowerCase()
+      const buffer = Buffer.from(await file.arrayBuffer())
+      const timestamp = Date.now()
+      const random = randomBytes(4).toString('hex')
+      const safeName = (file.name || `file.${ext}`).replace(/[^a-z0-9._-]/gi, '_').toLowerCase()
       const objectName = `media/${timestamp}-${random}-${safeName}`
 
       let url: string
@@ -137,12 +137,12 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
       }
 
       const [row] = await db.insert(media).values({
-        filename:     objectName,
+        filename: objectName,
         originalName: file.name || safeName,
-        mimeType:     mime,
-        sizeBytes:    file.size,
+        mimeType: mime,
+        sizeBytes: file.size,
         url,
-        altText:      null,
+        altText: null,
       }).returning()
 
       set.status = 201
@@ -157,7 +157,7 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
     detail: { tags: ['CMS'], summary: 'Upload file to MinIO or local disk and save metadata' },
   })
 
-  // PATCH /api/cms/media/:id â€” update alt text
+  // PATCH /api/cms/media/:id    update alt text
   .patch('/:id', async ({ params, body, set }) => {
     const [row] = await db.select().from(media).where(eq(media.id, params.id))
     if (!row) { set.status = 404; return { success: false, data: null, message: 'Media tidak ditemukan' } }
@@ -168,7 +168,7 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
     detail: { tags: ['CMS'], summary: 'Update media alt text' },
   })
 
-  // DELETE /api/cms/media/:id â€” cascade delete MinIO + DB
+  // DELETE /api/cms/media/:id    cascade delete MinIO + DB
   .delete('/:id', async ({ params, set }) => {
     const [row] = await db.select().from(media).where(eq(media.id, params.id))
     if (!row) { set.status = 404; return { success: false, data: null, message: 'Media tidak ditemukan' } }
@@ -184,11 +184,11 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
     detail: { tags: ['CMS'], summary: 'Delete media from MinIO (if available) and DB' },
   })
 
-// â”€â”€ Public media route â€” GET /api/media (images only) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+//  ”€ ”€ Public media route    GET /api/media (images only)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const publicMediaRoutes = new Elysia({ prefix: '/api/media' })
   .get('/', async ({ query }) => {
-    const limit  = Math.min(50, Math.max(1, Number(query.limit ?? 20)))
-    const page   = Math.max(1, Number(query.page ?? 1))
+    const limit = Math.min(50, Math.max(1, Number(query.limit ?? 20)))
+    const page = Math.max(1, Number(query.page ?? 1))
     const offset = (page - 1) * limit
 
     const rows = await db.select().from(media)

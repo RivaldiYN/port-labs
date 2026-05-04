@@ -3,35 +3,35 @@ import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
 const NAV_ITEMS = [
-  { icon: 'dashboard',    label: 'Dashboard',  path: '/cms' },
-  { icon: 'person',       label: 'Profile',    path: '/cms/profile' },
-  { icon: 'rocket_launch',label: 'Projects',   path: '/cms/projects' },
-  { icon: 'edit_note',    label: 'Posts',      path: '/cms/posts' },
-  { icon: 'perm_media',   label: 'Media',      path: '/cms/media' },
+  { icon: 'dashboard', label: 'Dashboard', path: '/cms' },
+  { icon: 'person', label: 'Profile', path: '/cms/profile' },
+  { icon: 'rocket_launch', label: 'Projects', path: '/cms/projects' },
+  { icon: 'edit_note', label: 'Posts', path: '/cms/posts' },
+  { icon: 'perm_media', label: 'Media', path: '/cms/media' },
 ]
 
 const STATS = [
-  { label: 'Total Projects', value: '3',  icon: 'rocket_launch', progress: 60 },
-  { label: 'Total Posts',    value: '2',  icon: 'article',       progress: 40 },
-  { label: 'Published',      value: '5',  icon: 'check_circle',  progress: 80 },
-  { label: 'Drafts',         value: '0',  icon: 'pending',       progress: 10, secondary: true },
+  { label: 'Total Projects', value: '3', icon: 'rocket_launch', progress: 60 },
+  { label: 'Total Posts', value: '2', icon: 'article', progress: 40 },
+  { label: 'Published', value: '5', icon: 'check_circle', progress: 80 },
+  { label: 'Drafts', value: '0', icon: 'pending', progress: 10, secondary: true },
 ]
 
 const ACTIVITY = [
-  { name: 'Dashboard ML Monitoring',              type: 'Project', status: 'Published', time: '2h ago',  live: true  },
-  { name: 'HRIS â€” PT Kimia Farma',               type: 'Project', status: 'Published', time: '5h ago',  live: true  },
-  { name: 'Antigravity Portfolio',               type: 'Project', status: 'Published', time: '1d ago',  live: true  },
-  { name: 'Kenapa Saya Memilih Elysia.js',       type: 'Post',    status: 'Published', time: '4d ago',  live: true  },
-  { name: 'Membangun WCAG 2.1 AA Compliant Site',type: 'Post',    status: 'Draft',     time: '5d ago',  live: false },
+  { name: 'Dashboard ML Monitoring', type: 'Project', status: 'Published', time: '2h ago', live: true },
+  { name: 'HRIS    PT Kimia Farma', type: 'Project', status: 'Published', time: '5h ago', live: true },
+  { name: 'Antigravity Portfolio', type: 'Project', status: 'Published', time: '1d ago', live: true },
+  { name: 'Kenapa Saya Memilih Elysia.js', type: 'Post', status: 'Published', time: '4d ago', live: true },
+  { name: 'Membangun WCAG 2.1 AA Compliant Site', type: 'Post', status: 'Draft', time: '5d ago', live: false },
 ]
 
 const BAR_HEIGHTS = [50, 65, 80, 52, 75, 100, 68, 55]
 
 export default function CmsDashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [loggingOut, setLoggingOut]   = useState(false)
-  const { admin, logout }             = useAuth()
-  const navigate                      = useNavigate()
+  const [loggingOut, setLoggingOut] = useState(false)
+  const { admin, logout } = useAuth()
+  const navigate = useNavigate()
 
   const handleLogout = async () => {
     setLoggingOut(true)
@@ -42,7 +42,7 @@ export default function CmsDashboardPage() {
   return (
     <div className="bg-[#131313] text-[#e5e2e1] min-h-screen font-body flex">
 
-      {/* â”€â”€ Mobile overlay â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/*  ”€ ”€ Mobile overlay  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 bg-black/60 z-40 lg:hidden"
@@ -50,7 +50,7 @@ export default function CmsDashboardPage() {
         />
       )}
 
-      {/* â”€â”€ Sidebar â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/*  ”€ ”€ Sidebar  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ */}
       <aside className={`fixed left-0 top-0 h-screen w-64 bg-[#1c1b1b] flex flex-col py-8
         shadow-[20px_0_40px_rgba(0,0,0,0.4)] z-50 transition-transform duration-300
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}`}>
@@ -116,7 +116,7 @@ export default function CmsDashboardPage() {
         </div>
       </aside>
 
-      {/* â”€â”€ Main â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */}
+      {/*  ”€ ”€ Main  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ */}
       <main className="lg:ml-64 min-h-screen flex-1 bg-[#131313] p-6 md:p-10 xl:p-12">
 
         {/* Mobile top-bar */}
@@ -140,7 +140,7 @@ export default function CmsDashboardPage() {
               Overview<span className="text-[#53e076]">.</span>
             </h2>
             <p className="text-[#e5e2e1]/60 text-sm md:text-base">
-              Halo, <span className="text-[#53e076] font-semibold">{admin?.username ?? 'â€”'}</span> â€” sistem aktif dan sinkronisasi berjalan.
+              Halo, <span className="text-[#53e076] font-semibold">{admin?.username ?? '  '}</span>    sistem aktif dan sinkronisasi berjalan.
             </p>
           </div>
           <button className="bg-[#53e076] hover:bg-[#1db954] text-[#002108] font-bold py-3 px-6 md:py-4 md:px-8

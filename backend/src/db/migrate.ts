@@ -19,13 +19,13 @@ async function runMigrations() {
   const db = drizzle(migrationClient)
 
   try {
-    console.log('âš¡ Running migrations...')
+    console.log(' š¡ Running migrations...')
     await migrate(db, {
       migrationsFolder: path.join(__dirname, 'migrations'),
     })
-    console.log('âœ… All migrations applied successfully!')
+    console.log(' œ… All migrations applied successfully!')
   } catch (error) {
-    console.error('âŒ Migration failed:', error)
+    console.error(' Œ Migration failed:', error)
     process.exit(1)
   } finally {
     await migrationClient.end()

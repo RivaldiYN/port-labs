@@ -4,16 +4,16 @@ import { useAuth } from '../../context/AuthContext'
 
 export default function CmsLoginPage() {
   const { login } = useAuth()
-  const navigate  = useNavigate()
-  const location  = useLocation()
-  const from      = (location.state as { from?: Location })?.from?.pathname ?? '/cms'
+  const navigate = useNavigate()
+  const location = useLocation()
+  const from = (location.state as { from?: Location })?.from?.pathname ?? '/cms'
 
-  const [username,  setUsername]  = useState('')
-  const [password,  setPassword]  = useState('')
-  const [showPass,  setShowPass]  = useState(false)
-  const [loading,   setLoading]   = useState(false)
-  const [error,     setError]     = useState('')
-  const [shake,     setShake]     = useState(false)
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [showPass, setShowPass] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState('')
+  const [shake, setShake] = useState(false)
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
@@ -113,7 +113,7 @@ export default function CmsLoginPage() {
                   onChange={e => setPassword(e.target.value)}
                   required
                   autoComplete="current-password"
-                  placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢"
+                  placeholder=" €¢ €¢ €¢ €¢ €¢ €¢ €¢ €¢"
                   className="w-full bg-[#131313] border border-[#3d4a3d]/30 focus:border-[#1db954] focus:outline-none rounded-xl py-3.5 pl-12 pr-12 text-[#e5e2e1] placeholder:text-[#e5e2e1]/20 font-body text-sm transition-all focus:shadow-[0_0_0_3px_rgba(29,185,84,0.1)]"
                 />
                 <button
@@ -162,7 +162,7 @@ export default function CmsLoginPage() {
         {/* Security note */}
         <p className="text-center mt-6 font-label text-[10px] text-[#e5e2e1]/20 uppercase tracking-widest flex items-center justify-center gap-1.5">
           <span className="material-symbols-outlined text-sm">shield</span>
-          Dilindungi JWT + Bcrypt Â· Max 5 login/menit
+          Dilindungi JWT + Bcrypt  · Max 5 login/menit
         </p>
       </div>
 
