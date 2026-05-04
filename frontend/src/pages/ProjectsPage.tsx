@@ -122,7 +122,7 @@ export default function ProjectsPage() {
             <div className="flex flex-col items-center py-24 gap-4 text-center">
               <span className="material-symbols-outlined text-5xl text-[#ffb4ab]/60">wifi_off</span>
               <p className="text-[#ffb4ab] font-label text-sm">{error}</p>
-              <p className="text-[#e5e2e1]/40 font-body text-xs">Pastikan backend berjalan di http://localhost:3000</p>
+              <p className="text-[#e5e2e1]/40 font-body text-xs">Pastikan backend berjalan di backend</p>
             </div>
           )}
 

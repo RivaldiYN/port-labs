@@ -1,7 +1,7 @@
-﻿import { useState, useEffect } from "react"
+import { useState, useEffect } from "react"
 import { Link, useParams } from "react-router-dom"
 
-const API = import.meta.env.VITE_API_URL ?? "http://localhost:3000"
+const API = import.meta.env.VITE_API_URL ?? "backend"
 
 interface Post {
   id: string; title: string; slug: string; excerpt: string|null; content: string|null
@@ -25,7 +25,7 @@ export default function PostDetailPage() {
       .finally(() => setLoading(false))
   }, [slug])
 
-  const readTime = post?.content ? `${Math.ceil(post.content.split(/\s+/).length / 200)} MIN READ` : "— MIN READ"
+  const readTime = post?.content ? `${Math.ceil(post.content.split(/\s+/).length / 200)} MIN READ` : "� MIN READ"
 
   return (
     <div className="bg-[#131313] text-[#e5e2e1] min-h-screen font-body">
@@ -50,7 +50,7 @@ export default function PostDetailPage() {
             <span className="material-symbols-outlined text-6xl text-[#ffb4ab]/50" aria-hidden="true">article_shortcut</span>
             <h1 className="font-headline text-2xl font-bold text-[#e5e2e1]">Post tidak ditemukan</h1>
             <p className="text-[#e5e2e1]/50">{error}</p>
-            <Link to="/posts" className="bg-[#53e076] text-[#002108] px-6 py-3 rounded-full font-label font-bold text-xs uppercase tracking-widest hover:bg-[#1db954] transition-all">← Kembali ke Posts</Link>
+            <Link to="/posts" className="bg-[#53e076] text-[#002108] px-6 py-3 rounded-full font-label font-bold text-xs uppercase tracking-widest hover:bg-[#1db954] transition-all">? Kembali ke Posts</Link>
           </div>
         )}
 
@@ -103,7 +103,7 @@ export default function PostDetailPage() {
                   <a href="mailto:aldinggln9@gmail.com" className="block w-full py-3 bg-[#53e076] text-[#002108] font-bold rounded-full text-sm text-center hover:shadow-[0_0_20px_rgba(83,224,118,0.3)] transition-all active:scale-95">Get in Touch</a>
                 </div>
                 <div>
-                  <Link to="/posts" className="text-[#53e076] font-label text-xs uppercase tracking-widest hover:underline">← All Notes</Link>
+                  <Link to="/posts" className="text-[#53e076] font-label text-xs uppercase tracking-widest hover:underline">? All Notes</Link>
                 </div>
               </aside>
             </section>
@@ -113,7 +113,7 @@ export default function PostDetailPage() {
 
       <footer className="w-full py-12 border-t border-[#e5e2e1]/10 bg-[#131313] mt-12">
         <div className="flex flex-col md:flex-row justify-between items-center px-8 w-full max-w-7xl mx-auto gap-6">
-          <p className="font-label text-sm text-[#e5e2e1]/40">© {new Date().getFullYear()} Rivaldi Yonathan Nainggolan.</p>
+          <p className="font-label text-sm text-[#e5e2e1]/40">� {new Date().getFullYear()} Rivaldi Yonathan Nainggolan.</p>
           <div className="flex gap-8">{[["LinkedIn","https://linkedin.com/in/rivaldiyn"],["GitHub","https://github.com/RivaldiYN"]].map(([l,h]) => <a key={l} href={h} target="_blank" rel="noopener noreferrer" className="font-label text-sm text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors">{l}</a>)}</div>
         </div>
       </footer>

@@ -14,7 +14,7 @@ interface AuthState {
 
 const AuthCtx = createContext<AuthState | null>(null)
 
-const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
+const API = import.meta.env.VITE_API_URL ?? 'backend'
 const LS_REFRESH = 'cms_refresh_token'
 const LS_ADMIN   = 'cms_admin'
 
