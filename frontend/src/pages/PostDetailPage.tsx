@@ -4,16 +4,16 @@ import { Link, useParams } from "react-router-dom"
 const API = import.meta.env.VITE_API_URL ?? "backend"
 
 interface Post {
-  id: string; title: string; slug: string; excerpt: string|null; content: string|null
-  coverUrl: string|null; tags: string[]|null; isPublished: boolean
-  publishedAt: string|null; createdAt: string; updatedAt: string
+  id: string; title: string; slug: string; excerpt: string | null; content: string | null
+  coverUrl: string | null; tags: string[] | null; isPublished: boolean
+  publishedAt: string | null; createdAt: string; updatedAt: string
 }
 
 export default function PostDetailPage() {
   const { slug } = useParams<{ slug: string }>()
-  const [post, setPost] = useState<Post|null>(null)
+  const [post, setPost] = useState<Post | null>(null)
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string|null>(null)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (!slug) return
@@ -25,7 +25,7 @@ export default function PostDetailPage() {
       .finally(() => setLoading(false))
   }, [slug])
 
-  const readTime = post?.content ? `${Math.ceil(post.content.split(/\s+/).length / 200)} MIN READ` : "— MIN READ"
+  const readTime = post?.content ? `${Math.ceil(post.content.split(/\s+/).length / 200)} MIN READ` : "Â© MIN READ"
 
   return (
     <div className="bg-[#131313] text-[#e5e2e1] min-h-screen font-body">
@@ -35,8 +35,8 @@ export default function PostDetailPage() {
       <nav className="fixed top-0 w-full z-50 bg-[#131313]/60 backdrop-blur-xl shadow-2xl shadow-black/40 h-20 flex justify-between items-center px-6 md:px-8">
         <Link to="/" className="text-xl font-bold text-[#e5e2e1] font-headline tracking-tighter">Rivaldi<span className="text-[#1DB954]">.</span></Link>
         <div className="hidden md:flex items-center gap-8">
-          {([["/"," Home",false],["/projects","Projects",false],["/posts","Notes",true]] as [string,string,boolean][]).map(([to,label,active]) => (
-            <Link key={to} to={to} aria-current={active?"page":undefined} className={`font-headline tracking-tighter text-sm px-2 py-1 rounded transition-all ${active?"text-[#1DB954] font-bold border-b-2 border-[#1DB954]":"text-[#e5e2e1]/70 hover:text-[#e5e2e1] hover:bg-[#1DB954]/10"}`}>{label}</Link>
+          {([["/", " Home", false], ["/projects", "Projects", false], ["/posts", "Notes", true]] as [string, string, boolean][]).map(([to, label, active]) => (
+            <Link key={to} to={to} aria-current={active ? "page" : undefined} className={`font-headline tracking-tighter text-sm px-2 py-1 rounded transition-all ${active ? "text-[#1DB954] font-bold border-b-2 border-[#1DB954]" : "text-[#e5e2e1]/70 hover:text-[#e5e2e1] hover:bg-[#1DB954]/10"}`}>{label}</Link>
           ))}
         </div>
         <a href="mailto:aldinggln9@gmail.com" className="bg-[#1DB954] text-[#003914] px-5 py-2 rounded-full font-bold font-label text-xs uppercase tracking-widest active:scale-95 transition-all">Hire Me</a>
@@ -59,7 +59,7 @@ export default function PostDetailPage() {
             <header className="relative w-full h-64 sm:h-80 md:h-[480px] lg:h-[560px] flex items-end overflow-hidden">
               {post.coverUrl
                 ? <><img src={post.coverUrl} alt="" className="absolute inset-0 w-full h-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/60 to-transparent" /></>
-                : <div className="absolute inset-0 bg-gradient-to-br from-[#1db954]/20 via-[#1c1b1b] to-[#131313]"><div className="absolute inset-0 flex items-center justify-center opacity-10"><span className="material-symbols-outlined text-[#53e076]" style={{fontSize:"400px"}} aria-hidden="true">article</span></div><div className="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/40 to-transparent" /></div>
+                : <div className="absolute inset-0 bg-gradient-to-br from-[#1db954]/20 via-[#1c1b1b] to-[#131313]"><div className="absolute inset-0 flex items-center justify-center opacity-10"><span className="material-symbols-outlined text-[#53e076]" style={{ fontSize: "400px" }} aria-hidden="true">article</span></div><div className="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/40 to-transparent" /></div>
               }
               <div className="relative z-20 w-full max-w-7xl mx-auto px-6 md:px-8 pb-10 md:pb-16">
                 <Link to="/posts" className="flex items-center gap-2 text-[#53e076] font-label text-xs uppercase tracking-widest mb-6 hover:-translate-x-1 transition-transform w-fit">
@@ -72,7 +72,7 @@ export default function PostDetailPage() {
                 <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-headline font-extrabold tracking-tighter leading-none text-[#e5e2e1] max-w-4xl">{post.title}</h1>
                 <div className="flex items-center gap-4 mt-6">
                   <div className="w-10 h-10 rounded-full bg-[#2a2a2a] border-2 border-[#53e076]/30 flex items-center justify-center"><span className="text-lg font-headline font-black text-[#53e076]" aria-hidden="true">R</span></div>
-                  <div><p className="text-[#e5e2e1] font-semibold text-sm">Rivaldi Yonathan Nainggolan</p><p className="text-[#e5e2e1]/40 text-xs font-label uppercase tracking-tighter">{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("id-ID",{year:"numeric",month:"long",day:"numeric"}) : ""}</p></div>
+                  <div><p className="text-[#e5e2e1] font-semibold text-sm">Rivaldi Yonathan Nainggolan</p><p className="text-[#e5e2e1]/40 text-xs font-label uppercase tracking-tighter">{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("id-ID", { year: "numeric", month: "long", day: "numeric" }) : ""}</p></div>
                 </div>
               </div>
             </header>
@@ -86,14 +86,14 @@ export default function PostDetailPage() {
                 <div>
                   <h2 className="font-label text-xs uppercase tracking-[0.2em] text-[#e5e2e1]/40 mb-6">Share</h2>
                   <div className="flex gap-3">
-                    {["share","link"].map(icon => <button key={icon} aria-label={icon==="share"?"Share post":"Copy link"} className="w-10 h-10 rounded-full bg-[#1c1b1b] flex items-center justify-center hover:bg-[#53e076]/20 hover:text-[#53e076] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#53e076]"><span className="material-symbols-outlined text-base" aria-hidden="true">{icon}</span></button>)}
+                    {["share", "link"].map(icon => <button key={icon} aria-label={icon === "share" ? "Share post" : "Copy link"} className="w-10 h-10 rounded-full bg-[#1c1b1b] flex items-center justify-center hover:bg-[#53e076]/20 hover:text-[#53e076] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#53e076]"><span className="material-symbols-outlined text-base" aria-hidden="true">{icon}</span></button>)}
                   </div>
                 </div>
               </aside>
 
               <article className="lg:col-span-7 prose">
                 {post.excerpt && <p className="text-xl text-[#e5e2e1]/90 leading-relaxed font-medium mb-12">{post.excerpt}</p>}
-                {post.content && <div style={{whiteSpace:"pre-wrap"}} className="text-[#bccbb9] leading-relaxed">{post.content}</div>}
+                {post.content && <div style={{ whiteSpace: "pre-wrap" }} className="text-[#bccbb9] leading-relaxed">{post.content}</div>}
               </article>
 
               <aside className="lg:col-span-2 space-y-10">
@@ -113,8 +113,8 @@ export default function PostDetailPage() {
 
       <footer className="w-full py-12 border-t border-[#e5e2e1]/10 bg-[#131313] mt-12">
         <div className="flex flex-col md:flex-row justify-between items-center px-8 w-full max-w-7xl mx-auto gap-6">
-          <p className="font-label text-sm text-[#e5e2e1]/40">© {new Date().getFullYear()} Rivaldi Yonathan Nainggolan.</p>
-          <div className="flex gap-8">{[["LinkedIn","https://linkedin.com/in/rivaldiyn"],["GitHub","https://github.com/RivaldiYN"]].map(([l,h]) => <a key={l} href={h} target="_blank" rel="noopener noreferrer" className="font-label text-sm text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors">{l}</a>)}</div>
+          <p className="font-label text-sm text-[#e5e2e1]/40">ï¿½ {new Date().getFullYear()} Rivaldi Yonathan Nainggolan.</p>
+          <div className="flex gap-8">{[["LinkedIn", "https://linkedin.com/in/rivaldiyn"], ["GitHub", "https://github.com/RivaldiYN"]].map(([l, h]) => <a key={l} href={h} target="_blank" rel="noopener noreferrer" className="font-label text-sm text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors">{l}</a>)}</div>
         </div>
       </footer>
     </div>
