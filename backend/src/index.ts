@@ -137,18 +137,21 @@ const app = new Elysia({ adapter: node() })
     return { success: false, data: null, message: 'Route tidak ditemukan' }
   })
 
-  .listen(Number(process.env.PORT ?? 3000))
+const port = Number(process.env.PORT ?? 3000)
 
-const port = app.server?.port ?? process.env.PORT ?? 3000
-console.log('')
-console.log('╔══════════════════════════════════════════════════╗')
-console.log('║       🚀 Antigravity Portfolio API               ║')
-console.log('╠══════════════════════════════════════════════════╣')
-console.log(`║  Server  : http://localhost:${String(port).padEnd(21)}║`)
-console.log(`║  Swagger : http://localhost:${port}/docs          ║`)
-console.log(`║  Health  : http://localhost:${port}/health        ║`)
-console.log(`║  Env     : ${(process.env.NODE_ENV ?? 'development').padEnd(38)}║`)
-console.log('╚══════════════════════════════════════════════════╝')
-console.log('')
+if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
+  app.listen(port)
+  console.log('')
+  console.log('╔══════════════════════════════════════════════════╗')
+  console.log('║       🚀 Antigravity Portfolio API               ║')
+  console.log('╠══════════════════════════════════════════════════╣')
+  console.log(`║  Server  : http://localhost:${String(port).padEnd(21)}║`)
+  console.log(`║  Swagger : http://localhost:${port}/docs          ║`)
+  console.log(`║  Health  : http://localhost:${port}/health        ║`)
+  console.log(`║  Env     : ${(process.env.NODE_ENV ?? 'development').padEnd(38)}║`)
+  console.log('╚══════════════════════════════════════════════════╝')
+  console.log('')
+}
 
+export { app }
 export type App = typeof app
