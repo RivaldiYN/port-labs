@@ -1,6 +1,7 @@
 {
   "name": "portfolio-backend",
   "version": "1.0.0",
+  "type": "module",
   "description": "Antigravity Portfolio - Elysia.js API Server",
   "engines": {
     "node": ">=20.0.0"
