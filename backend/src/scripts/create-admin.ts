@@ -6,8 +6,8 @@
 import 'dotenv/config'
 import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
-import { db } from '../lib/db'
-import { adminUsers } from '../db/schema'
+import { db } from '../lib/db.js'
+import { adminUsers } from '../db/schema.js'
 import * as readline from 'readline'
 
 async function prompt(question: string, hidden = false): Promise<string> {
