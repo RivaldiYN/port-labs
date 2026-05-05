@@ -61,20 +61,16 @@ const app = new Elysia()
     },
   }))
 
-  // Request logger
-  .onRequest(({ request }) => {
-    const start = Date.now()
-    ;(request as Request & { _start?: number })._start = start
-  })
-
+  // Request logger — use WeakMap to avoid mutating readonly Request objects
   .onAfterResponse(({ request, set }) => {
-    const start = (request as Request & { _start?: number })._start ?? Date.now()
-    const duration = Date.now() - start
-    const method = request.method.padEnd(6)
-    const url = new URL(request.url).pathname
-    const status = set.status ?? 200
-    const timestamp = new Date().toISOString()
-    console.log(`[${timestamp}] ${method} ${url} -> ${status} (${duration}ms)`)
+    try {
+      const method = (request.method ?? 'GET').padEnd(6)
+      let pathname = request.url ?? '/'
+      try { pathname = new URL(request.url).pathname } catch { /* relative url ok */ }
+      const status = set.status ?? 200
+      const timestamp = new Date().toISOString()
+      console.log(`[${timestamp}] ${method} ${pathname} -> ${status}`)
+    } catch { /* never crash from logger */ }
   })
 
   // Global error handler

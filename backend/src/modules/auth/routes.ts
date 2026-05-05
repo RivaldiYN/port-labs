@@ -24,7 +24,7 @@ function checkRateLimit(ip: string): boolean {
   return true
 }
 
-//  ”€ ”€ Helpers  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+//   Helpers     
 function generateRefreshToken(): string {
   return randomBytes(64).toString('hex')
 }
@@ -35,7 +35,7 @@ function hashToken(raw: string): string {
 
 const REFRESH_TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
 
-//  ”€ ”€ Auth plugin (derive currentAdmin into context)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+//   Auth plugin (derive currentAdmin into context)               
 export const authPlugin = new Elysia({ name: 'auth-plugin' })
   .use(jwt({
     name: 'jwt',
@@ -59,7 +59,7 @@ export const authPlugin = new Elysia({ name: 'auth-plugin' })
     return { currentAdmin: admin ?? null }
   })
 
-//  ”€ ”€ requireAuth guard  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+//   requireAuth guard                              
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function requireAuth({ currentAdmin, set }: { currentAdmin: unknown; set: any }) {
   if (!currentAdmin) {
@@ -68,7 +68,7 @@ export function requireAuth({ currentAdmin, set }: { currentAdmin: unknown; set:
   }
 }
 
-//  ”€ ”€ Auth routes  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+//   Auth routes   
 export const authRoutes = new Elysia({ prefix: '/auth' })
   .use(jwt({
     name: 'jwt',
@@ -77,10 +77,17 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
   }))
   .use(authPlugin)
 
-  // POST /auth/login  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+  // POST /auth/login
   .post('/login', async ({ body, jwt, set, request }) => {
-    const ip = request.headers.get('x-forwarded-for')?.split(',')[0]?.trim()
-      ?? request.headers.get('x-real-ip')
+    // headers.get() works for Web API Headers; fallback for Node.js plain object
+    const h = request.headers
+    const getHeader = (key: string) =>
+      typeof (h as Headers).get === 'function'
+        ? (h as Headers).get(key)
+        : (h as unknown as Record<string, string>)[key] ?? null
+
+    const ip = getHeader('x-forwarded-for')?.split(',')[0]?.trim()
+      ?? getHeader('x-real-ip')
       ?? '0.0.0.0'
 
     // Rate limit
@@ -137,7 +144,7 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
     detail: { tags: ['Auth'], summary: 'Login admin    returns accessToken + refreshToken' },
   })
 
-  // POST /auth/refresh  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+  // POST /auth/refresh                              
   .post('/refresh', async ({ body, jwt, set }) => {
     const { refreshToken: rawToken } = body
     const hashed = hashToken(rawToken)
@@ -192,7 +199,7 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
     detail: { tags: ['Auth'], summary: 'Refresh access token    rotates refresh token' },
   })
 
-  // POST /auth/logout  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+  // POST /auth/logout
   .post('/logout', async ({ body, set }) => {
     const { refreshToken: rawToken } = body
     const hashed = hashToken(rawToken)
@@ -206,7 +213,7 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
     detail: { tags: ['Auth'], summary: 'Logout    revoke refresh token' },
   })
 
-  // GET /auth/me  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+  // GET /auth/me   
   .get('/me', async ({ currentAdmin, set }) => {
     const guard = requireAuth({ currentAdmin, set })
     if (guard) return guard
@@ -216,5 +223,5 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
     detail: { tags: ['Auth'], summary: 'Get current admin info    requires Bearer token' },
   })
 
-  // GET /auth/ping (stub override)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+  // GET /auth/ping (stub override)                        
   .get('/ping', () => ({ module: 'auth', status: 'ok    see ISSUE-005  œ…' }))
