@@ -1,10 +1,10 @@
-﻿/**
+/**
  * create-admin.ts    CLI to create the first admin user
  * Usage: npm run create-admin
  *   or with args: USERNAME=rivaldi EMAIL=admin@example.com PASSWORD=secret123 npm run create-admin
  */
 import 'dotenv/config'
-import { hash } from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 import { eq } from 'drizzle-orm'
 import { db } from '../lib/db'
 import { adminUsers } from '../db/schema'
@@ -70,7 +70,7 @@ async function main() {
     process.exit(1)
   }
 
-  const passwordHash = await hash(password, 12)
+  const passwordHash = await bcrypt.hash(password, 12)
   const [admin] = await db.insert(adminUsers).values({ username, email, passwordHash }).returning()
 
   console.log('\n œ… Admin berhasil dibuat!')

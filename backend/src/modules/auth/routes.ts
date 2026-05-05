@@ -1,13 +1,12 @@
-﻿import { Elysia, t } from 'elysia'
+import { Elysia, t } from 'elysia'
 import { jwt } from '@elysiajs/jwt'
-import { compare } from 'bcryptjs'
+import bcrypt from 'bcryptjs'
 import { randomBytes, createHash } from 'crypto'
 import { eq, and, gt } from 'drizzle-orm'
 import { db } from '../../lib/db'
 import { adminUsers, refreshTokens } from '../../db/schema'
 import { ok } from '../../index'
 
-//  ”€ ”€ Rate limiter (in-memory, per IP)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 const loginAttempts = new Map<string, { count: number; resetAt: number }>()
 const MAX_ATTEMPTS = 5
 const WINDOW_MS = 60_000 // 1 minute
@@ -105,7 +104,7 @@ export const authRoutes = new Elysia({ prefix: '/auth' })
       return { success: false, data: null, message: INVALID_MSG, code: 'INVALID_CREDENTIALS' }
     }
 
-    const valid = await compare(password, admin.passwordHash)
+    const valid = await bcrypt.compare(password, admin.passwordHash)
     if (!valid) {
       set.status = 401
       return { success: false, data: null, message: INVALID_MSG, code: 'INVALID_CREDENTIALS' }
