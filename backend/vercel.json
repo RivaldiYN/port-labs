@@ -1,15 +1,8 @@
 {
   "version": 2,
   "framework": null,
-  "builds": [
-    {
-      "src": "api/index.ts",
-      "use": "@vercel/node"
-    }
-  ],
   "functions": {
     "api/index.ts": {
-      "runtime": "@vercel/node@5",
       "maxDuration": 30
     }
   },
@@ -43,4 +36,3 @@
     }
   ]
 }
-
