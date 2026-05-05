@@ -1,13 +1,11 @@
 import 'dotenv/config'
 import { Elysia } from 'elysia'
-import { node } from '@elysiajs/node'
 import { cors } from '@elysiajs/cors'
 import { jwt } from '@elysiajs/jwt'
 import { swagger } from '@elysiajs/swagger'
-import { staticPlugin } from '@elysiajs/static'
-import { authRoutes } from './modules/auth/routes'
-import { publicRoutes } from './modules/public/routes'
-import { cmsRoutes } from './modules/cms/routes'
+import { authRoutes } from './modules/auth/routes.js'
+import { publicRoutes } from './modules/public/routes.js'
+import { cmsRoutes } from './modules/cms/routes.js'
 
 // Response format helpers
 export function ok<T>(data: T, message = 'OK', meta?: Record<string, unknown>) {
@@ -18,8 +16,8 @@ export function fail(message: string, status = 400) {
   return { success: false, data: null, message, status }
 }
 
-// App
-const app = process.env.VERCEL ? new Elysia() : new Elysia({ adapter: node() })
+// App — no node() adapter needed for Vercel serverless
+const app = new Elysia()
 
   // Plugins
   .use(cors({
@@ -131,9 +129,6 @@ const app = process.env.VERCEL ? new Elysia() : new Elysia({ adapter: node() })
   .use(publicRoutes)
   .use(cmsRoutes)
 
-  // Static files - local disk uploads fallback
-  .use(staticPlugin({ assets: 'uploads', prefix: '/uploads' }))
-
   // 404 fallback
   .get('*', ({ set }) => {
     set.status = 404
@@ -142,18 +137,24 @@ const app = process.env.VERCEL ? new Elysia() : new Elysia({ adapter: node() })
 
 const port = Number(process.env.PORT ?? 3000)
 
-if (process.env.NODE_ENV !== 'production' || !process.env.VERCEL) {
-  app.listen(port)
-  console.log('')
-  console.log('====================================================')
-  console.log('  Antigravity Portfolio API')
-  console.log('====================================================')
-  console.log(`  Server  : http://localhost:${port}`)
-  console.log(`  Swagger : http://localhost:${port}/docs`)
-  console.log(`  Health  : http://localhost:${port}/health`)
-  console.log(`  Env     : ${process.env.NODE_ENV ?? 'development'}`)
-  console.log('====================================================')
-  console.log('')
+// Only start HTTP server when running locally (not on Vercel serverless)
+if (!process.env.VERCEL) {
+  // Dynamically import node adapter only for local dev
+  import('@elysiajs/node').then(({ node }) => {
+    const localApp = new Elysia({ adapter: node() })
+    localApp.use(app)
+    localApp.listen(port)
+    console.log('')
+    console.log('====================================================')
+    console.log('  Antigravity Portfolio API')
+    console.log('====================================================')
+    console.log(`  Server  : http://localhost:${port}`)
+    console.log(`  Swagger : http://localhost:${port}/docs`)
+    console.log(`  Health  : http://localhost:${port}/health`)
+    console.log(`  Env     : ${process.env.NODE_ENV ?? 'development'}`)
+    console.log('====================================================')
+    console.log('')
+  })
 }
 
 export { app }

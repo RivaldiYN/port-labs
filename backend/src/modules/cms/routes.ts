@@ -1,12 +1,12 @@
-﻿import { Elysia } from 'elysia'
-import { authPlugin, requireAuth } from '../auth/routes'
-import { cmsProjectRoutes } from '../public/projectRoutes'
-import { cmsProfileRoutes } from '../public/profileRoutes'
-import { cmsPostRoutes } from '../public/postRoutes'
-import { cmsMediaRoutes } from '../public/mediaRoutes'
+import { Elysia } from 'elysia'
+import { authPlugin, requireAuth } from '../auth/routes.js'
+import { cmsProjectRoutes } from '../public/projectRoutes.js'
+import { cmsProfileRoutes } from '../public/profileRoutes.js'
+import { cmsPostRoutes } from '../public/postRoutes.js'
+import { cmsMediaRoutes } from '../public/mediaRoutes.js'
 
 /**
- * CMS routes    /api/cms/*
+ * CMS routes — /api/cms/*
  * All routes require Bearer JWT token (admin only).
  */
 export const cmsRoutes = new Elysia()

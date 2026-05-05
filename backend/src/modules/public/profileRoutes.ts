@@ -1,12 +1,12 @@
-ï»¿import { Elysia, t } from 'elysia'
+import { Elysia, t } from 'elysia'
 import { eq } from 'drizzle-orm'
 import { createHash } from 'crypto'
-import { db } from '../../lib/db'
-import { profile } from '../../db/schema'
-import { ok } from '../../index'
+import { db } from '../../lib/db.js'
+import { profile } from '../../db/schema.js'
+import { ok } from '../../index.js'
 import * as Minio from 'minio'
 
-//  â€â‚¬ â€â‚¬ MinIO client  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ MinIO client  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 const minioClient = new Minio.Client({
   endPoint: process.env.MINIO_ENDPOINT ?? 'localhost',
   port: Number(process.env.MINIO_PORT ?? 9000),
@@ -42,7 +42,7 @@ async function ensureBucket() {
 // Ensure bucket on startup
 ensureBucket()
 
-//  â€â‚¬ â€â‚¬ Profile body schema  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ Profile body schema  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 const ProfileBody = t.Object({
   name: t.Optional(t.String({ minLength: 1, maxLength: 100 })),
   tagline: t.Optional(t.Union([t.String(), t.Null()])),
@@ -55,7 +55,7 @@ const ProfileBody = t.Object({
   avatarUrl: t.Optional(t.Union([t.String(), t.Null()])),
 })
 
-//  â€â‚¬ â€â‚¬ Public route    GET /api/profile  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ Public route    GET /api/profile  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const publicProfileRoutes = new Elysia()
   .get('/api/profile', async ({ set }) => {
     const rows = await db.select().from(profile).limit(1)
@@ -68,7 +68,7 @@ export const publicProfileRoutes = new Elysia()
     detail: { tags: ['Public'], summary: 'Get public profile data' },
   })
 
-//  â€â‚¬ â€â‚¬ CMS routes    /api/cms/profile (admin only)  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ CMS routes    /api/cms/profile (admin only)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const cmsProfileRoutes = new Elysia()
 
   // PUT /api/cms/profile    update profile

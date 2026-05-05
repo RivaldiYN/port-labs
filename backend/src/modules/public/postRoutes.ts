@@ -1,18 +1,18 @@
-ï»¿import { Elysia, t } from 'elysia'
+import { Elysia, t } from 'elysia'
 import { eq, and, ilike, sql, desc, asc, arrayContains, arrayOverlaps } from 'drizzle-orm'
 import slugify from 'slugify'
-import { db } from '../../lib/db'
-import { posts } from '../../db/schema'
-import { ok } from '../../index'
+import { db } from '../../lib/db.js'
+import { posts } from '../../db/schema.js'
+import { ok } from '../../index.js'
 
-//  â€â‚¬ â€â‚¬ Helpers  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ Helpers  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 function autoExcerpt(content: string | null | undefined, max = 160): string | null {
   if (!content) return null
   const plain = content.replace(/[#*`>_\-\[\]()!]/g, '').replace(/\s+/g, ' ').trim()
-  return plain.length > max ? plain.slice(0, max).trimEnd() + ' â‚¬Â¦' : plain
+  return plain.length > max ? plain.slice(0, max).trimEnd() + ' €¦' : plain
 }
 
-//  â€â‚¬ â€â‚¬ Shared body schema  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ Shared body schema  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 const NullableStr = t.Optional(t.Union([t.String(), t.Null()]))
 
 const PostBody = t.Object({
@@ -24,7 +24,7 @@ const PostBody = t.Object({
   isPublished: t.Optional(t.Boolean()),
 })
 
-//  â€â‚¬ â€â‚¬ Public routes    /api/posts  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ Public routes    /api/posts  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const publicPostRoutes = new Elysia({ prefix: '/api/posts' })
 
   // GET /api/posts/tags    must be before /:slug
@@ -126,7 +126,7 @@ export const publicPostRoutes = new Elysia({ prefix: '/api/posts' })
     detail: { tags: ['Public'], summary: 'Get published post by slug' },
   })
 
-//  â€â‚¬ â€â‚¬ CMS routes    /api/cms/posts (admin only)  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ CMS routes    /api/cms/posts (admin only)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const cmsPostRoutes = new Elysia({ prefix: '/api/cms/posts' })
 
   // GET /api/cms/posts

@@ -3,9 +3,9 @@ import { jwt } from '@elysiajs/jwt'
 import bcrypt from 'bcryptjs'
 import { randomBytes, createHash } from 'crypto'
 import { eq, and, gt } from 'drizzle-orm'
-import { db } from '../../lib/db'
-import { adminUsers, refreshTokens } from '../../db/schema'
-import { ok } from '../../index'
+import { db } from '../../lib/db.js'
+import { adminUsers, refreshTokens } from '../../db/schema.js'
+import { ok } from '../../index.js'
 
 const loginAttempts = new Map<string, { count: number; resetAt: number }>()
 const MAX_ATTEMPTS = 5

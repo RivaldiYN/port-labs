@@ -1,11 +1,11 @@
-﻿import { Elysia } from 'elysia'
-import { publicProjectRoutes } from './projectRoutes'
-import { publicProfileRoutes } from './profileRoutes'
-import { publicPostRoutes } from './postRoutes'
-import { publicMediaRoutes } from './mediaRoutes'
+import { Elysia } from 'elysia'
+import { publicProjectRoutes } from './projectRoutes.js'
+import { publicProfileRoutes } from './profileRoutes.js'
+import { publicPostRoutes } from './postRoutes.js'
+import { publicMediaRoutes } from './mediaRoutes.js'
 
 /**
- * Public routes    /api/*
+ * Public routes — /api/*
  * Aggregates all public-facing endpoints.
  */
 export const publicRoutes = new Elysia()

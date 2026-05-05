@@ -1,11 +1,11 @@
-ï»¿import { Elysia, t } from 'elysia'
+import { Elysia, t } from 'elysia'
 import { eq, and, ilike, sql, desc, asc, arrayContains } from 'drizzle-orm'
 import slugify from 'slugify'
-import { db } from '../../lib/db'
-import { projects } from '../../db/schema'
-import { ok } from '../../index'
+import { db } from '../../lib/db.js'
+import { projects } from '../../db/schema.js'
+import { ok } from '../../index.js'
 
-//  â€â‚¬ â€â‚¬ Shared project body schema  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ Shared project body schema  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 const NullableStr = t.Optional(t.Union([t.String(), t.Null()]))
 
 const ProjectBody = t.Object({
@@ -20,7 +20,7 @@ const ProjectBody = t.Object({
   isPublished: t.Optional(t.Boolean()),
 })
 
-//  â€â‚¬ â€â‚¬ Public routes    /api/projects  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ Public routes    /api/projects  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const publicProjectRoutes = new Elysia({ prefix: '/api/projects' })
 
   // GET /api/projects
@@ -89,7 +89,7 @@ export const publicProjectRoutes = new Elysia({ prefix: '/api/projects' })
     detail: { tags: ['Public'], summary: 'Get project detail by slug' },
   })
 
-//  â€â‚¬ â€â‚¬ CMS routes    /api/cms/projects (admin only)  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ CMS routes    /api/cms/projects (admin only)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const cmsProjectRoutes = new Elysia({ prefix: '/api/cms/projects' })
 
   // GET /api/cms/projects    list all including drafts

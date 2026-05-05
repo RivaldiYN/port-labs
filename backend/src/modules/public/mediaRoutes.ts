@@ -1,22 +1,22 @@
-ï»¿import { Elysia, t } from 'elysia'
+import { Elysia, t } from 'elysia'
 import { eq, desc, sql } from 'drizzle-orm'
 import { randomBytes } from 'crypto'
 import { writeFile, mkdir } from 'fs/promises'
 import { join } from 'path'
 import { existsSync } from 'fs'
 import * as Minio from 'minio'
-import { db } from '../../lib/db'
-import { media } from '../../db/schema'
-import { ok } from '../../index'
+import { db } from '../../lib/db.js'
+import { media } from '../../db/schema.js'
+import { ok } from '../../index.js'
 
-//  â€â‚¬ â€â‚¬ Serialize any thrown value to a readable string  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ Serialize any thrown value to a readable string  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 function errMsg(err: unknown): string {
   if (err instanceof Error) return err.message
   if (typeof err === 'string') return err
   try { return JSON.stringify(err) } catch { return String(err) }
 }
 
-//  â€â‚¬ â€â‚¬ MinIO client  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ MinIO client  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 let minioAvailable = false
 
 const minioClient = new Minio.Client({
@@ -49,7 +49,7 @@ async function ensureBucket() {
 }
 ensureBucket()
 
-//  â€â‚¬ â€â‚¬ Local disk fallback  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ Local disk fallback  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 const UPLOAD_DIR = join(process.cwd(), 'uploads')
 const PUBLIC_BASE = process.env.PUBLIC_URL ?? `http://localhost:${process.env.PORT ?? 3000}`
 
@@ -73,7 +73,7 @@ const ALLOWED_TYPES: Record<string, string> = {
   'image/webp': 'webp', 'image/gif': 'gif', 'application/pdf': 'pdf',
 }
 
-//  â€â‚¬ â€â‚¬ CMS Media routes  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ CMS Media routes  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
 
   // GET /api/cms/media
@@ -184,7 +184,7 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
     detail: { tags: ['CMS'], summary: 'Delete media from MinIO (if available) and DB' },
   })
 
-//  â€â‚¬ â€â‚¬ Public media route    GET /api/media (images only)  â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬ â€â‚¬
+//  ”€ ”€ Public media route    GET /api/media (images only)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 export const publicMediaRoutes = new Elysia({ prefix: '/api/media' })
   .get('/', async ({ query }) => {
     const limit = Math.min(50, Math.max(1, Number(query.limit ?? 20)))
