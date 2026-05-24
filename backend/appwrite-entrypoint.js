@@ -19,7 +19,11 @@ export default async ({ req, res, log, error }) => {
     // 3. Map request Body (only if method is not GET/HEAD)
     let body = null;
     if (!['GET', 'HEAD'].includes(req.method)) {
-      body = req.bodyString || req.body || null;
+      if (typeof req.bodyString === 'string' && req.bodyString.length > 0) {
+        body = req.bodyString;
+      } else if (req.body) {
+        body = typeof req.body === 'object' ? JSON.stringify(req.body) : req.body;
+      }
     }
 
     // 4. Create standard Web Request
