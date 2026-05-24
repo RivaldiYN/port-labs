@@ -17,13 +17,13 @@
     "autoprefixer": "^10.5.0",
     "tailwindcss": "^4.2.2",
     "typescript": "~6.0.2",
-    "vite": "^8.0.4"
+    "vite": "^6.0.5"
   },
   "dependencies": {
     "@fontsource/epilogue": "^5.2.8",
     "@fontsource/plus-jakarta-sans": "^5.2.8",
     "@fontsource/space-grotesk": "^5.2.10",
-    "@vitejs/plugin-react": "^6.0.1",
+    "@vitejs/plugin-react": "^5.0.1",
     "aos": "^2.3.4",
     "lucide-react": "^1.8.0",
     "react-router-dom": "^7.14.1"
