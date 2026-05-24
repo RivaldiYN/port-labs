@@ -22,11 +22,12 @@ const app = new Elysia()
   // Plugins
   .use(cors({
     origin: [
+      process.env.FRONTEND_URL,
       'https://portaldilabs.me',
       'https://www.portaldilabs.me',
       'http://localhost:5173',
       'http://localhost:3000',
-    ],
+    ].filter(Boolean) as string[],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
