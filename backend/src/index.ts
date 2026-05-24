@@ -134,8 +134,8 @@ const app = new Elysia()
 
 const port = Number(process.env.PORT ?? 3000)
 
-// Only start HTTP server when running locally (not on Vercel serverless)
-if (!process.env.VERCEL) {
+// Only start HTTP server when running locally (not on Vercel or Appwrite Functions serverless)
+if (!process.env.VERCEL && !process.env.APPWRITE_FUNCTION_ID) {
   // Dynamically import node adapter only for local dev
   import('@elysiajs/node').then(({ node }) => {
     const localApp = new Elysia({ adapter: node() })
