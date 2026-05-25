@@ -21,13 +21,22 @@ const app = new Elysia()
 
   // Plugins
   .use(cors({
-    origin: [
-      process.env.FRONTEND_URL,
-      'https://portaldilabs.me',
-      'https://www.portaldilabs.me',
-      'http://localhost:5173',
-      'http://localhost:3000',
-    ].filter(Boolean) as string[],
+    origin: (request) => {
+      const origin = request.headers.get('origin') ?? ''
+      const allowed = [
+        process.env.FRONTEND_URL,
+        'https://port-labs.appwrite.network',
+        'https://portaldilabs.me',
+        'https://www.portaldilabs.me',
+        'http://localhost:5173',
+        'http://localhost:3000',
+      ].filter(Boolean) as string[]
+
+      // Allow any *.appwrite.network subdomain
+      if (origin.endsWith('.appwrite.network')) return true
+
+      return allowed.includes(origin)
+    },
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
