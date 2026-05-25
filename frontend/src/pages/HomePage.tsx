@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom'
 import { useProfile } from '../hooks/useProfile'
 import { usePosts } from '../hooks/usePosts'
 import { useProjects } from '../hooks/useProjects'
+import { useStats } from '../hooks/useStats'
 
 export default function HomePage() {
   const { data: profile } = useProfile()
@@ -15,19 +16,20 @@ export default function HomePage() {
   const githubUrl = profile?.githubUrl ?? 'https://github.com/RivaldiYN'
   const linkedinUrl = profile?.linkedinUrl ?? 'https://linkedin.com/in/rivaldiyn'
 
-  const DEFAULT_STATS = [
-    { value: '4+', label: 'Years Building' },
-    { value: '20+', label: 'Projects Shipped' },
-    { value: '3.45', label: 'GPA Excellence' },
-  ]
+  // ── Auto-computed from DB ────────────────────────────────────────────────
+  const { data: stats } = useStats()
+  const yearsLabel = stats ? `${stats.yearsExperience}+` : '...'
+  const projectsLabel = stats ? `${stats.totalProjects}+` : '...'
 
-  // Parse "value|label" pipe-delimited strings from the API
-  const heroStats = (profile?.stats ?? []).length > 0
-    ? profile!.stats!.map((entry) => {
-        const [value, ...labelParts] = entry.split('|')
-        return { value: value ?? '', label: labelParts.join('|') }
-      })
-    : DEFAULT_STATS
+  // ── GPA comes from CMS profile.stats (pipe-delimited "value|label") ──────
+  const gpaEntry = (profile?.stats ?? []).find((s) => s.toLowerCase().includes('gpa'))
+  const gpaValue = gpaEntry ? gpaEntry.split('|')[0] : '3.45'
+
+  const heroStats = [
+    { value: yearsLabel,    label: 'Years Building' },
+    { value: projectsLabel, label: 'Projects Shipped' },
+    { value: gpaValue,      label: 'GPA Excellence' },
+  ]
 
   return (
     <div className="bg-gradient-to-br from-[#FFFDF7] via-[#FFFFFF] to-[#FAF8F3] text-[#1F2937] min-h-screen font-body">

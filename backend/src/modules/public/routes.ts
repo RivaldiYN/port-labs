@@ -3,6 +3,7 @@ import { publicProjectRoutes } from './projectRoutes.js'
 import { publicProfileRoutes } from './profileRoutes.js'
 import { publicPostRoutes } from './postRoutes.js'
 import { publicMediaRoutes } from './mediaRoutes.js'
+import { publicStatsRoutes } from './statsRoutes.js'
 
 /**
  * Public routes — /api/*
@@ -13,3 +14,4 @@ export const publicRoutes = new Elysia()
   .use(publicProfileRoutes)
   .use(publicPostRoutes)
   .use(publicMediaRoutes)
+  .use(publicStatsRoutes)
