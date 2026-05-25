@@ -1,5 +1,5 @@
 import { Elysia } from 'elysia'
-import { eq, sql, min } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { db } from '../../lib/db.js'
 import { projects, experiences } from '../../db/schema.js'
 import { ok } from '../../index.js'
@@ -8,7 +8,8 @@ import { ok } from '../../index.js'
  * GET /api/stats
  * Returns dynamically computed portfolio stats:
  *  - totalProjects  : count of all published projects
- *  - yearsExperience: years since the earliest experience start_date (rounded down)
+ *  - yearsExperience: total accumulated years across all experience records
+ *                     (sums durations; current roles use today as end date)
  */
 export const publicStatsRoutes = new Elysia()
   .get('/api/stats', async () => {
@@ -20,24 +21,31 @@ export const publicStatsRoutes = new Elysia()
 
     const totalProjects = projectsRow?.total ?? 0
 
-    // 2. Find the earliest experience start_date to compute years of experience
-    const [expRow] = await db
-      .select({ earliest: min(experiences.startDate) })
+    // 2. Fetch all experience records to compute total accumulated years
+    const allExperiences = await db
+      .select({
+        startDate: experiences.startDate,
+        endDate: experiences.endDate,
+        isCurrent: experiences.isCurrent,
+      })
       .from(experiences)
 
-    let yearsExperience = 0
-    if (expRow?.earliest) {
-      const start = new Date(expRow.earliest)
-      const now = new Date()
-      yearsExperience = Math.floor(
-        (now.getTime() - start.getTime()) / (1000 * 60 * 60 * 24 * 365.25)
-      )
+    let totalMs = 0
+    const now = new Date()
+
+    for (const exp of allExperiences) {
+      const start = new Date(exp.startDate)
+      const end = exp.isCurrent || !exp.endDate ? now : new Date(exp.endDate)
+      const ms = end.getTime() - start.getTime()
+      if (ms > 0) totalMs += ms
     }
+
+    const yearsExperience = Math.floor(totalMs / (1000 * 60 * 60 * 24 * 365.25))
 
     return ok(
       { totalProjects, yearsExperience },
       'Stats berhasil diambil'
     )
   }, {
-    detail: { tags: ['Public'], summary: 'Get computed portfolio stats (project count & years experience)' },
+    detail: { tags: ['Public'], summary: 'Get computed portfolio stats (project count & total years experience)' },
   })

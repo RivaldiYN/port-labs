@@ -1,7 +1,38 @@
 import { app } from './dist/index.js';
 
+const ALLOWED_ORIGINS = [
+  'https://port-labs.appwrite.network',
+  'https://portaldilabs.me',
+  'https://www.portaldilabs.me',
+  'http://localhost:5173',
+  'http://localhost:3000',
+];
+
+function getAllowedOrigin(reqHeaders) {
+  const origin = reqHeaders?.['origin'] ?? '';
+  if (!origin) return null;
+  if (origin.endsWith('.appwrite.network')) return origin;
+  const envOrigin = process.env.FRONTEND_URL ?? '';
+  if (envOrigin && origin === envOrigin) return origin;
+  return ALLOWED_ORIGINS.includes(origin) ? origin : null;
+}
+
 export default async ({ req, res, log, error }) => {
   try {
+    const allowedOrigin = getAllowedOrigin(req.headers);
+
+    const corsHeaders = {
+      'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      'Access-Control-Allow-Credentials': 'true',
+      ...(allowedOrigin ? { 'Access-Control-Allow-Origin': allowedOrigin } : {}),
+    };
+
+    // Handle CORS preflight immediately — no need to hit Elysia
+    if (req.method === 'OPTIONS') {
+      return res.send('', 204, corsHeaders);
+    }
+
     // 1. Map request headers
     const requestHeaders = new Headers();
     if (req.headers) {
@@ -36,11 +67,14 @@ export default async ({ req, res, log, error }) => {
     // 5. Delegate request handling to Elysia
     const response = await app.handle(request);
 
-    // 6. Map response headers and status
+    // 6. Map response headers — merge Elysia headers + our CORS headers
     const responseStatus = response.status || 200;
-    const responseHeaders = {};
+    const responseHeaders = { ...corsHeaders };
     response.headers.forEach((value, key) => {
-      responseHeaders[key] = value;
+      // CORS headers from our entrypoint take precedence
+      if (!key.startsWith('access-control-')) {
+        responseHeaders[key] = value;
+      }
     });
 
     // 7. Get response body text
@@ -53,3 +87,4 @@ export default async ({ req, res, log, error }) => {
     return res.json({ success: false, error: err.message }, 500);
   }
 };
+

@@ -18,8 +18,11 @@ export default function HomePage() {
 
   // ── Auto-computed from DB ────────────────────────────────────────────────
   const { data: stats } = useStats()
-  const yearsLabel = stats ? `${stats.yearsExperience}+` : '...'
-  const projectsLabel = stats ? `${stats.totalProjects}+` : '...'
+  // Show '—' for years if no experience data yet; show count directly for projects
+  const yearsLabel = stats
+    ? stats.yearsExperience > 0 ? `${stats.yearsExperience}+` : '—'
+    : '...'
+  const projectsLabel = stats ? `${stats.totalProjects}` : '...'
 
   // ── GPA comes from CMS profile.stats (pipe-delimited "value|label") ──────
   const gpaEntry = (profile?.stats ?? []).find((s) => s.toLowerCase().includes('gpa'))
@@ -124,27 +127,41 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Featured Projects */}
-      {featuredProjects && featuredProjects.length > 0 && (
-        <section className="py-20 md:py-28 px-4 sm:px-6 md:px-10 lg:px-16">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-12">
-              <div>
-                <h2 className="text-4xl md:text-5xl font-headline font-bold text-[#1F2937] mb-4">
-                  Featured Projects
-                  <span className="text-[#D4A373]">.</span>
-                </h2>
-                <p className="text-[#6B7280] text-lg font-body">Showcase of recent work and experiments</p>
-              </div>
-              <Link
-                to="/projects"
-                className="text-[#D4A373] font-body font-bold text-sm uppercase tracking-wider hover:text-[#0891B2] transition-colors flex items-center gap-2 group"
-              >
-                View All
-                <span className="group-hover:translate-x-1 transition-transform">→</span>
-              </Link>
-            </div>
 
+      {/* Featured Projects */}
+      <section className="py-20 md:py-28 px-4 sm:px-6 md:px-10 lg:px-16">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-12">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-headline font-bold text-[#1F2937] mb-4">
+                Featured Projects
+                <span className="text-[#D4A373]">.</span>
+              </h2>
+              <p className="text-[#6B7280] text-lg font-body">Showcase of recent work and experiments</p>
+            </div>
+            <Link
+              to="/projects"
+              className="text-[#D4A373] font-body font-bold text-sm uppercase tracking-wider hover:text-[#0891B2] transition-colors flex items-center gap-2 group"
+            >
+              View All
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
+          </div>
+
+          {projectsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="rounded-xl border border-[#E5E7EB] bg-white overflow-hidden animate-pulse">
+                  <div className="h-48 bg-[#F3F4F6]" />
+                  <div className="p-6 space-y-3">
+                    <div className="h-5 bg-[#F3F4F6] rounded w-3/4" />
+                    <div className="h-4 bg-[#F3F4F6] rounded w-full" />
+                    <div className="h-4 bg-[#F3F4F6] rounded w-2/3" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : featuredProjects.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {featuredProjects.slice(0, 3).map((project) => (
                 <Link
@@ -180,31 +197,50 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
-          </div>
-        </section>
-      )}
+          ) : (
+            <div className="text-center py-16 text-[#9CA3AF] font-body">
+              <p className="text-4xl mb-3">🚀</p>
+              <p className="font-semibold">No featured projects yet.</p>
+              <p className="text-sm mt-1">Check back soon!</p>
+            </div>
+          )}
+        </div>
+      </section>
+
 
       {/* Latest Articles */}
-      {latestPosts && latestPosts.length > 0 && (
-        <section className="py-20 md:py-28 px-4 sm:px-6 md:px-10 lg:px-16 bg-white border-t border-[#E5E7EB]">
-          <div className="max-w-6xl mx-auto">
-            <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-12">
-              <div>
-                <h2 className="text-4xl md:text-5xl font-headline font-bold text-[#1F2937] mb-4">
-                  Articles & Insights
-                  <span className="text-[#D4A373]">.</span>
-                </h2>
-                <p className="text-[#6B7280] text-lg font-body">Thoughts on development, design, and the web</p>
-              </div>
-              <Link
-                to="/posts"
-                className="text-[#D4A373] font-body font-bold text-sm uppercase tracking-wider hover:text-[#0891B2] transition-colors flex items-center gap-2 group"
-              >
-                Read All
-                <span className="group-hover:translate-x-1 transition-transform">→</span>
-              </Link>
+      <section className="py-20 md:py-28 px-4 sm:px-6 md:px-10 lg:px-16 bg-white border-t border-[#E5E7EB]">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-8 mb-12">
+            <div>
+              <h2 className="text-4xl md:text-5xl font-headline font-bold text-[#1F2937] mb-4">
+                Articles &amp; Insights
+                <span className="text-[#D4A373]">.</span>
+              </h2>
+              <p className="text-[#6B7280] text-lg font-body">Thoughts on development, design, and the web</p>
             </div>
+            <Link
+              to="/posts"
+              className="text-[#D4A373] font-body font-bold text-sm uppercase tracking-wider hover:text-[#0891B2] transition-colors flex items-center gap-2 group"
+            >
+              Read All
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </Link>
+          </div>
 
+          {postsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="rounded-xl p-6 border border-[#E5E7EB] animate-pulse">
+                  <div className="h-3 bg-[#F3F4F6] rounded w-1/3 mb-3" />
+                  <div className="h-5 bg-[#F3F4F6] rounded w-full mb-2" />
+                  <div className="h-5 bg-[#F3F4F6] rounded w-4/5 mb-4" />
+                  <div className="h-4 bg-[#F3F4F6] rounded w-full" />
+                  <div className="h-4 bg-[#F3F4F6] rounded w-2/3 mt-2" />
+                </div>
+              ))}
+            </div>
+          ) : latestPosts.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               {latestPosts.slice(0, 3).map((post) => (
                 <Link
@@ -234,9 +270,15 @@ export default function HomePage() {
                 </Link>
               ))}
             </div>
-          </div>
-        </section>
-      )}
+          ) : (
+            <div className="text-center py-16 text-[#9CA3AF] font-body">
+              <p className="text-4xl mb-3">✍️</p>
+              <p className="font-semibold">No articles published yet.</p>
+              <p className="text-sm mt-1">Check back soon!</p>
+            </div>
+          )}
+        </div>
+      </section>
 
       {/* CTA Section */}
       <section className="py-20 md:py-28 px-4 sm:px-6 md:px-10 lg:px-16 relative overflow-hidden">
