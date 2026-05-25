@@ -12,7 +12,7 @@ if (!DATABASE_URL) {
 const queryClient = postgres(DATABASE_URL ?? '', {
   ssl: 'require',
   prepare: false,
-  max: 1,
+  max: 10,
   idle_timeout: 20,
   connect_timeout: 10,
 })
