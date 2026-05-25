@@ -348,7 +348,7 @@ export default function CmsProjectsPage() {
             <h1 className="font-headline text-3xl md:text-4xl font-extrabold tracking-tighter text-[#e5e2e1]">
               Projects<span className="text-[#53e076]">.</span>
             </h1>
-            <p className="text-[#e5e2e1]/50 text-sm mt-1">Kelola semua project Ã¢ ‚¬ € published & drafts</p>
+            <p className="text-[#e5e2e1]/50 text-sm mt-1">Manage all projects, published & drafts</p>
           </div>
           <button onClick={() => setEditProject('new')}
             className="bg-[#53e076] hover:bg-[#1db954] text-[#002108] font-bold py-3 px-6 rounded-full flex items-center gap-2 transition-all active:scale-95 group shrink-0">
