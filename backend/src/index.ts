@@ -8,7 +8,8 @@ import { publicRoutes } from './modules/public/routes.js'
 import { cmsRoutes } from './modules/cms/routes.js'
 
 // Re-export helpers from lib/response — routes import directly from there to avoid circular deps
-export { ok, fail } from './lib/response.js'
+import { ok, fail } from './lib/response.js'
+export { ok, fail }
 
 // App â€” no node() adapter needed for Vercel serverless
 const app = new Elysia()
