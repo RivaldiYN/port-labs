@@ -3,7 +3,7 @@ import { eq, and, ilike, sql, desc, asc, arrayContains } from 'drizzle-orm'
 import slugify from 'slugify'
 import { db } from '../../lib/db.js'
 import { projects } from '../../db/schema.js'
-import { ok } from '../../index.js'
+import { ok } from '../../lib/response.js'
 
 //  ”€ ”€ Shared project body schema  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 const NullableStr = t.Optional(t.Union([t.String(), t.Null()]))

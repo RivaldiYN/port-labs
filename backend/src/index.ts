@@ -7,14 +7,8 @@ import { authRoutes } from './modules/auth/routes.js'
 import { publicRoutes } from './modules/public/routes.js'
 import { cmsRoutes } from './modules/cms/routes.js'
 
-// Response format helpers
-export function ok<T>(data: T, message = 'OK', meta?: Record<string, unknown>) {
-  return { success: true, data, message, ...(meta ? { meta } : {}) }
-}
-
-export function fail(message: string, status = 400) {
-  return { success: false, data: null, message, status }
-}
+// Re-export helpers from lib/response — routes import directly from there to avoid circular deps
+export { ok, fail } from './lib/response.js'
 
 // App â€” no node() adapter needed for Vercel serverless
 const app = new Elysia()

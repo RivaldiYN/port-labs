@@ -7,7 +7,7 @@ import { existsSync } from 'fs'
 import * as Minio from 'minio'
 import { db } from '../../lib/db.js'
 import { media } from '../../db/schema.js'
-import { ok } from '../../index.js'
+import { ok } from '../../lib/response.js'
 
 //  ”€ ”€ Serialize any thrown value to a readable string  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 function errMsg(err: unknown): string {

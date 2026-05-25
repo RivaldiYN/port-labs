@@ -3,7 +3,7 @@ import { eq } from 'drizzle-orm'
 import { createHash } from 'crypto'
 import { db } from '../../lib/db.js'
 import { profile } from '../../db/schema.js'
-import { ok } from '../../index.js'
+import { ok } from '../../lib/response.js'
 import * as Minio from 'minio'
 
 //  �� �� MinIO client  �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� �� ��

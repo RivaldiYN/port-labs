@@ -2,7 +2,7 @@ import { Elysia } from 'elysia'
 import { eq, sql } from 'drizzle-orm'
 import { db } from '../../lib/db.js'
 import { projects, experiences } from '../../db/schema.js'
-import { ok } from '../../index.js'
+import { ok } from '../../lib/response.js'
 
 /**
  * GET /api/stats

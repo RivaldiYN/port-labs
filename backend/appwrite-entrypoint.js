@@ -1,90 +1,98 @@
 import { app } from './dist/index.js';
 
-const ALLOWED_ORIGINS = [
+// ── Allowed origins ───────────────────────────────────────────────────────────
+const ALLOWED_ORIGINS = new Set([
   'https://port-labs.appwrite.network',
   'https://portaldilabs.me',
   'https://www.portaldilabs.me',
   'http://localhost:5173',
   'http://localhost:3000',
-];
+]);
 
-function getAllowedOrigin(reqHeaders) {
-  const origin = reqHeaders?.['origin'] ?? '';
-  if (!origin) return null;
+function resolveOrigin(reqHeaders) {
+  const origin = (reqHeaders?.['origin'] ?? reqHeaders?.['Origin'] ?? '').trim();
+  if (!origin) return '*'; // no origin header → allow (e.g. curl, server-side)
   if (origin.endsWith('.appwrite.network')) return origin;
-  const envOrigin = process.env.FRONTEND_URL ?? '';
+  const envOrigin = (process.env.FRONTEND_URL ?? '').trim();
   if (envOrigin && origin === envOrigin) return origin;
-  return ALLOWED_ORIGINS.includes(origin) ? origin : null;
+  return ALLOWED_ORIGINS.has(origin) ? origin : null;
 }
 
+function buildCorsHeaders(origin) {
+  return {
+    'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
+    'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    'Access-Control-Allow-Credentials': 'true',
+    'Vary': 'Origin',
+    ...(origin ? { 'Access-Control-Allow-Origin': origin } : {}),
+  };
+}
+
+// ── Main handler ──────────────────────────────────────────────────────────────
 export default async ({ req, res, log, error }) => {
+  // Resolve CORS origin FIRST — outside try/catch so it's always available
+  const allowedOrigin = resolveOrigin(req.headers);
+  const corsHeaders = buildCorsHeaders(allowedOrigin);
+
+  // Handle CORS preflight immediately
+  if (req.method === 'OPTIONS') {
+    return res.send('', 204, corsHeaders);
+  }
+
   try {
-    const allowedOrigin = getAllowedOrigin(req.headers);
-
-    const corsHeaders = {
-      'Access-Control-Allow-Methods': 'GET, POST, PUT, PATCH, DELETE, OPTIONS',
-      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
-      'Access-Control-Allow-Credentials': 'true',
-      ...(allowedOrigin ? { 'Access-Control-Allow-Origin': allowedOrigin } : {}),
-    };
-
-    // Handle CORS preflight immediately — no need to hit Elysia
-    if (req.method === 'OPTIONS') {
-      return res.send('', 204, corsHeaders);
-    }
-
-    // 1. Map request headers
+    // 1. Forward all incoming headers to the internal Elysia request
     const requestHeaders = new Headers();
     if (req.headers) {
       for (const [key, value] of Object.entries(req.headers)) {
-        requestHeaders.set(key, value);
+        requestHeaders.set(key, String(value));
       }
     }
 
-    // 2. Map request URL
-    const dummyHost = 'http://localhost';
+    // 2. Reconstruct full URL
     const path = req.path || '/';
     const queryString = req.queryString ? `?${req.queryString}` : '';
-    const fullUrl = `${dummyHost}${path}${queryString}`;
+    const fullUrl = `http://localhost${path}${queryString}`;
 
-    // 3. Map request Body (only if method is not GET/HEAD)
+    // 3. Attach body for non-GET/HEAD requests
     let body = null;
     if (!['GET', 'HEAD'].includes(req.method)) {
       if (typeof req.bodyString === 'string' && req.bodyString.length > 0) {
         body = req.bodyString;
       } else if (req.body) {
-        body = typeof req.body === 'object' ? JSON.stringify(req.body) : req.body;
+        body = typeof req.body === 'object' ? JSON.stringify(req.body) : String(req.body);
       }
     }
 
-    // 4. Create standard Web Request
+    // 4. Build a standard Web API Request and delegate to Elysia
     const request = new Request(fullUrl, {
       method: req.method || 'GET',
       headers: requestHeaders,
-      body: body,
+      body,
     });
 
-    // 5. Delegate request handling to Elysia
     const response = await app.handle(request);
 
-    // 6. Map response headers — merge Elysia headers + our CORS headers
-    const responseStatus = response.status || 200;
-    const responseHeaders = { ...corsHeaders };
+    // 5. Merge CORS headers on top of Elysia's response headers
+    //    Our entrypoint CORS headers take precedence over anything Elysia sets.
+    const status = response.status || 200;
+    const headers = { ...corsHeaders };
     response.headers.forEach((value, key) => {
-      // CORS headers from our entrypoint take precedence
-      if (!key.startsWith('access-control-')) {
-        responseHeaders[key] = value;
+      if (!key.startsWith('access-control-') && key !== 'vary') {
+        headers[key] = value;
       }
     });
 
-    // 7. Get response body text
     const responseBody = await response.text();
+    return res.send(responseBody, status, headers);
 
-    // 8. Return response to Appwrite client
-    return res.send(responseBody, responseStatus, responseHeaders);
   } catch (err) {
+    // IMPORTANT: always include CORS headers even on 500 so the browser
+    // can actually read the error response instead of reporting a CORS failure.
     error('Appwrite Function Error:', err);
-    return res.json({ success: false, error: err.message }, 500);
+    return res.send(
+      JSON.stringify({ success: false, error: String(err?.message ?? err) }),
+      500,
+      { ...corsHeaders, 'Content-Type': 'application/json' },
+    );
   }
 };
-
