@@ -6,7 +6,7 @@ import { profile } from '../../db/schema.js'
 import { ok } from '../../index.js'
 import * as Minio from 'minio'
 
-//  ”€ ”€ MinIO client  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+//  ï¿½ï¿½ ï¿½ï¿½ MinIO client  ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½
 const minioClient = new Minio.Client({
   endPoint: process.env.MINIO_ENDPOINT ?? 'localhost',
   port: Number(process.env.MINIO_PORT ?? 9000),
@@ -42,7 +42,7 @@ async function ensureBucket() {
 // Ensure bucket on startup
 ensureBucket()
 
-//  ”€ ”€ Profile body schema  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+//  ï¿½ï¿½ ï¿½ï¿½ Profile body schema  ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½
 const ProfileBody = t.Object({
   name: t.Optional(t.String({ minLength: 1, maxLength: 100 })),
   tagline: t.Optional(t.Union([t.String(), t.Null()])),
@@ -53,9 +53,11 @@ const ProfileBody = t.Object({
   location: t.Optional(t.Union([t.String({ maxLength: 100 }), t.Null()])),
   resumeUrl: t.Optional(t.Union([t.String(), t.Null()])),
   avatarUrl: t.Optional(t.Union([t.String(), t.Null()])),
+  // Each entry: "value|label", e.g. ["4+|Years Building", "20+|Projects Shipped"]
+  stats: t.Optional(t.Union([t.Array(t.String()), t.Null()])),
 })
 
-//  ”€ ”€ Public route    GET /api/profile  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+//  ï¿½ï¿½ ï¿½ï¿½ Public route    GET /api/profile  ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½
 export const publicProfileRoutes = new Elysia()
   .get('/api/profile', async ({ set }) => {
     const rows = await db.select().from(profile).limit(1)
@@ -68,7 +70,7 @@ export const publicProfileRoutes = new Elysia()
     detail: { tags: ['Public'], summary: 'Get public profile data' },
   })
 
-//  ”€ ”€ CMS routes    /api/cms/profile (admin only)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+//  ï¿½ï¿½ ï¿½ï¿½ CMS routes    /api/cms/profile (admin only)  ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½
 export const cmsProfileRoutes = new Elysia()
 
   // PUT /api/cms/profile    update profile
@@ -91,6 +93,7 @@ export const cmsProfileRoutes = new Elysia()
         location: body.location ?? null,
         resumeUrl: body.resumeUrl ?? null,
         avatarUrl: body.avatarUrl ?? null,
+        stats: body.stats ?? ['4+|Years Building', '20+|Projects Shipped', '3.45|GPA Excellence'],
         updatedAt: new Date(),
       }).returning()
       set.status = 201
@@ -108,6 +111,7 @@ export const cmsProfileRoutes = new Elysia()
       location: body.location !== undefined ? body.location : existing.location,
       resumeUrl: body.resumeUrl !== undefined ? body.resumeUrl : existing.resumeUrl,
       avatarUrl: body.avatarUrl !== undefined ? body.avatarUrl : existing.avatarUrl,
+      stats: body.stats !== undefined ? body.stats : existing.stats,
       updatedAt: new Date(),
     }).where(eq(profile.id, existing.id)).returning()
 

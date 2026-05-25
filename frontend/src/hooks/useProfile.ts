@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 
 const API = import.meta.env.VITE_API_URL ?? 'http://localhost:3000'
 
@@ -13,6 +13,8 @@ export interface Profile {
   githubUrl: string | null
   linkedinUrl: string | null
   location: string | null
+  // Each entry: "value|label", e.g. ["4+|Years Building", "20+|Projects Shipped"]
+  stats: string[] | null
   updatedAt: string | null
 }
 

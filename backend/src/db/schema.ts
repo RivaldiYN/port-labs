@@ -1,4 +1,4 @@
-﻿import {
+import {
   pgTable, uuid, varchar, text, boolean,
   smallint, integer, timestamp, date, check,
 } from 'drizzle-orm/pg-core'
@@ -15,6 +15,8 @@ export const profile = pgTable('profile', {
   githubUrl:   text('github_url'),
   linkedinUrl: text('linkedin_url'),
   location:    varchar('location', { length: 100 }),
+  // Each entry: "value|label", e.g. "4+|Years Building"
+  stats:       text('stats').array(),
   updatedAt:   timestamp('updated_at', { withTimezone: true }).defaultNow(),
 })
 

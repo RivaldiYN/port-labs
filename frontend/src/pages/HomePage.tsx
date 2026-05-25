@@ -15,6 +15,20 @@ export default function HomePage() {
   const githubUrl = profile?.githubUrl ?? 'https://github.com/RivaldiYN'
   const linkedinUrl = profile?.linkedinUrl ?? 'https://linkedin.com/in/rivaldiyn'
 
+  const DEFAULT_STATS = [
+    { value: '4+', label: 'Years Building' },
+    { value: '20+', label: 'Projects Shipped' },
+    { value: '3.45', label: 'GPA Excellence' },
+  ]
+
+  // Parse "value|label" pipe-delimited strings from the API
+  const heroStats = (profile?.stats ?? []).length > 0
+    ? profile!.stats!.map((entry) => {
+        const [value, ...labelParts] = entry.split('|')
+        return { value: value ?? '', label: labelParts.join('|') }
+      })
+    : DEFAULT_STATS
+
   return (
     <div className="bg-gradient-to-br from-[#FFFDF7] via-[#FFFFFF] to-[#FAF8F3] text-[#1F2937] min-h-screen font-body">
       {/* Hero Section */}
@@ -46,18 +60,12 @@ export default function HomePage() {
 
           {/* Stats */}
           <div className="grid grid-cols-3 gap-4 md:gap-8 mb-10 pb-10 border-b border-[#E5E7EB]">
-            <div>
-              <p className="text-3xl md:text-4xl font-headline font-bold text-[#1F2937]">4+</p>
-              <p className="text-xs uppercase tracking-widest text-[#9CA3AF] font-bold mt-2 font-body">Years Building</p>
-            </div>
-            <div>
-              <p className="text-3xl md:text-4xl font-headline font-bold text-[#1F2937]">20+</p>
-              <p className="text-xs uppercase tracking-widest text-[#9CA3AF] font-bold mt-2 font-body">Projects Shipped</p>
-            </div>
-            <div>
-              <p className="text-3xl md:text-4xl font-headline font-bold text-[#1F2937]">3.45</p>
-              <p className="text-xs uppercase tracking-widest text-[#9CA3AF] font-bold mt-2 font-body">GPA Excellence</p>
-            </div>
+            {heroStats.map(({ value, label }) => (
+              <div key={label}>
+                <p className="text-3xl md:text-4xl font-headline font-bold text-[#1F2937]">{value}</p>
+                <p className="text-xs uppercase tracking-widest text-[#9CA3AF] font-bold mt-2 font-body">{label}</p>
+              </div>
+            ))}
           </div>
 
           {/* CTAs */}
