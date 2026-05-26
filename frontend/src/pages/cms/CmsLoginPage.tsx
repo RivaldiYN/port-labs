@@ -49,7 +49,7 @@ export default function CmsLoginPage() {
             </div>
           </Link>
           <h1 className="font-headline text-2xl md:text-3xl font-bold text-[#1F2937] mb-2">
-            Admin Console
+            Admin Panel
           </h1>
           <p className="font-body text-sm text-[#6B7280]">Secure access to portfolio management</p>
         </div>

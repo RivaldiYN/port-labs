@@ -103,7 +103,7 @@ export default function CmsDashboardPage() {
           <button
             onClick={handleLogout}
             disabled={loggingOut}
-            className="flex items-center gap-3 text-[#DC2626] hover:text-[#991B1B] transition-all font-body font-semibold text-sm disabled:opacity-50 w-full"
+            className="flex items-center gap-3 text-[#DC2626] hover:text-[#991B1B] transition-all font-body font-semibold text-sm disabled:opacity-50 w-full cursor-pointer"
             aria-label={loggingOut ? 'Logging out' : 'Logout'}
           >
             {loggingOut
@@ -140,10 +140,6 @@ export default function CmsDashboardPage() {
               Hey, <span className="text-[#D4A373] font-semibold">{admin?.username ?? 'Admin'}</span> — everything is running smoothly.
             </p>
           </div>
-          <button className="bg-gradient-to-r from-[#D4A373] to-[#CA8A04] hover:shadow-lg text-white font-bold py-3 px-6 md:px-8 rounded-xl flex items-center gap-2 transition-all active:scale-95 group shrink-0 shadow-md">
-            <span className="material-symbols-outlined group-hover:rotate-90 transition-transform duration-300">add</span>
-            <span className="font-body text-sm uppercase tracking-wider hidden sm:inline">Create New</span>
-          </button>
         </header>
 
         {/* Stats Grid */}

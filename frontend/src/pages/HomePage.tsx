@@ -77,7 +77,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 items-start">
             <Link
               to="/projects"
-              className="bg-gradient-to-r from-[#D4A373] to-[#E6B849] hover:shadow-lg text-white font-bold py-3.5 px-8 rounded-lg transition-all active:scale-95 flex items-center gap-2 group font-body uppercase tracking-wider text-sm"
+              className="bg-gradient-to-r from-[#2d1769] to-[#4418A7] hover:shadow-lg text-white font-bold py-3.5 px-8 rounded-lg transition-all active:scale-95 flex items-center gap-2 group font-body uppercase tracking-wider text-sm"
               aria-label="View my projects"
             >
               <span>View Projects</span>
@@ -85,11 +85,11 @@ export default function HomePage() {
             </Link>
             <a
               href={`mailto:${contactEmail}`}
-              className="border-2 border-[#D4A373] text-[#D4A373] hover:bg-[#FFF8F0] font-bold py-3.5 px-8 rounded-lg transition-all flex items-center gap-2 font-body uppercase tracking-wider text-sm"
+              className="border-[#D4A373] text-[#D4A373] hover:bg-[#FFF8F0] hover:shadow-lg text-white font-bold py-3.5 px-8 rounded-lg transition-all active:scale-95 flex items-center gap-2 group font-body uppercase tracking-wider text-sm"
               aria-label="Send me an email"
             >
               <span>Get In Touch</span>
-              <span className="text-lg">→</span>
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
             </a>
           </div>
         </div>
@@ -294,7 +294,7 @@ export default function HomePage() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a
               href={`mailto:${contactEmail}`}
-              className="bg-gradient-to-r from-[#D4A373] to-[#E6B849] hover:shadow-lg text-white font-bold py-3.5 px-10 rounded-lg transition-all active:scale-95 font-body uppercase tracking-wider inline-block"
+              className="bg-gradient-to-r from-[#2d1769] to-[#4418A7] hover:shadow-lg text-white font-bold py-3.5 px-10 rounded-lg transition-all active:scale-95 font-body uppercase tracking-wider inline-block"
             >
               Send Me An Email
             </a>
