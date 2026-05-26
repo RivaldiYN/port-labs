@@ -87,7 +87,7 @@ export default function ProjectsPage() {
                 <button
                   key={tab}
                   onClick={() => handleFilterTab(tab)}
-                  className={`px-4 py-2 rounded-full font-medium text-sm transition-all ${
+                  className={`px-4 py-2 rounded-full font-medium text-sm transition-all cursor-pointer ${
                     (tab === 'All' && !activeTech) || tab === activeTech
                       ? 'bg-gradient-primary text-white shadow-lg'
                       : 'bg-white border border-[#E2E8F0] text-[#475569] hover:border-[#4F46E5] hover:text-[#4F46E5]'
