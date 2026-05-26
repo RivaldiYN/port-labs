@@ -214,7 +214,7 @@ export default function ProjectsPage() {
                   setSearchInput('')
                   setPage(1)
                 }}
-                className="text-[#4F46E5] font-body text-sm font-bold border-b border-[#4F46E5] pb-1 hover:text-[#06B6D4] transition-colors"
+                className="text-[#4F46E5] font-body text-sm font-bold border-b border-[#4F46E5] pb-1 hover:text-[#06B6D4] transition-colors cursor-pointer"
               >
                 Reset Filters
               </button>

@@ -68,12 +68,12 @@ export default function PostsPage() {
                 onChange={e => setInputVal(e.target.value)}
                 placeholder="Search articles..."
                 aria-label="Search articles"
-                className="w-full bg-white border border-[#E2E8F0] focus:border-[#4F46E5] focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/10 py-3 pl-12 pr-4 font-body text-sm placeholder:text-[#94A3B8] rounded-lg transition-all"
+                className="w-full bg-white border border-[#E2E8F0] focus:border-[#4F46E5] focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/10 py-3 pl-12 pr-4 font-body text-sm placeholder:text-[#94A3B8] rounded-lg transition-all cursor-pointer"
               />
             </div>
             <button
               type="submit"
-              className="px-6 py-3 rounded-lg bg-gradient-primary text-white font-bold text-sm uppercase tracking-wide transition-all hover:shadow-lg"
+              className="px-6 py-3 rounded-lg bg-gradient-primary text-white font-bold text-sm uppercase tracking-wide transition-all hover:shadow-lg cursor-pointer"
             >
               Search
             </button>
@@ -87,7 +87,7 @@ export default function PostsPage() {
                   setPage(1)
                 }}
                 aria-label="Reset filters"
-                className="px-6 py-3 rounded-lg bg-white border border-[#E2E8F0] text-[#4F46E5] font-bold text-sm uppercase tracking-wide hover:border-[#4F46E5] transition-all"
+                className="px-6 py-3 rounded-lg bg-white border border-[#E2E8F0] text-[#4F46E5] font-bold text-sm uppercase tracking-wide hover:border-[#4F46E5] transition-all cursor-pointer"
               >
                 Reset
               </button>
@@ -96,13 +96,13 @@ export default function PostsPage() {
 
           {/* Tag Filter */}
           {tags.length > 0 && (
-            <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by tag">
+            <div className="flex flex-wrap gap-2 cursor-pointer" role="group" aria-label="Filter by tag">
               {tags.map(t => (
                 <button
                   key={t}
                   onClick={() => handleTag(t)}
                   aria-pressed={activeTag === t}
-                  className={`px-4 py-2 rounded-full font-medium text-sm transition-all ${
+                  className={`px-4 py-2 rounded-full font-medium text-sm transition-all cursor-pointer ${
                     activeTag === t
                       ? 'bg-gradient-secondary text-white'
                       : 'bg-white border border-[#E2E8F0] text-[#475569] hover:border-[#06B6D4] hover:text-[#06B6D4]'
