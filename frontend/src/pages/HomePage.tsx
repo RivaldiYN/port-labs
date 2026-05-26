@@ -36,8 +36,28 @@ export default function HomePage() {
 
   return (
     <div className="bg-gradient-to-br from-[#FFFDF7] via-[#FFFFFF] to-[#FAF8F3] text-[#1F2937] min-h-screen font-body">
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-[#E5E7EB] h-20 flex justify-between items-center px-6 md:px-8 shadow-sm">
+        <Link to="/" className="text-xl font-bold gradient-text font-headline tracking-tight flex items-center gap-2">
+          <span className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center text-white font-bold text-sm">RY</span>
+          Rivaldi
+        </Link>
+        <div className="hidden md:flex gap-8 items-center">
+          {[["Home", "/"], ["Projects", "/projects"], ["Articles", "/posts"]].map(([label, to]) => (
+            <Link key={to} to={to} className={`font-medium text-sm transition-colors duration-200 ${
+              to === '/' ? 'text-[#4F46E5] font-bold' : 'text-[#475569] hover:text-[#4F46E5]'
+            }`}>
+              {label}
+            </Link>
+          ))}
+        </div>
+        <a href="mailto:aldinggln9@gmail.com" className="btn-primary">
+          Let's Connect
+        </a>
+      </nav>
+
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center pt-20 px-4 sm:px-6 md:px-10 lg:px-16 overflow-hidden">
+      <section className="relative min-h-screen flex items-center pt-32 px-4 sm:px-6 md:px-10 lg:px-16 overflow-hidden">
         {/* Floating blobs */}
         <div className="absolute top-20 right-0 w-96 h-96 bg-gradient-to-br from-[#D4A373]/20 to-transparent rounded-full blur-3xl -z-10" />
         <div className="absolute -bottom-32 left-1/4 w-72 h-72 bg-gradient-to-br from-[#0891B2]/10 to-transparent rounded-full blur-3xl -z-10" />

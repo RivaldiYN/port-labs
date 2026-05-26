@@ -140,7 +140,7 @@ export default function ProjectsPage() {
               {projects.map(project => (
                 <Link
                   key={project.id}
-                  to={`/projects/${project.id}`}
+                  to={`/projects/${project.slug}`}
                   className="card group relative overflow-hidden"
                 >
                   {/* Image/Icon */}

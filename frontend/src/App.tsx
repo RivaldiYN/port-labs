@@ -1,9 +1,10 @@
-﻿import { useEffect } from 'react'
+import { useEffect } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import RequireAuth from './components/auth/RequireAuth'
 import HomePage from './pages/HomePage'
 import ProjectsPage from './pages/ProjectsPage'
+import ProjectDetailPage from './pages/ProjectDetailPage'
 import PostsPage from './pages/PostsPage'
 import PostDetailPage from './pages/PostDetailPage'
 import CmsLoginPage from './pages/cms/CmsLoginPage'
@@ -33,6 +34,7 @@ export default function App() {
           {/* Public */}
           <Route path="/" element={<HomePage />} />
           <Route path="/projects" element={<ProjectsPage />} />
+          <Route path="/projects/:slug" element={<ProjectDetailPage />} />
           <Route path="/posts" element={<PostsPage />} />
           <Route path="/news/:slug" element={<PostDetailPage />} />
 

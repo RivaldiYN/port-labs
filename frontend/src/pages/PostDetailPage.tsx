@@ -25,85 +25,153 @@ export default function PostDetailPage() {
       .finally(() => setLoading(false))
   }, [slug])
 
-  const readTime = post?.content ? `${Math.ceil(post.content.split(/\s+/).length / 200)} MIN READ` : " © MIN READ"
+  const readTime = post?.content ? `${Math.ceil(post.content.split(/\s+/).length / 200)} MIN READ` : "— MIN READ"
 
   return (
-    <div className="bg-[#131313] text-[#e5e2e1] min-h-screen font-body">
-      <div className="kinetic-blur fixed w-[40vw] h-[40vw] top-[-10%] left-[-10%] z-0" />
-      <div className="kinetic-blur fixed w-[40vw] h-[40vw] bottom-[-10%] right-[-10%] z-0" />
+    <div className="bg-gradient-to-b from-[#F8FAFC] via-[#FFFFFF] to-[#F1F5F9] text-[#0F172A] min-h-screen font-body">
+      {/* Ambient glows */}
+      <div className="blob blob-primary w-96 h-96 -top-20 -right-20" style={{ opacity: 0.15 }} />
+      <div className="blob blob-secondary w-96 h-96 top-1/2 -left-20" style={{ opacity: 0.15 }} />
 
-      <nav className="fixed top-0 w-full z-50 bg-[#131313]/60 backdrop-blur-xl shadow-2xl shadow-black/40 h-20 flex justify-between items-center px-6 md:px-8">
-        <Link to="/" className="text-xl font-bold text-[#e5e2e1] font-headline tracking-tighter">Rivaldi<span className="text-[#1DB954]">.</span></Link>
-        <div className="hidden md:flex items-center gap-8">
-          {([["/", " Home", false], ["/projects", "Projects", false], ["/posts", "Notes", true]] as [string, string, boolean][]).map(([to, label, active]) => (
-            <Link key={to} to={to} aria-current={active ? "page" : undefined} className={`font-headline tracking-tighter text-sm px-2 py-1 rounded transition-all ${active ? "text-[#1DB954] font-bold border-b-2 border-[#1DB954]" : "text-[#e5e2e1]/70 hover:text-[#e5e2e1] hover:bg-[#1DB954]/10"}`}>{label}</Link>
+      {/* Navigation */}
+      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-[#E2E8F0] h-20 flex justify-between items-center px-6 md:px-8 shadow-sm">
+        <Link to="/" className="text-xl font-bold gradient-text font-headline tracking-tight flex items-center gap-2">
+          <span className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center text-white font-bold text-sm">RY</span>
+          Rivaldi
+        </Link>
+        <div className="hidden md:flex gap-8 items-center">
+          {[["Home", "/"], ["Projects", "/projects"], ["Articles", "/posts"]].map(([label, to]) => (
+            <Link key={to} to={to} className={`font-medium text-sm transition-colors duration-200 ${
+              to === '/posts' ? 'text-[#4F46E5] font-bold' : 'text-[#475569] hover:text-[#4F46E5]'
+            }`}>
+              {label}
+            </Link>
           ))}
         </div>
-        <a href="mailto:aldinggln9@gmail.com" className="bg-[#1DB954] text-[#003914] px-5 py-2 rounded-full font-bold font-label text-xs uppercase tracking-widest active:scale-95 transition-all">Hire Me</a>
+        <a href="mailto:aldinggln9@gmail.com" className="btn-primary">
+          Let's Connect
+        </a>
       </nav>
 
       <main className="pt-20">
-        {loading && <div className="flex items-center justify-center min-h-screen" role="status" aria-label="Memuat"><div className="w-12 h-12 border-2 border-[#53e076] border-t-transparent rounded-full animate-spin" aria-hidden="true" /></div>}
+        {loading && (
+          <div className="flex flex-col items-center justify-center min-h-[60vh] gap-4" role="status">
+            <div className="w-12 h-12 rounded-full border-2 border-[#4F46E5] border-t-transparent animate-spin" />
+            <p className="text-sm font-medium text-[#94A3B8] uppercase tracking-widest">Loading article...</p>
+          </div>
+        )}
 
         {error && !loading && (
-          <div className="flex flex-col items-center justify-center min-h-screen gap-6 px-6">
-            <span className="material-symbols-outlined text-6xl text-[#ffb4ab]/50" aria-hidden="true">article_shortcut</span>
-            <h1 className="font-headline text-2xl font-bold text-[#e5e2e1]">Post tidak ditemukan</h1>
-            <p className="text-[#e5e2e1]/50">{error}</p>
-            <Link to="/posts" className="bg-[#53e076] text-[#002108] px-6 py-3 rounded-full font-label font-bold text-xs uppercase tracking-widest hover:bg-[#1db954] transition-all">? Kembali ke Posts</Link>
+          <div className="flex flex-col items-center justify-center min-h-[60vh] gap-6 px-6 text-center">
+            <span className="material-symbols-outlined text-6xl text-[#FF6B6B] opacity-60" aria-hidden="true">article_shortcut</span>
+            <h1 className="font-headline text-2xl font-bold text-[#0F172A]">Post tidak ditemukan</h1>
+            <p className="text-[#64748B] max-w-md">{error}</p>
+            <Link to="/posts" className="btn-primary flex items-center gap-2">
+              <span className="material-symbols-outlined text-sm" aria-hidden="true">arrow_back</span> Kembali ke Halaman Artikel
+            </Link>
           </div>
         )}
 
         {post && !loading && (
           <>
-            <header className="relative w-full h-64 sm:h-80 md:h-[480px] lg:h-[560px] flex items-end overflow-hidden">
-              {post.coverUrl
-                ? <><img src={post.coverUrl} alt="" className="absolute inset-0 w-full h-full object-cover" /><div className="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/60 to-transparent" /></>
-                : <div className="absolute inset-0 bg-gradient-to-br from-[#1db954]/20 via-[#1c1b1b] to-[#131313]"><div className="absolute inset-0 flex items-center justify-center opacity-10"><span className="material-symbols-outlined text-[#53e076]" style={{ fontSize: "400px" }} aria-hidden="true">article</span></div><div className="absolute inset-0 bg-gradient-to-t from-[#131313] via-[#131313]/40 to-transparent" /></div>
-              }
-              <div className="relative z-20 w-full max-w-7xl mx-auto px-6 md:px-8 pb-10 md:pb-16">
-                <Link to="/posts" className="flex items-center gap-2 text-[#53e076] font-label text-xs uppercase tracking-widest mb-6 hover:-translate-x-1 transition-transform w-fit">
-                  <span className="material-symbols-outlined text-sm" aria-hidden="true">arrow_back</span> Back to Notes
+            {/* Header / Hero Section */}
+            <header className="relative w-full h-[400px] md:h-[500px] flex items-end overflow-hidden border-b border-[#E2E8F0] bg-gradient-to-br from-[#2d1769] to-[#CFFAFE]">
+              {post.coverUrl ? (
+                <>
+                  <img src={post.coverUrl} alt="" className="absolute inset-0 w-full h-full object-cover" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent z-10" />
+                </>
+              ) : (
+                <div className="absolute inset-0 flex items-center justify-center opacity-10">
+                  <span className="material-symbols-outlined text-[#4F46E5]" style={{ fontSize: "300px" }} aria-hidden="true">article</span>
+                </div>
+              )}
+              
+              <div className="relative z-20 w-full max-w-7xl mx-auto px-6 md:px-8 pb-10 md:pb-16 text-white">
+                <Link to="/posts" className="inline-flex items-center gap-2 text-[#E6B849] hover:text-[#FFF8F0] font-medium text-xs uppercase tracking-widest mb-6 transition-all">
+                  <span className="material-symbols-outlined text-sm" aria-hidden="true">arrow_back</span> Back to Articles
                 </Link>
                 <div className="flex flex-wrap gap-2 mb-4">
-                  {(post.tags ?? []).map(t => <span key={t} className="px-4 py-1 bg-[#353534] rounded-full text-[#53e076] font-label text-xs tracking-wider border border-[#3d4a3d]/20">{t.toUpperCase()}</span>)}
-                  <span className="px-4 py-1 bg-[#353534] rounded-full text-[#e5e2e1]/60 font-label text-xs tracking-wider border border-[#3d4a3d]/20">{readTime}</span>
+                  {(post.tags ?? []).map(t => (
+                    <span key={t} className="px-3.5 py-1 bg-white/20 backdrop-blur-md rounded-full text-white font-medium text-xs uppercase tracking-wider border border-white/10">
+                      {t}
+                    </span>
+                  ))}
+                  <span className="px-3.5 py-1 bg-white/20 backdrop-blur-md rounded-full text-white/80 font-medium text-xs uppercase tracking-wider border border-white/10">
+                    {readTime}
+                  </span>
                 </div>
-                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-headline font-extrabold tracking-tighter leading-none text-[#e5e2e1] max-w-4xl">{post.title}</h1>
+                <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-headline font-bold tracking-tight leading-none max-w-4xl">
+                  {post.title}
+                </h1>
                 <div className="flex items-center gap-4 mt-6">
-                  <div className="w-10 h-10 rounded-full bg-[#2a2a2a] border-2 border-[#53e076]/30 flex items-center justify-center"><span className="text-lg font-headline font-black text-[#53e076]" aria-hidden="true">R</span></div>
-                  <div><p className="text-[#e5e2e1] font-semibold text-sm">Rivaldi Yonathan Nainggolan</p><p className="text-[#e5e2e1]/40 text-xs font-label uppercase tracking-tighter">{post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("id-ID", { year: "numeric", month: "long", day: "numeric" }) : ""}</p></div>
+                  <div className="w-10 h-10 rounded-full bg-white/10 border-2 border-white/25 flex items-center justify-center shrink-0">
+                    <span className="text-lg font-headline font-black text-white" aria-hidden="true">R</span>
+                  </div>
+                  <div>
+                    <p className="font-semibold text-sm">Rivaldi Yonathan Nainggolan</p>
+                    <p className="text-white/60 text-xs font-body tracking-wider uppercase">
+                      {post.publishedAt ? new Date(post.publishedAt).toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }) : ""}
+                    </p>
+                  </div>
                 </div>
               </div>
             </header>
 
-            <section className="max-w-7xl mx-auto px-6 md:px-8 py-16 md:py-24 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-16">
-              <aside className="hidden lg:block lg:col-span-3 sticky top-32 h-fit">
-                <div className="mb-12">
-                  <h2 className="font-label text-xs uppercase tracking-[0.2em] text-[#e5e2e1]/40 mb-4">Tags</h2>
-                  <div className="flex flex-wrap gap-2">{(post.tags ?? []).map(t => <Link key={t} to={`/posts?tag=${t}`} className="px-3 py-1 bg-[#1c1b1b] border border-[#3d4a3d]/20 rounded-full text-[#53e076] font-label text-[10px] uppercase tracking-widest hover:border-[#53e076]/40 transition-all">{t}</Link>)}</div>
+            {/* Content Section */}
+            <section className="max-w-7xl mx-auto px-6 md:px-8 py-12 md:py-16 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 relative z-10">
+              {/* Sidebar Left: Tags & Share */}
+              <aside className="hidden lg:block lg:col-span-3 sticky top-28 h-fit space-y-8">
+                <div className="bg-white border border-[#E2E8F0] rounded-2xl p-6 shadow-sm">
+                  <h2 className="font-headline text-xs font-bold uppercase tracking-wider text-[#94A3B8] mb-4">Tags</h2>
+                  <div className="flex flex-wrap gap-2">
+                    {(post.tags ?? []).map(t => (
+                      <Link key={t} to={`/posts?tag=${t}`} className="px-3 py-1.5 bg-[#E0E7FF] border border-[#CFFAFE] rounded-lg text-[#4F46E5] font-bold text-xs uppercase tracking-wider hover:border-[#4F46E5] transition-all">
+                        {t}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
-                <div>
-                  <h2 className="font-label text-xs uppercase tracking-[0.2em] text-[#e5e2e1]/40 mb-6">Share</h2>
+                
+                <div className="bg-white border border-[#E2E8F0] rounded-2xl p-6 shadow-sm">
+                  <h2 className="font-headline text-xs font-bold uppercase tracking-wider text-[#94A3B8] mb-4">Share Article</h2>
                   <div className="flex gap-3">
-                    {["share", "link"].map(icon => <button key={icon} aria-label={icon === "share" ? "Share post" : "Copy link"} className="w-10 h-10 rounded-full bg-[#1c1b1b] flex items-center justify-center hover:bg-[#53e076]/20 hover:text-[#53e076] transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#53e076]"><span className="material-symbols-outlined text-base" aria-hidden="true">{icon}</span></button>)}
+                    {["share", "link"].map(icon => (
+                      <button key={icon} aria-label={icon === "share" ? "Share post" : "Copy link"} className="w-10 h-10 rounded-xl bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-center hover:bg-[#FFF8F0] hover:text-[#D4A373] hover:border-[#D4A373] transition-all cursor-pointer">
+                        <span className="material-symbols-outlined text-base" aria-hidden="true">{icon}</span>
+                      </button>
+                    ))}
                   </div>
                 </div>
               </aside>
 
-              <article className="lg:col-span-7 prose">
-                {post.excerpt && <p className="text-xl text-[#e5e2e1]/90 leading-relaxed font-medium mb-12">{post.excerpt}</p>}
-                {post.content && <div style={{ whiteSpace: "pre-wrap" }} className="text-[#bccbb9] leading-relaxed">{post.content}</div>}
+              {/* Main Article Body */}
+              <article className="lg:col-span-7 prose prose-slate max-w-none pt-4">
+                {post.excerpt && (
+                  <p className="text-xl text-[#475569] leading-relaxed font-body font-medium mb-8 pb-6 border-b border-[#E2E8F0]">
+                    {post.excerpt}
+                  </p>
+                )}
+                {post.content && (
+                  <div style={{ whiteSpace: "pre-wrap" }} className="text-[#334155] leading-relaxed text-base font-body">
+                    {post.content}
+                  </div>
+                )}
               </article>
 
-              <aside className="lg:col-span-2 space-y-10">
-                <div className="p-6 rounded-2xl bg-[#1c1b1b] border border-[#3d4a3d]/10">
-                  <p className="font-label text-[10px] uppercase tracking-widest text-[#53e076] mb-4">Hire Me</p>
-                  <h3 className="text-[#e5e2e1] font-headline font-bold text-sm mb-4">Ready to launch your project?</h3>
-                  <a href="mailto:aldinggln9@gmail.com" className="block w-full py-3 bg-[#53e076] text-[#002108] font-bold rounded-full text-sm text-center hover:shadow-[0_0_20px_rgba(83,224,118,0.3)] transition-all active:scale-95">Get in Touch</a>
+              {/* Sidebar Right: Hire CTA */}
+              <aside className="lg:col-span-2 space-y-6 lg:sticky lg:top-28 h-fit">
+                <div className="bg-gradient-to-br from-[#D4A373]/10 to-[#0891B2]/10 border border-[#E2E8F0] rounded-2xl p-6 text-center space-y-4">
+                  <span className="text-[10px] uppercase tracking-widest text-[#D4A373] font-bold block">Hire Me</span>
+                  <h3 className="text-[#0F172A] font-headline font-bold text-sm">Ready to build your next web project?</h3>
+                  <a href="mailto:aldinggln9@gmail.com" className="btn-primary block text-center py-2.5">
+                    Get in Touch
+                  </a>
                 </div>
-                <div>
-                  <Link to="/posts" className="text-[#53e076] font-label text-xs uppercase tracking-widest hover:underline">? All Notes</Link>
+                <div className="text-center">
+                  <Link to="/posts" className="inline-flex items-center gap-1 text-[#4F46E5] hover:text-[#06B6D4] font-semibold text-xs uppercase tracking-widest transition-colors">
+                    <span className="material-symbols-outlined text-xs">arrow_back</span> All Articles
+                  </Link>
                 </div>
               </aside>
             </section>
@@ -111,10 +179,17 @@ export default function PostDetailPage() {
         )}
       </main>
 
-      <footer className="w-full py-12 border-t border-[#e5e2e1]/10 bg-[#131313] mt-12">
-        <div className="flex flex-col md:flex-row justify-between items-center px-8 w-full max-w-7xl mx-auto gap-6">
-          <p className="font-label text-sm text-[#e5e2e1]/40">ï¿½ {new Date().getFullYear()} Rivaldi Yonathan Nainggolan.</p>
-          <div className="flex gap-8">{[["LinkedIn", "https://linkedin.com/in/rivaldiyn"], ["GitHub", "https://github.com/RivaldiYN"]].map(([l, h]) => <a key={l} href={h} target="_blank" rel="noopener noreferrer" className="font-label text-sm text-[#e5e2e1]/40 hover:text-[#1DB954] transition-colors">{l}</a>)}</div>
+      {/* Footer */}
+      <footer className="border-t border-[#E2E8F0] bg-white/50 backdrop-blur-sm mt-20">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center py-12 px-6 md:px-8 gap-6">
+          <p className="text-sm text-[#64748B]">© {new Date().getFullYear()} Rivaldi Yonathan. Crafted with ❤️ for the web.</p>
+          <div className="flex gap-6">
+            {[['LinkedIn', 'https://linkedin.com/in/rivaldiyn'], ['GitHub', 'https://github.com/RivaldiYN']].map(([l, h]) => (
+              <a key={l} href={h} target="_blank" rel="noopener noreferrer" className="text-[#64748B] hover:text-[#4F46E5] transition-colors font-body text-sm font-medium">
+                {l}
+              </a>
+            ))}
+          </div>
         </div>
       </footer>
     </div>
