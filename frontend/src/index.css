@@ -1,9 +1,13 @@
 @import url("https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap");
 @import url("https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&family=Silkscreen:wght@400;700&display=swap");
 
 @import "tailwindcss";
 
 @theme {
+  --font-press-start: "Press Start 2P", monospace;
+  --font-vt323: "VT323", monospace;
+  --font-silkscreen: "Silkscreen", monospace;
   /* NomadKit - Warm Sand + Ocean + Forest - WCAG AA+ Compliant */
   --color-background: #FFFDF7;
   --color-surface: #FFFFFF;
@@ -298,5 +302,145 @@ a:focus-visible {
 
 .blob-tertiary {
   background: radial-gradient(circle, rgba(22, 101, 52, 0.2) 0%, rgba(22, 101, 52, 0) 70%);
+}
+
+/* ──────────────────────────────────────────────────────────────────────────
+   RPG Game Wiki Theme Styles (taskbarhero.wiki style)
+   ────────────────────────────────────────────────────────────────────────── */
+
+/* Custom Scanlines Overlay */
+.rpg-scanlines {
+  position: relative;
+}
+.rpg-scanlines::after {
+  content: " ";
+  display: block;
+  position: absolute;
+  top: 0; left: 0; bottom: 0; right: 0;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.15) 50%);
+  background-size: 100% 4px;
+  z-index: 10;
+  pointer-events: none;
+  opacity: 0.4;
+}
+
+/* Custom Scrollbars */
+.rpg-scrollbar::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+.rpg-scrollbar::-webkit-scrollbar-track {
+  background: #121620;
+  border-left: 2px solid #252e3d;
+}
+.rpg-scrollbar::-webkit-scrollbar-thumb {
+  background: #C89B3C;
+  border: 2px solid #121620;
+}
+.rpg-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #E5B849;
+}
+
+.rpg-scrollbar-light::-webkit-scrollbar-track {
+  background: #FAF6EE;
+  border-left: 2px solid #e6dfcf;
+}
+.rpg-scrollbar-light::-webkit-scrollbar-thumb {
+  background: #7D5832;
+  border: 2px solid #FAF6EE;
+}
+.rpg-scrollbar-light::-webkit-scrollbar-thumb:hover {
+  background: #96602e;
+}
+
+/* Red Title Banners with Gold Borders */
+.rpg-banner-red-dark {
+  background: linear-gradient(180deg, #b0302b 0%, #8c221e 100%);
+  border: 3px double #C89B3C;
+  box-shadow: 0 4px 0px #000000;
+  text-shadow: 2px 2px 0px #000;
+}
+
+.rpg-banner-red-light {
+  background: linear-gradient(180deg, #d2652b 0%, #a64f1d 100%);
+  border: 3px double #7D5832;
+  box-shadow: 0 4px 0px #2E2218;
+  text-shadow: 1px 1px 0px #2E2218;
+}
+
+/* Parchment / Paper Effect */
+.rpg-parchment {
+  background-color: #f6eeda;
+  border: 3px double #7d5c34;
+  box-shadow: inset 0 0 40px rgba(125, 92, 52, 0.15), 4px 4px 0px #2e2218;
+  color: #2e2218;
+}
+
+/* RPG Boxes (Double borders, blocky shadow) */
+.rpg-box-dark {
+  background-color: #161a24;
+  border: 3px double #C89B3C;
+  box-shadow: inset 0 0 12px rgba(0,0,0,0.6), 4px 4px 0px #000000;
+}
+
+.rpg-box-light {
+  background-color: #Fdfaf2;
+  border: 3px double #7D5832;
+  box-shadow: inset 0 0 10px rgba(125,92,52,0.1), 4px 4px 0px #2E2218;
+}
+
+/* RPG Buttons with retro clicking animation */
+.rpg-btn-gold-dark {
+  font-family: 'Silkscreen', monospace;
+  font-size: 11px;
+  background: linear-gradient(180deg, #e5b849 0%, #c89b3c 100%);
+  color: #121620;
+  border: 2px solid #121620;
+  box-shadow: 2px 2px 0px #000000;
+  transition: all 0.05s ease;
+  cursor: pointer;
+}
+.rpg-btn-gold-dark:hover {
+  background: linear-gradient(180deg, #f3c75d 0%, #dcae4a 100%);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #000000;
+}
+.rpg-btn-gold-dark:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px #000000;
+}
+
+.rpg-btn-gold-light {
+  font-family: 'Silkscreen', monospace;
+  font-size: 11px;
+  background: linear-gradient(180deg, #96602e 0%, #7d5c34 100%);
+  color: #FAF6EE;
+  border: 2px solid #2E2218;
+  box-shadow: 2px 2px 0px #2E2218;
+  transition: all 0.05s ease;
+  cursor: pointer;
+}
+.rpg-btn-gold-light:hover {
+  background: linear-gradient(180deg, #ab733e 0%, #8c683c 100%);
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0px #2E2218;
+}
+.rpg-btn-gold-light:active {
+  transform: translate(2px, 2px);
+  box-shadow: 0px 0px 0px #2E2218;
+}
+
+/* Pixel divider */
+.rpg-pixel-divider-dark {
+  height: 4px;
+  background-image: linear-gradient(to right, #C89B3C 50%, transparent 50%);
+  background-size: 8px 4px;
+  width: 100%;
+}
+.rpg-pixel-divider-light {
+  height: 4px;
+  background-image: linear-gradient(to right, #7D5832 50%, transparent 50%);
+  background-size: 8px 4px;
+  width: 100%;
 }
 

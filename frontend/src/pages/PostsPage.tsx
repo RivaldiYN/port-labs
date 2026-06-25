@@ -1,4 +1,4 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Link } from "react-router-dom"
 import { usePosts, useTags } from "../hooks/usePosts"
 
@@ -22,219 +22,366 @@ export default function PostsPage() {
     setPage(1)
   }
 
+  // ── Theme State ──────────────────────────────────────────────────────────
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('rpg-theme')
+    return saved ? saved === 'dark' : true
+  })
+
+  useEffect(() => {
+    localStorage.setItem('rpg-theme', isDarkMode ? 'dark' : 'light')
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark')
+    } else {
+      document.documentElement.classList.remove('dark')
+    }
+  }, [isDarkMode])
+
+  const theme = isDarkMode ? {
+    mode: 'dark',
+    outerBg: 'bg-[#0f1118]/85 grayscale-[20%] brightness-[45%]',
+    mainBg: 'bg-[#121620]',
+    borderColor: 'border-[#C89B3C]',
+    textColor: 'text-[#F5F3EF]',
+    textColorMuted: 'text-[#9FA3AF]',
+    bannerClass: 'rpg-banner-red-dark',
+    boxClass: 'rpg-box-dark',
+    btnClass: 'rpg-btn-gold-dark',
+    dividerClass: 'rpg-pixel-divider-dark',
+    scrollbarClass: 'rpg-scrollbar',
+  } : {
+    mode: 'light',
+    outerBg: 'bg-[#f0e6cf]/40 sepia-[15%] brightness-[92%]',
+    mainBg: 'bg-[#FAF6EE]',
+    borderColor: 'border-[#7D5832]',
+    textColor: 'text-[#2E2218]',
+    textColorMuted: 'text-[#685547]',
+    bannerClass: 'rpg-banner-red-light',
+    boxClass: 'rpg-box-light',
+    btnClass: 'rpg-btn-gold-light',
+    dividerClass: 'rpg-pixel-divider-light',
+    scrollbarClass: 'rpg-scrollbar-light',
+  }
+
   return (
-    <div className="bg-gradient-to-b from-[#F8FAFC] via-[#FFFFFF] to-[#F1F5F9] text-[#0F172A] min-h-screen">
-      {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-xl border-b border-[#E2E8F0] h-20 flex justify-between items-center px-6 md:px-8 shadow-sm">
-        <Link to="/" className="text-xl font-bold gradient-text font-headline tracking-tight flex items-center gap-2">
-          <span className="w-8 h-8 rounded-lg bg-gradient-primary flex items-center justify-center text-white font-bold text-sm">RY</span>
-          Rivaldi
-        </Link>
-        <div className="hidden md:flex gap-8 items-center">
-          {[["Home", "/"], ["Projects", "/projects"], ["Articles", "/posts"]].map(([label, to]) => (
-            <Link key={to} to={to} className={`font-medium text-sm transition-colors duration-200 ${
-              to === '/posts' ? 'text-[#4F46E5] font-bold' : 'text-[#475569] hover:text-[#4F46E5]'
-            }`}>
-              {label}
-            </Link>
-          ))}
-        </div>
-        <a href="mailto:aldinggln9@gmail.com" className="btn-primary">
-          Let's Connect
-        </a>
-      </nav>
+    <div className={`relative min-h-screen font-body overflow-x-hidden ${theme.textColor} transition-colors duration-250`}>
+      {/* Fixed Immersive RPG Map Background */}
+      <div 
+        className={`fixed inset-0 -z-50 bg-[url('/src/assets/fantasy_map_bg.png')] bg-cover bg-center bg-no-repeat transition-all duration-300 ${theme.outerBg}`} 
+      />
 
-      <main className="pt-32 pb-20 px-6 md:px-8 max-w-6xl mx-auto relative z-10">
-        {/* Ambient glows */}
-        <div className="blob blob-secondary w-96 h-96 -top-40 -left-40" />
-        <div className="blob blob-tertiary w-72 h-72 bottom-0 -right-20" style={{ opacity: 0.3 }} />
+      {/* Main Game Wiki Frame */}
+      <div className={`w-full max-w-[1300px] mx-auto min-h-screen ${theme.mainBg} border-x-4 ${theme.borderColor} shadow-2xl flex flex-col relative z-10`}>
+        
+        {/* RPG Style Top Header */}
+        <header className={`sticky top-0 z-50 border-b-4 ${theme.borderColor} ${theme.mainBg} h-20 flex justify-between items-center px-4 md:px-6`}>
+          <Link to="/" className="flex items-center gap-2.5 group">
+            <span className={`w-9 h-9 border-2 ${theme.borderColor} bg-red-800 flex items-center justify-center text-white font-press-start text-xs shadow-[2px_2px_0px_#000]`}>
+              RY
+            </span>
+            <div className="flex flex-col">
+              <span className="font-silkscreen text-xs uppercase tracking-widest text-amber-500 font-bold group-hover:text-amber-400 transition-colors">
+                RIVALDI
+              </span>
+              <span className="font-silkscreen text-[9px] uppercase tracking-wider opacity-60">
+                v1.2.0-alpha
+              </span>
+            </div>
+          </Link>
 
-        <header className="mb-12 relative z-10">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold font-headline text-[#0F172A] mb-4 tracking-tight">
-            Articles & Insights
-          </h1>
-          <p className="text-lg text-[#475569] max-w-2xl">Technical writing, development tips, and thoughts on modern web.</p>
+          {/* Navigation Links inside Retro Boxes */}
+          <nav className="hidden md:flex gap-4">
+            {[
+              ["Home", "/", "🏡"], 
+              ["Projects", "/projects", "⚔️"], 
+              ["Articles", "/posts", "📜"]
+            ].map(([label, to, icon]) => (
+              <Link 
+                key={to} 
+                to={to} 
+                className={`font-silkscreen text-xs px-3 py-1.5 border border-transparent hover:border-amber-600 hover:bg-amber-600/10 flex items-center gap-1.5 transition-all ${
+                  to === '/posts' ? 'text-amber-500 font-bold' : ''
+                }`}
+              >
+                <span>{icon}</span>
+                <span>{label}</span>
+              </Link>
+            ))}
+          </nav>
+
+          {/* Action Area (Theme Switch & Email Connect) */}
+          <div className="flex items-center gap-3">
+            {/* Theme Toggle Button */}
+            <button 
+              onClick={() => setIsDarkMode(!isDarkMode)} 
+              className={`${theme.btnClass} py-2 px-3 flex items-center gap-2`}
+              title="Toggle Theme Mode"
+            >
+              <span>{isDarkMode ? '🌙' : '☀️'}</span>
+              <span className="hidden sm:inline font-silkscreen text-[10px]">
+                {isDarkMode ? 'DARK' : 'LIGHT'}
+              </span>
+            </button>
+
+            <a 
+              href="mailto:aldinggln9@gmail.com" 
+              className={`${theme.btnClass} py-2 px-4 font-silkscreen text-[10px] hidden sm:block`}
+            >
+              LET'S CONNECT
+            </a>
+          </div>
         </header>
 
-        <div className="space-y-6 relative z-10 mb-10">
-          {/* Search and Filter Bar */}
-          <form onSubmit={handleSearch} className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1 max-w-md">
-              <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-[#94A3B8]" aria-hidden="true">
-                search
-              </span>
-              <input
-                value={inputVal}
-                onChange={e => setInputVal(e.target.value)}
-                placeholder="Search articles..."
-                aria-label="Search articles"
-                className="w-full bg-white border border-[#E2E8F0] focus:border-[#4F46E5] focus:outline-none focus:ring-2 focus:ring-[#4F46E5]/10 py-3 pl-12 pr-4 font-body text-sm placeholder:text-[#94A3B8] rounded-lg transition-all cursor-pointer"
-              />
+        {/* Outer Split Pane Layout: Sidebar + Main Content */}
+        <div className="flex-1 flex flex-col md:flex-row relative">
+          
+          {/* Left Navigation & Stats Sidebar */}
+          <aside className={`hidden md:flex flex-col w-64 border-r-4 ${theme.borderColor} p-4 shrink-0 gap-6 h-[calc(100vh-80px)] sticky top-20 overflow-y-auto ${theme.scrollbarClass} ${theme.mainBg}`}>
+            
+            {/* Section: Wiki Menu */}
+            <div className="flex flex-col gap-2.5">
+              <div className="text-[10px] font-silkscreen font-bold tracking-widest text-amber-500 mb-1">
+                [ WIKI MENU ]
+              </div>
+              <Link to="/" className="p-2 font-silkscreen text-xs border border-transparent hover:border-amber-600/20 hover:bg-amber-600/5 flex items-center gap-2 transition-all">
+                <span>🏡</span> Profile Home
+              </Link>
+              <Link to="/projects" className="p-2 font-silkscreen text-xs border border-transparent hover:border-amber-600/20 hover:bg-amber-600/5 flex items-center gap-2 transition-all">
+                <span>⚔️</span> Projects Inventory
+              </Link>
+              <Link to="/posts" className="p-2 font-silkscreen text-xs border border-amber-600/20 bg-amber-600/5 hover:bg-amber-600/10 flex items-center gap-2 transition-all">
+                <span>📜</span> Codex Chronicles
+              </Link>
             </div>
-            <button
-              type="submit"
-              className="px-6 py-3 rounded-lg bg-gradient-primary text-white font-bold text-sm uppercase tracking-wide transition-all hover:shadow-lg cursor-pointer"
-            >
-              Search
-            </button>
-            {(search || activeTag) && (
-              <button
-                type="button"
-                onClick={() => {
-                  setSearch("")
-                  setInputVal("")
-                  setActiveTag("")
-                  setPage(1)
-                }}
-                aria-label="Reset filters"
-                className="px-6 py-3 rounded-lg bg-white border border-[#E2E8F0] text-[#4F46E5] font-bold text-sm uppercase tracking-wide hover:border-[#4F46E5] transition-all cursor-pointer"
+
+            {/* Section: External Guild Links */}
+            <div className="flex flex-col gap-2.5 mt-auto pt-4 border-t-2 border-dashed border-amber-600/20">
+              <div className="text-[10px] font-silkscreen font-bold tracking-widest text-amber-500 mb-1">
+                [ GUILD WEB ]
+              </div>
+              <a 
+                href="https://github.com/RivaldiYN" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="p-2 font-silkscreen text-[11px] hover:text-amber-500 flex items-center gap-2"
               >
-                Reset
-              </button>
-            )}
-          </form>
-
-          {/* Tag Filter */}
-          {tags.length > 0 && (
-            <div className="flex flex-wrap gap-2 cursor-pointer" role="group" aria-label="Filter by tag">
-              {tags.map(t => (
-                <button
-                  key={t}
-                  onClick={() => handleTag(t)}
-                  aria-pressed={activeTag === t}
-                  className={`px-4 py-2 rounded-full font-medium text-sm transition-all cursor-pointer ${
-                    activeTag === t
-                      ? 'bg-gradient-secondary text-white'
-                      : 'bg-white border border-[#E2E8F0] text-[#475569] hover:border-[#06B6D4] hover:text-[#06B6D4]'
-                  }`}
-                >
-                  {t}
-                </button>
-              ))}
+                <span>📦</span> GitHub
+              </a>
+              <a 
+                href="https://linkedin.com/in/rivaldiyn" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="p-2 font-silkscreen text-[11px] hover:text-amber-500 flex items-center gap-2"
+              >
+                <span>💼</span> LinkedIn
+              </a>
             </div>
-          )}
-        </div>
+          </aside>
 
-        {/* Loading State */}
-        {loading && (
-          <div className="flex justify-center py-24" role="status" aria-label="Loading articles">
-            <div className="w-10 h-10 border-2 border-[#4F46E5] border-t-transparent rounded-full animate-spin" />
-          </div>
-        )}
-
-        {/* Error State */}
-        {error && !loading && (
-          <div role="alert" className="text-center py-16 relative z-10">
-            <span className="material-symbols-outlined text-5xl text-[#FF6B6B] opacity-60 mb-3 block" aria-hidden="true">
-              error
-            </span>
-            <p className="text-[#FF6B6B] font-body text-sm">{error}</p>
-          </div>
-        )}
-
-        {/* Posts Grid */}
-        {!loading && !error && (
-          <>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 relative z-10 mb-12">
-              {posts.map(post => (
-                <Link
-                  key={post.id}
-                  to={`/news/${post.slug}`}
-                  className="card group"
-                >
-                  {post.coverUrl && (
-                    <div className="w-full h-40 relative overflow-hidden rounded-lg mb-4 bg-gradient-to-br from-[#E0E7FF] to-[#CFFAFE]">
-                      <img
-                        src={post.coverUrl}
-                        alt={post.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                    </div>
-                  )}
-                  <div className="space-y-3">
-                    <div className="flex flex-wrap gap-2">
-                      {(post.tags ?? []).slice(0, 2).map(t => (
-                        <span
-                          key={t}
-                          className="bg-[#CFFAFE] text-[#06B6D4] font-bold text-[10px] px-2.5 py-1 rounded-full uppercase tracking-widest"
-                        >
-                          {t}
-                        </span>
-                      ))}
-                    </div>
-                    <h2 className="font-headline font-bold text-[#0F172A] text-lg leading-tight group-hover:text-[#4F46E5] transition-colors">
-                      {post.title}
-                    </h2>
-                    <p className="text-[#64748B] text-sm leading-relaxed line-clamp-3">{post.excerpt ?? ""}</p>
-                    <p className="text-[#94A3B8] font-body text-xs uppercase tracking-widest pt-2 border-t border-[#E2E8F0]">
-                      {post.publishedAt
-                        ? new Date(post.publishedAt).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "short",
-                            day: "numeric",
-                          })
-                        : "—"}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-              {posts.length === 0 && (
-                <div className="col-span-3 text-center py-20">
-                  <span className="material-symbols-outlined text-5xl text-[#CBD5E1] mb-3 block" aria-hidden="true">
-                    article
-                  </span>
-                  <p className="text-[#64748B] font-body text-sm">No articles found.</p>
-                </div>
+          {/* Main Scrollable Content Area */}
+          <main className="flex-1 p-4 sm:p-6 lg:p-8 flex flex-col gap-8">
+            
+            {/* Header Banner */}
+            <div className={`${theme.bannerClass} py-3.5 px-4 flex justify-between items-center rounded-sm`}>
+              <span className="font-silkscreen text-[10px] text-yellow-300 font-bold">SYSTEM: CODEX</span>
+              <h1 className="font-silkscreen text-xs md:text-sm font-bold text-white uppercase tracking-wider">
+                CHRONICLES &amp; TOMES
+              </h1>
+              {meta ? (
+                <span className="font-silkscreen text-[10px] text-yellow-300 font-bold">
+                  QTY: {meta.total} SCROLLS
+                </span>
+              ) : (
+                <span className="font-silkscreen text-[10px] text-yellow-300 font-bold">QTY: 0 SCROLLS</span>
               )}
             </div>
 
-            {/* Pagination */}
-            {meta && meta.totalPages > 1 && (
-              <nav className="flex items-center justify-center gap-4 relative z-10" aria-label="Pagination">
-                <button
-                  onClick={() => setPage(p => Math.max(1, p - 1))}
-                  disabled={page === 1}
-                  aria-label="Previous page"
-                  className="w-10 h-10 rounded-lg bg-white border border-[#E2E8F0] flex items-center justify-center disabled:opacity-30 hover:border-[#4F46E5] hover:text-[#4F46E5] transition-all"
-                >
-                  <span className="material-symbols-outlined text-sm">chevron_left</span>
-                </button>
-                <span className="font-body text-sm text-[#94A3B8]" aria-live="polite">
-                  {page} / {meta.totalPages}
-                </span>
-                <button
-                  onClick={() => setPage(p => Math.min(meta.totalPages, p + 1))}
-                  disabled={page === meta.totalPages}
-                  aria-label="Next page"
-                  className="w-10 h-10 rounded-lg bg-white border border-[#E2E8F0] flex items-center justify-center disabled:opacity-30 hover:border-[#4F46E5] hover:text-[#4F46E5] transition-all"
-                >
-                  <span className="material-symbols-outlined text-sm">chevron_right</span>
-                </button>
-              </nav>
-            )}
-          </>
-        )}
-      </main>
+            {/* Search & Filter widget box */}
+            <div className={`${theme.boxClass} p-4 flex flex-col gap-4 rounded-sm`}>
+              <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4">
+                
+                {/* Tag Filters list */}
+                {tags.length > 0 && (
+                  <div className="flex flex-wrap gap-1.5">
+                    {tags.map(t => {
+                      const isActive = activeTag === t
+                      return (
+                        <button
+                          key={t}
+                          onClick={() => handleTag(t)}
+                          className={`font-silkscreen text-[9px] py-1.5 px-3 border border-dashed transition-all cursor-pointer ${
+                            isActive 
+                              ? 'bg-green-800/20 text-green-400 border-green-400 font-bold'
+                              : 'bg-black/5 dark:bg-black/20 text-inherit border-black/10 hover:border-green-600/40 hover:text-green-400'
+                          }`}
+                        >
+                          {t}
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
 
-      {/* Footer */}
-      <footer className="border-t border-[#E2E8F0] bg-white/50 backdrop-blur-sm mt-20">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center py-12 px-6 md:px-8 gap-6">
-          <p className="text-sm text-[#64748B]">© {new Date().getFullYear()} Rivaldi Yonathan. Crafted with ❤️ for the web.</p>
-          <div className="flex gap-6">
-            {[["LinkedIn", "https://linkedin.com/in/rivaldiyn"], ["GitHub", "https://github.com/RivaldiYN"]].map(([l, h]) => (
-              <a
-                key={l}
-                href={h}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-[#64748B] hover:text-[#4F46E5] transition-colors font-body text-sm font-medium"
-              >
-                {l}
-              </a>
-            ))}
-          </div>
+                {/* Search query box */}
+                <div className="flex flex-wrap items-center gap-3 w-full lg:w-auto">
+                  <form onSubmit={handleSearch} className="relative flex-1 lg:w-72">
+                    <input
+                      value={inputVal}
+                      onChange={e => setInputVal(e.target.value)}
+                      placeholder="Search codex pages..."
+                      type="text"
+                      className="w-full bg-black/10 border-2 border-black/20 focus:border-amber-600/40 py-2 pl-4 pr-10 font-silkscreen text-[10px] focus:outline-none focus:bg-black/20 transition-all rounded-xs"
+                    />
+                    <button 
+                      type="submit" 
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-amber-500 hover:text-amber-400"
+                      aria-label="Search"
+                    >
+                      <span className="material-symbols-outlined text-base">search</span>
+                    </button>
+                  </form>
+
+                  {(search || activeTag) && (
+                    <button
+                      onClick={() => {
+                        setSearch("")
+                        setInputVal("")
+                        setActiveTag("")
+                        setPage(1)
+                      }}
+                      className={`${theme.btnClass} py-2 px-4 text-[9px] font-silkscreen`}
+                    >
+                      RESET FILTERS
+                    </button>
+                  )}
+                </div>
+
+              </div>
+            </div>
+
+            {/* Loading State */}
+            {loading && (
+              <div className="flex flex-col items-center justify-center py-24 gap-3">
+                <div className="w-10 h-10 border-2 border-amber-500 border-t-transparent rounded-full animate-spin" />
+                <p className="font-silkscreen text-[10px] text-amber-500 uppercase tracking-widest">LOADING SCROLLS...</p>
+              </div>
+            )}
+
+            {/* Error State */}
+            {error && !loading && (
+              <div className={`${theme.boxClass} p-12 text-center flex flex-col items-center gap-3`}>
+                <span className="material-symbols-outlined text-5xl text-red-500/70">error</span>
+                <p className="text-red-500 font-silkscreen text-xs">{error}</p>
+                <p className="text-[10px] opacity-75">Please verify connection parameters.</p>
+              </div>
+            )}
+
+            {/* Posts Grid */}
+            {!loading && !error && (
+              <div className="relative z-10 flex-1 flex flex-col justify-between">
+                
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {posts.map(post => (
+                    <Link
+                      key={post.id}
+                      to={`/news/${post.slug}`}
+                      className={`group ${theme.boxClass} p-5 flex flex-col gap-3 rounded-sm hover:-translate-y-1 hover:border-amber-500 transition-all`}
+                    >
+                      {post.coverUrl && (
+                        <div className="w-full h-40 relative border-2 border-black/40 overflow-hidden bg-black/10 rounded-xs">
+                          <img
+                            src={post.coverUrl}
+                            alt={post.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 pixelated"
+                          />
+                        </div>
+                      )}
+                      
+                      <div className="flex flex-col gap-1.5">
+                        <span className="font-silkscreen text-[8px] text-green-500 font-bold">
+                          {new Date(post.createdAt).toLocaleDateString('id-ID', { month: 'short', day: 'numeric', year: 'numeric' })}
+                        </span>
+                        
+                        <h2 className="font-silkscreen text-[11px] font-bold text-amber-500 group-hover:text-amber-400 transition-colors line-clamp-2 leading-tight">
+                          {post.title}
+                        </h2>
+                        
+                        <span className="font-silkscreen text-[7px] text-purple-400 font-bold uppercase tracking-wider">
+                          ✦ CHRONICLE CODEX
+                        </span>
+                      </div>
+
+                      <p className="text-xs opacity-80 leading-relaxed line-clamp-3 h-12">
+                        {post.excerpt ?? ""}
+                      </p>
+
+                      {post.tags && post.tags.length > 0 && (
+                        <div className="flex flex-wrap gap-1 mt-auto pt-2 border-t border-dashed border-amber-600/20">
+                          {post.tags.slice(0, 2).map(tag => (
+                            <span 
+                              key={tag} 
+                              className="text-[8px] font-silkscreen bg-black/10 text-green-400 px-1.5 py-0.5 border border-black/10"
+                            >
+                              {tag}
+                            </span>
+                          ))}
+                        </div>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+
+                {posts.length === 0 && (
+                  <div className={`${theme.boxClass} text-center py-20 rounded-sm`}>
+                    <span className="material-symbols-outlined text-5xl text-amber-600/40 mb-3 block">article</span>
+                    <p className="font-silkscreen text-xs text-amber-500 font-bold">Chronicles are empty</p>
+                    <p className="text-xs opacity-75 mt-1">No matching codices exist in selected tag archives.</p>
+                  </div>
+                )}
+
+                {/* Pagination */}
+                {meta && meta.totalPages > 1 && (
+                  <nav className="flex items-center justify-center gap-4 mt-8 mb-4" aria-label="Pagination">
+                    <button
+                      onClick={() => setPage(p => Math.max(1, p - 1))}
+                      disabled={page === 1}
+                      className={`${theme.btnClass} w-8 h-8 flex items-center justify-center disabled:opacity-30`}
+                      aria-label="Previous page"
+                    >
+                      <span className="material-symbols-outlined text-sm">chevron_left</span>
+                    </button>
+                    
+                    <span className="font-silkscreen text-[10px] text-amber-500">
+                      PAGE {page} OF {meta.totalPages}
+                    </span>
+                    
+                    <button
+                      onClick={() => setPage(p => Math.min(meta.totalPages, p + 1))}
+                      disabled={page === meta.totalPages}
+                      className={`${theme.btnClass} w-8 h-8 flex items-center justify-center disabled:opacity-30`}
+                      aria-label="Next page"
+                    >
+                      <span className="material-symbols-outlined text-sm">chevron_right</span>
+                    </button>
+                  </nav>
+                )}
+
+              </div>
+            )}
+          </main>
         </div>
-      </footer>
+
+        {/* Footer info bar */}
+        <footer className={`border-t-4 ${theme.borderColor} py-4 px-6 flex flex-col sm:flex-row justify-between items-center gap-3 ${theme.mainBg}`}>
+          <span className="font-silkscreen text-[9px] opacity-60">
+            © {new Date().getFullYear()} Rivaldi Yonathan Nainggolan. All Rights Reserved.
+          </span>
+          <span className="font-silkscreen text-[9px] text-amber-500 font-semibold">
+            DESIGNED BY RIVALDI
+          </span>
+        </footer>
+
+      </div>
     </div>
   )
 }
