@@ -1,35 +1,32 @@
 import 'dotenv/config'
-import { drizzle } from 'drizzle-orm/postgres-js'
-import { migrate } from 'drizzle-orm/postgres-js/migrator'
-import postgres from 'postgres'
+import { drizzle } from 'drizzle-orm/neon-http'
+import { migrate } from 'drizzle-orm/neon-http/migrator'
+import { neon } from '@neondatabase/serverless'
 import path from 'path'
 import { fileURLToPath } from 'url'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 async function runMigrations() {
-  console.log('üîå Connecting to database...')
+  console.log('Connecting to Neon database...')
 
-  if (!process.env.DATABASE_URL) {
+  const connectionString = process.env.DATABASE_URL_UNPOOLED || process.env.DATABASE_URL
+  if (!connectionString) {
     throw new Error('DATABASE_URL is not set in .env')
   }
 
-  // Use separate connection for migrations (max 1 connection)
-  const migrationClient = postgres(process.env.DATABASE_URL, { max: 1 })
-  const db = drizzle(migrationClient)
+  const sql = neon(connectionString)
+  const db = drizzle(sql)
 
   try {
-    console.log(' ö° Running migrations...')
+    console.log('Running migrations...')
     await migrate(db, {
       migrationsFolder: path.join(__dirname, 'migrations'),
     })
-    console.log(' úÖ All migrations applied successfully!')
+    console.log('All migrations applied successfully!')
   } catch (error) {
-    console.error(' ùå Migration failed:', error)
+    console.error('Migration failed:', error)
     process.exit(1)
-  } finally {
-    await migrationClient.end()
-    console.log('üîå Database connection closed.')
   }
 }
 

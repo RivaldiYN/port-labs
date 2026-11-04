@@ -1,0 +1,12 @@
+{
+  "name": "port-labs",
+  "version": "1.0.0",
+  "scripts": {
+    "build": "npm --prefix backend run build && npm --prefix frontend run build",
+    "start": "npm --prefix backend run start"
+  },
+  "dependencies": {
+    "@neon/config": "^1.10.1",
+    "@neon/env": "^1.6.9"
+  }
+}

@@ -1,4 +1,4 @@
-import { Elysia, t } from 'elysia'
+ï»¿import { Elysia, t } from 'elysia'
 import { eq, desc, sql } from 'drizzle-orm'
 import { randomBytes } from 'crypto'
 import { writeFile, mkdir } from 'fs/promises'
@@ -8,17 +8,21 @@ import * as Minio from 'minio'
 import { db } from '../../lib/db.js'
 import { media } from '../../db/schema.js'
 import { ok } from '../../lib/response.js'
+import {
+  isNeonStorageAvailable,
+  uploadToNeonStorage,
+  deleteFromNeonStorage,
+  getNeonObjectStream,
+} from '../../lib/neon.js'
 
-//  ”€ ”€ Serialize any thrown value to a readable string  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
 function errMsg(err: unknown): string {
   if (err instanceof Error) return err.message
   if (typeof err === 'string') return err
   try { return JSON.stringify(err) } catch { return String(err) }
 }
 
-//  ”€ ”€ MinIO client  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+// MinIO fallback client
 let minioAvailable = false
-
 const minioClient = new Minio.Client({
   endPoint: process.env.MINIO_ENDPOINT ?? 'localhost',
   port: Number(process.env.MINIO_PORT ?? 9000),
@@ -30,18 +34,17 @@ const minioClient = new Minio.Client({
 const BUCKET = process.env.MINIO_BUCKET ?? 'portfolio-media'
 
 async function ensureBucket() {
+  if (isNeonStorageAvailable) {
+    console.log('[Media] Neon Object Storage active (S3-compatible bucket ready)')
+    return
+  }
   try {
     const exists = await minioClient.bucketExists(BUCKET)
     if (!exists) {
       await minioClient.makeBucket(BUCKET, 'us-east-1')
-      const policy = JSON.stringify({
-        Version: '2012-10-17',
-        Statement: [{ Effect: 'Allow', Principal: { AWS: ['*'] }, Action: ['s3:GetObject'], Resource: [`arn:aws:s3:::${BUCKET}/*`] }],
-      })
-      await minioClient.setBucketPolicy(BUCKET, policy)
     }
     minioAvailable = true
-    console.log('[Media] MinIO connected    bucket:', BUCKET)
+    console.log('[Media] MinIO connected - bucket:', BUCKET)
   } catch (e) {
     console.warn('[Media] MinIO tidak tersedia, fallback ke disk lokal:', errMsg(e))
     minioAvailable = false
@@ -49,7 +52,7 @@ async function ensureBucket() {
 }
 ensureBucket()
 
-//  ”€ ”€ Local disk fallback  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+// Local disk fallback
 const UPLOAD_DIR = join(process.cwd(), 'uploads')
 const PUBLIC_BASE = process.env.PUBLIC_URL ?? `http://localhost:${process.env.PORT ?? 3000}`
 
@@ -71,9 +74,10 @@ function buildMinioUrl(objectName: string) {
 const ALLOWED_TYPES: Record<string, string> = {
   'image/jpeg': 'jpg', 'image/jpg': 'jpg', 'image/png': 'png',
   'image/webp': 'webp', 'image/gif': 'gif', 'application/pdf': 'pdf',
+  'text/plain': 'txt',
 }
 
-//  ”€ ”€ CMS Media routes  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+// CMS Media routes
 export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
 
   // GET /api/cms/media
@@ -101,18 +105,17 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
       return { success: false, data: null, message: 'File diperlukan' }
     }
 
-    // Normalize mime type
     const mime = file.type || 'application/octet-stream'
     const ext = ALLOWED_TYPES[mime]
     if (!ext) {
       set.status = 400
-      return { success: false, data: null, message: `Format tidak didukung (${mime}). Gunakan JPG, PNG, WebP, GIF, atau PDF.` }
+      return { success: false, data: null, message: `Format tidak didukung (${mime}). Gunakan JPG, PNG, WebP, GIF, TXT, atau PDF.` }
     }
 
-    const MAX = 5 * 1024 * 1024
+    const MAX = 10 * 1024 * 1024
     if (file.size > MAX) {
       set.status = 400
-      return { success: false, data: null, message: 'Ukuran file maksimal 5MB' }
+      return { success: false, data: null, message: 'Ukuran file maksimal 10MB' }
     }
 
     try {
@@ -125,7 +128,11 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
       let url: string
       let storage: string
 
-      if (minioAvailable) {
+      if (isNeonStorageAvailable) {
+        url = await uploadToNeonStorage(objectName, buffer, mime)
+        storage = 'Neon Object Storage'
+        console.log('[Media] Uploaded to Neon Object Storage:', objectName)
+      } else if (minioAvailable) {
         await minioClient.putObject(BUCKET, objectName, buffer, buffer.length, { 'Content-Type': mime })
         url = buildMinioUrl(objectName)
         storage = 'MinIO'
@@ -133,7 +140,7 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
       } else {
         url = await saveLocally(objectName, buffer)
         storage = 'disk lokal'
-        console.log('[Media] Saved to disk (MinIO unavailable):', url)
+        console.log('[Media] Saved to disk (S3/MinIO unavailable):', url)
       }
 
       const [row] = await db.insert(media).values({
@@ -153,11 +160,11 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
       return { success: false, data: null, message: `Upload gagal: ${errMsg(err)}` }
     }
   }, {
-    body: t.Object({ file: t.File({ maxSize: '5m' }) }),
-    detail: { tags: ['CMS'], summary: 'Upload file to MinIO or local disk and save metadata' },
+    body: t.Object({ file: t.File({ maxSize: '10m' }) }),
+    detail: { tags: ['CMS'], summary: 'Upload file to Neon Object Storage or MinIO/disk' },
   })
 
-  // PATCH /api/cms/media/:id    update alt text
+  // PATCH /api/cms/media/:id
   .patch('/:id', async ({ params, body, set }) => {
     const [row] = await db.select().from(media).where(eq(media.id, params.id))
     if (!row) { set.status = 404; return { success: false, data: null, message: 'Media tidak ditemukan' } }
@@ -168,23 +175,26 @@ export const cmsMediaRoutes = new Elysia({ prefix: '/api/cms/media' })
     detail: { tags: ['CMS'], summary: 'Update media alt text' },
   })
 
-  // DELETE /api/cms/media/:id    cascade delete MinIO + DB
+  // DELETE /api/cms/media/:id
   .delete('/:id', async ({ params, set }) => {
     const [row] = await db.select().from(media).where(eq(media.id, params.id))
     if (!row) { set.status = 404; return { success: false, data: null, message: 'Media tidak ditemukan' } }
 
-    if (minioAvailable) {
+    if (isNeonStorageAvailable) {
+      try { await deleteFromNeonStorage(row.filename) }
+      catch (e) { console.warn('[Media] Neon delete failed:', errMsg(e)) }
+    } else if (minioAvailable) {
       try { await minioClient.removeObject(BUCKET, row.filename) }
-      catch (e) { console.warn('[Media] MinIO delete failed (non-fatal):', errMsg(e)) }
+      catch (e) { console.warn('[Media] MinIO delete failed:', errMsg(e)) }
     }
 
     await db.delete(media).where(eq(media.id, params.id))
     return ok({ id: params.id }, 'Media berhasil dihapus')
   }, {
-    detail: { tags: ['CMS'], summary: 'Delete media from MinIO (if available) and DB' },
+    detail: { tags: ['CMS'], summary: 'Delete media from storage and DB' },
   })
 
-//  ”€ ”€ Public media route    GET /api/media (images only)  ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€ ”€
+// Public media routes
 export const publicMediaRoutes = new Elysia({ prefix: '/api/media' })
   .get('/', async ({ query }) => {
     const limit = Math.min(50, Math.max(1, Number(query.limit ?? 20)))
