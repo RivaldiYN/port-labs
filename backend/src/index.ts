@@ -1,4 +1,4 @@
-import 'dotenv/config'
+ï»¿import 'dotenv/config'
 import { Elysia } from 'elysia'
 import { cors } from '@elysiajs/cors'
 import { jwt } from '@elysiajs/jwt'
@@ -7,7 +7,7 @@ import { authRoutes } from './modules/auth/routes.js'
 import { publicRoutes } from './modules/public/routes.js'
 import { cmsRoutes } from './modules/cms/routes.js'
 
-// Re-export helpers from lib/response — routes import directly from there to avoid circular deps
+// Re-export helpers from lib/response ï¿½ routes import directly from there to avoid circular deps
 import { ok, fail } from './lib/response.js'
 export { ok, fail }
 
@@ -28,7 +28,7 @@ const app = new Elysia()
       ].filter(Boolean) as string[]
 
       // Allow any *.appwrite.network subdomain
-      if (origin.endsWith('.appwrite.network')) return true
+      if (origin.endsWith('.appwrite.network') || origin.endsWith('.vercel.app')) return true
 
       return allowed.includes(origin)
     },
@@ -160,3 +160,4 @@ if (!process.env.VERCEL && !process.env.APPWRITE_FUNCTION_ID) {
 
 export { app }
 export type App = typeof app
+
